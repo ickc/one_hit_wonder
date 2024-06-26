@@ -2,28 +2,35 @@
 
 # compile
 SRC_C = $(wildcard src/*.c)
+SRC_CPP = $(wildcard src/*.cpp)
 SRC_PY = $(wildcard src/*.py)
 SRC_SH = $(wildcard src/*.sh)
-SRC = $(SRC_C) $(SRC_PY) $(SRC_SH)
+SRC = $(SRC_C) $(SRC_CPP) $(SRC_PY) $(SRC_SH)
 BIN_C = $(patsubst src/%.c, bin/%_c, $(SRC_C))
+BIN_CPP = $(patsubst src/%.cpp, bin/%_cpp, $(SRC_CPP))
 BIN_PY = $(patsubst src/%.py, bin/%_py, $(SRC_PY))
 BIN_SH = $(patsubst src/%.sh, bin/%_sh, $(SRC_SH))
-BIN = $(BIN_C) $(BIN_PY) $(BIN_SH)
+BIN = $(BIN_C) $(BIN_CPP) $(BIN_PY) $(BIN_SH)
 
 # C
 CC = gcc
 ARG_C = -O3 -march=armv8.5-a -mtune=native -std=c23
+# CXX
+CXX = g++
+ARG_CPP = -O3 -march=armv8.5-a -mtune=native -std=c++23
 
 # test & benchmark
 TXT_C = $(patsubst src/%.c, out/c.txt, $(SRC_C))
+TXT_CPP = $(patsubst src/%.cpp, out/cpp.txt, $(SRC_CPP))
 TXT_PY = $(patsubst src/%.py, out/py.txt, $(SRC_PY))
 TXT_SH = $(patsubst src/%.sh, out/sh.txt, $(SRC_SH))
-TXT = $(TXT_C) $(TXT_PY) $(TXT_SH)
+TXT = $(TXT_C) $(TXT_CPP) $(TXT_PY) $(TXT_SH)
 TIME = $(patsubst %.txt, %.time, $(TXT))
 BENCH_C = $(patsubst src/%.c, out/c.hyperfine, $(SRC_C))
+BENCH_CPP = $(patsubst src/%.cpp, out/cpp.hyperfine, $(SRC_CPP))
 BENCH_PY = $(patsubst src/%.py, out/py.hyperfine, $(SRC_PY))
 BENCH_SH = $(patsubst src/%.sh, out/sh.hyperfine, $(SRC_SH))
-BENCH = $(BENCH_C) $(BENCH_PY) $(BENCH_SH)
+BENCH = $(BENCH_C) $(BENCH_CPP) $(BENCH_PY) $(BENCH_SH)
 
 PATH1 = /usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin
 PATH2 = ~/.nix-profile/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin
@@ -35,12 +42,15 @@ all:  ## compile, run, diff, and bench
 
 # compile
 .PHONY: compile
-compile: $(BIN_C) $(BIN_PY) $(BIN_SH)  ## compile all
+compile: $(BIN)  ## compile all
 
 # C
 bin/%_c: src/%.c
 	@mkdir -p $(@D)
 	$(CC) -o $@ $< $(ARG_C)
+bin/%_cpp: src/%.cpp
+	@mkdir -p $(@D)
+	$(CXX) -o $@ $< $(ARG_CPP)
 bin/%_py: src/%.py
 	@mkdir -p $(@D)
 	ln -s ../$< $@
@@ -54,7 +64,7 @@ clean_compile:  ## clean compiled files
 
 # run
 .PHONY: run
-run: $(TXT_C) $(TXT_PY) $(TXT_SH)  ## run all
+run: $(TXT)  ## run all
 out/%.txt: bin/diffpath_%
 	@mkdir -p $(@D)
 	command time -v $< $(PATH1) $(PATH2) > $@ 2> $(@:.txt=.time)
@@ -65,7 +75,7 @@ clean_run:  ## clean run files
 
 # bench
 .PHONY: bench
-bench: $(BENCH_C) $(BENCH_PY) $(BENCH_SH)  ## benchmark all
+bench: $(BENCH)  ## benchmark all
 out/%.hyperfine: bin/diffpath_%
 	@mkdir -p $(@D)
 	hyperfine --warmup 1 '$< $(PATH1) $(PATH2)' | tee $@
@@ -77,6 +87,7 @@ clean_bench:  ## clean benchmark files
 # diff
 .PHONY: diff
 diff: $(TXT)  ## diff all
+	difft out/c.txt out/cpp.txt
 	difft out/c.txt out/py.txt
 	difft out/c.txt out/sh.txt
 
