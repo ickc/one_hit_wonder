@@ -2,7 +2,6 @@
 #include <iostream>
 #include <set>
 #include <string>
-#include <unistd.h>
 #include <vector>
 
 namespace fs = std::filesystem;
@@ -11,7 +10,7 @@ const inline bool is_executable(const fs::path& p)
 {
     std::error_code ec;
     fs::file_status status = fs::status(p, ec);
-    return !ec && fs::is_regular_file(status) && (access(p.c_str(), X_OK) == 0);
+    return !ec && fs::is_regular_file(status) && ((status.permissions() & (fs::perms::owner_exec | fs::perms::group_exec | fs::perms::others_exec)) != fs::perms::none);
 }
 
 const inline std::vector<std::string> split_path(const std::string& path)

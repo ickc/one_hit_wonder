@@ -13,7 +13,7 @@ def get_executables(path: str) -> set[str]:
         if os.path.isdir(dir)
         for file in os.listdir(dir)
         if os.path.isfile(file_path := os.path.join(dir, file))
-        and os.access(file_path, os.X_OK)
+        and (os.stat(file_path).st_mode & 0o111)
     }
 
 

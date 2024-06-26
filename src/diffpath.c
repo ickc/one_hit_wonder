@@ -11,7 +11,7 @@
 static inline int is_executable(const char* path)
 {
     struct stat st;
-    return (stat(path, &st) == 0 && S_ISREG(st.st_mode) && (access(path, X_OK) == 0));
+    return (stat(path, &st) == 0) && S_ISREG(st.st_mode) && (st.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH));
 }
 
 // Function to get executables from a PATH
