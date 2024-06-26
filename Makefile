@@ -4,13 +4,15 @@
 SRC_C = $(wildcard src/*.c)
 SRC_CPP = $(wildcard src/*.cpp)
 SRC_PY = $(wildcard src/*.py)
+SRC_RS = $(wildcard src/*.rs)
 SRC_SH = $(wildcard src/*.sh)
-SRC = $(SRC_C) $(SRC_CPP) $(SRC_PY) $(SRC_SH)
+SRC = $(SRC_C) $(SRC_CPP) $(SRC_PY) $(SRC_RS) $(SRC_SH)
 BIN_C = $(patsubst src/%.c, bin/%_c, $(SRC_C))
 BIN_CPP = $(patsubst src/%.cpp, bin/%_cpp, $(SRC_CPP))
 BIN_PY = $(patsubst src/%.py, bin/%_py, $(SRC_PY))
+BIN_RS = $(patsubst src/%.rs, bin/%_rs, $(SRC_RS))
 BIN_SH = $(patsubst src/%.sh, bin/%_sh, $(SRC_SH))
-BIN = $(BIN_C) $(BIN_CPP) $(BIN_PY) $(BIN_SH)
+BIN = $(BIN_C) $(BIN_CPP) $(BIN_PY) $(BIN_RS) $(BIN_SH)
 
 # C
 CC = gcc
@@ -23,14 +25,16 @@ ARG_CPP = -O3 -march=armv8.5-a -mtune=native -std=c++23
 TXT_C = $(patsubst src/%.c, out/c.txt, $(SRC_C))
 TXT_CPP = $(patsubst src/%.cpp, out/cpp.txt, $(SRC_CPP))
 TXT_PY = $(patsubst src/%.py, out/py.txt, $(SRC_PY))
+TXT_RS = $(patsubst src/%.rs, out/rs.txt, $(SRC_RS))
 TXT_SH = $(patsubst src/%.sh, out/sh.txt, $(SRC_SH))
-TXT = $(TXT_C) $(TXT_CPP) $(TXT_PY) $(TXT_SH)
+TXT = $(TXT_C) $(TXT_CPP) $(TXT_PY) $(TXT_RS) $(TXT_SH)
 TIME = $(patsubst %.txt, %.time, $(TXT))
 BENCH_C = $(patsubst src/%.c, out/c.hyperfine, $(SRC_C))
 BENCH_CPP = $(patsubst src/%.cpp, out/cpp.hyperfine, $(SRC_CPP))
 BENCH_PY = $(patsubst src/%.py, out/py.hyperfine, $(SRC_PY))
+BENCH_RS = $(patsubst src/%.rs, out/rs.hyperfine, $(SRC_RS))
 BENCH_SH = $(patsubst src/%.sh, out/sh.hyperfine, $(SRC_SH))
-BENCH = $(BENCH_C) $(BENCH_CPP) $(BENCH_PY) $(BENCH_SH)
+BENCH = $(BENCH_C) $(BENCH_CPP) $(BENCH_PY) $(BENCH_RS) $(BENCH_SH)
 
 PATH1 = /usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin
 PATH2 = ~/.nix-profile/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin
@@ -54,6 +58,9 @@ bin/%_cpp: src/%.cpp
 bin/%_py: src/%.py
 	@mkdir -p $(@D)
 	ln -s ../$< $@
+bin/%_rs: src/%.rs
+	@mkdir -p $(@D)
+	rustc -o $@ $<
 bin/%_sh: src/%.sh
 	@mkdir -p $(@D)
 	ln -s ../$< $@
@@ -89,6 +96,7 @@ clean_bench:  ## clean benchmark files
 diff: $(TXT)  ## diff all
 	difft out/c.txt out/cpp.txt
 	difft out/c.txt out/py.txt
+	difft out/c.txt out/rs.txt
 	difft out/c.txt out/sh.txt
 
 .PHONY: clean
