@@ -44,16 +44,16 @@ clean_run:  ## clean run files
 # bench
 .PHONY: bench bench_py bench_sh bench_c
 bench: bench_py bench_sh bench_c  ## benchmark all
-bench_py: bench/py.out  ## benchmark python version
-bench_sh: bench/sh.out  ## benchmark shell version
-bench_c: bench/c.out  ## benchmark c version
+bench_py: out/py.hyperfine  ## benchmark python version
+bench_sh: out/sh.hyperfine  ## benchmark shell version
+bench_c: out/c.hyperfine  ## benchmark c version
 
-bench/py.out bench/sh.out bench/c.out:
+out/py.hyperfine out/sh.hyperfine out/c.hyperfine:
 	@mkdir -p $(@D)
-	hyperfine --warmup 3 '$< $(PATH1) $(PATH2)' | tee $@
-bench/py.out: src/diffpath.py
-bench/sh.out: src/diffpath.sh
-bench/c.out: bin/diffpath_c
+	hyperfine --warmup 1 '$< $(PATH1) $(PATH2)' | tee $@
+out/py.hyperfine: src/diffpath.py
+out/sh.hyperfine: src/diffpath.sh
+out/c.hyperfine: bin/diffpath_c
 
 .PHONY: clean_bench
 clean_bench:  ## clean benchmark files
