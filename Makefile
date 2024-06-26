@@ -2,75 +2,95 @@
 
 # compile
 SRC_C = $(wildcard src/*.c)
+SRC_PY = $(wildcard src/*.py)
+SRC_SH = $(wildcard src/*.sh)
+SRC = $(SRC_C) $(SRC_PY) $(SRC_SH)
 BIN_C = $(patsubst src/%.c, bin/%_c, $(SRC_C))
+BIN_PY = $(patsubst src/%.py, bin/%_py, $(SRC_PY))
+BIN_SH = $(patsubst src/%.sh, bin/%_sh, $(SRC_SH))
+BIN = $(BIN_C) $(BIN_PY) $(BIN_SH)
+
+# C
 CC = gcc
 ARG_C = -O3 -march=armv8.5-a -mtune=native -std=c23
+
 # test & benchmark
+TXT_C = $(patsubst src/%.c, out/c.txt, $(SRC_C))
+TXT_PY = $(patsubst src/%.py, out/py.txt, $(SRC_PY))
+TXT_SH = $(patsubst src/%.sh, out/sh.txt, $(SRC_SH))
+TXT = $(TXT_C) $(TXT_PY) $(TXT_SH)
+TIME = $(patsubst %.txt, %.time, $(TXT))
+BENCH_C = $(patsubst src/%.c, out/c.hyperfine, $(SRC_C))
+BENCH_PY = $(patsubst src/%.py, out/py.hyperfine, $(SRC_PY))
+BENCH_SH = $(patsubst src/%.sh, out/sh.hyperfine, $(SRC_SH))
+BENCH = $(BENCH_C) $(BENCH_PY) $(BENCH_SH)
+
 PATH1 = /usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin
 PATH2 = ~/.nix-profile/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin
 
-# compile
-.PHONY: compile compile_c
-compile: compile_c  ## compile all
-compile_c: $(BIN_C)  ## compile c
+.PHONY: all
+all:  ## compile, run, diff, and bench
+	@$(MAKE) compile run diff
+	@$(MAKE) bench -j1
 
+# compile
+.PHONY: compile
+compile: $(BIN_C) $(BIN_PY) $(BIN_SH)  ## compile all
+
+# C
 bin/%_c: src/%.c
 	@mkdir -p $(@D)
 	$(CC) -o $@ $< $(ARG_C)
+bin/%_py: src/%.py
+	@mkdir -p $(@D)
+	ln -s ../$< $@
+bin/%_sh: src/%.sh
+	@mkdir -p $(@D)
+	ln -s ../$< $@
 
 .PHONY: clean_compile
 clean_compile:  ## clean compiled files
-	rm -rf bin
+	rm -f $(BIN)
 
 # run
-.PHONY: run run_py run_sh run_c
-run: run_py run_sh run_c  ## run all
-run_py: out/py.txt  ## run python version
-out/py.txt: src/diffpath.py
-run_sh: out/sh.txt  ## run shell version
-out/sh.txt: src/diffpath.sh
-run_c: out/c.txt  ## run c version
-out/c.txt: bin/diffpath_c
-
-out/py.txt out/sh.txt out/c.txt: 
+.PHONY: run
+run: $(TXT_C) $(TXT_PY) $(TXT_SH)  ## run all
+out/%.txt: bin/diffpath_%
 	@mkdir -p $(@D)
-	$< $(PATH1) $(PATH2) > $@
+	command time -v $< $(PATH1) $(PATH2) > $@ 2> $(@:.txt=.time)
 
 .PHONY: clean_run
 clean_run:  ## clean run files
-	rm -rf out/
+	rm -f $(TXT) $(TIME)
 
 # bench
-.PHONY: bench bench_py bench_sh bench_c
-bench: bench_py bench_sh bench_c  ## benchmark all
-bench_py: out/py.hyperfine  ## benchmark python version
-out/py.hyperfine: src/diffpath.py
-bench_sh: out/sh.hyperfine  ## benchmark shell version
-out/sh.hyperfine: src/diffpath.sh
-bench_c: out/c.hyperfine  ## benchmark c version
-out/c.hyperfine: bin/diffpath_c
-
-out/py.hyperfine out/sh.hyperfine out/c.hyperfine:
+.PHONY: bench
+bench: $(BENCH_C) $(BENCH_PY) $(BENCH_SH)  ## benchmark all
+out/%.hyperfine: bin/diffpath_%
 	@mkdir -p $(@D)
 	hyperfine --warmup 1 '$< $(PATH1) $(PATH2)' | tee $@
 
 .PHONY: clean_bench
 clean_bench:  ## clean benchmark files
-	rm -rf bench/
+	rm -f $(BENCH)
 
 # diff
 .PHONY: diff
-diff:  ## diff all
-	difft out/py.txt out/sh.txt
-	difft out/py.txt out/c.txt
-	difft out/sh.txt out/c.txt
+diff: $(TXT)  ## diff all
+	difft out/c.txt out/py.txt
+	difft out/c.txt out/sh.txt
 
 .PHONY: clean
-clean: clean_compile clean_run clean_bench  ## clean all
+clean: \
+	clean_compile \
+	clean_run \
+	clean_bench \
+	## clean all
+	rm -rf bin out
 
 .PHONY: help
-# https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
+# modified from https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 help:
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@sed ':a;N;$$!ba;s/\\\n//g' $(MAKEFILE_LIST) | grep -E '^[a-zA-Z_-]+:.*?## .*$$' | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
 print-%:
 	$(info $* = $($*))
