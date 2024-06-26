@@ -26,16 +26,15 @@ clean_compile:  ## clean compiled files
 .PHONY: run run_py run_sh run_c
 run: run_py run_sh run_c  ## run all
 run_py: out/py.txt  ## run python version
+out/py.txt: src/diffpath.py
 run_sh: out/sh.txt  ## run shell version
+out/sh.txt: src/diffpath.sh
 run_c: out/c.txt  ## run c version
+out/c.txt: bin/diffpath_c
 
 out/py.txt out/sh.txt out/c.txt: 
 	@mkdir -p $(@D)
 	$< $(PATH1) $(PATH2) > $@
-
-out/py.txt: src/diffpath.py
-out/sh.txt: src/diffpath.sh
-out/c.txt: bin/diffpath_c
 
 .PHONY: clean_run
 clean_run:  ## clean run files
@@ -45,15 +44,15 @@ clean_run:  ## clean run files
 .PHONY: bench bench_py bench_sh bench_c
 bench: bench_py bench_sh bench_c  ## benchmark all
 bench_py: out/py.hyperfine  ## benchmark python version
+out/py.hyperfine: src/diffpath.py
 bench_sh: out/sh.hyperfine  ## benchmark shell version
+out/sh.hyperfine: src/diffpath.sh
 bench_c: out/c.hyperfine  ## benchmark c version
+out/c.hyperfine: bin/diffpath_c
 
 out/py.hyperfine out/sh.hyperfine out/c.hyperfine:
 	@mkdir -p $(@D)
 	hyperfine --warmup 1 '$< $(PATH1) $(PATH2)' | tee $@
-out/py.hyperfine: src/diffpath.py
-out/sh.hyperfine: src/diffpath.sh
-out/c.hyperfine: bin/diffpath_c
 
 .PHONY: clean_bench
 clean_bench:  ## clean benchmark files
