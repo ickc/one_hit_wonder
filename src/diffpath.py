@@ -23,12 +23,10 @@ def diffpath(
 ) -> None:
     executables1 = get_executables(path1)
     executables2 = get_executables(path2)
-    only_in_path1 = executables1 - executables2
-    only_in_path2 = executables2 - executables1
-    for command in sorted(executables1 | executables2):
-        if command in only_in_path1:
+    for command in sorted(executables1 ^ executables2):
+        if command in executables1:
             print(command)
-        elif command in only_in_path2:
+        else:
             print(f"\t{command}")
 
 
