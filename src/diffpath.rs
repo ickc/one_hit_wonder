@@ -14,7 +14,7 @@ fn is_executable(file_path: &Path) -> bool {
     false
 }
 
-fn list_executables(paths: &str) -> BTreeSet<String> {
+fn get_executables(paths: &str) -> BTreeSet<String> {
     let mut executables = BTreeSet::new();
     for path in paths.split(':') {
         if let Ok(entries) = fs::read_dir(path) {
@@ -43,8 +43,8 @@ fn main() {
     let path1 = &args[1];
     let path2 = &args[2];
 
-    let executables1 = list_executables(path1);
-    let executables2 = list_executables(path2);
+    let executables1 = get_executables(path1);
+    let executables2 = get_executables(path2);
 
     let symmetric_difference: BTreeSet<_> = executables1
         .symmetric_difference(&executables2)
