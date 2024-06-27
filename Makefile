@@ -99,6 +99,44 @@ diff: $(TXT)  ## diff all
 	difft out/c.txt out/rs.txt
 	difft out/c.txt out/sh.txt
 
+# format
+.PHONY: format \
+	format_c \
+	format_cpp \
+	format_py \
+	format_rs \
+	format_sh
+format: \
+	format_c \
+	format_cpp \
+	format_py \
+	format_rs \
+	format_sh \
+	## format all
+format_c:  ## format C files
+	find src -type f -name '*.c' -exec clang-format -i -style=WebKit {} +
+format_cpp:  ## format C++ files
+	find src -type f -name '*.cpp' -exec clang-format -i -style=WebKit {} +
+format_py:  ## format Python files
+	autoflake --in-place --recursive --expand-star-imports --remove-all-unused-imports --ignore-init-module-imports --remove-duplicate-keys --remove-unused-variables src
+	black src
+	isort src
+format_rs:  ## format Rust files
+	find src -type f -name '*.rs' -exec rustfmt {} +
+format_sh:  ## format Shell files
+	find src -type f -name '*.sh' \
+	-exec sed -i -E \
+		-e 's/\$$([a-zA-Z_][a-zA-Z0-9_]*)/$${\1}/g' \
+		-e 's/([^[])\[ ([^]]+) \]/\1[[ \2 ]]/g' \
+		{} + \
+	-exec shfmt \
+		--write \
+		--simplify \
+		--indent 4 \
+		--case-indent \
+		--space-redirects \
+		{} +
+
 .PHONY: clean
 clean: \
 	clean_compile \
