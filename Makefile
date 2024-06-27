@@ -1,20 +1,8 @@
 .DEFAULT_GOAL = help
 
 # compile
-SRC_C = $(wildcard src/*.c)
-SRC_CPP = $(wildcard src/*.cpp)
-SRC_HS = $(wildcard src/*.hs)
-SRC_PY = $(wildcard src/*.py)
-SRC_RS = $(wildcard src/*.rs)
-SRC_SH = $(wildcard src/*.sh)
-SRC = $(SRC_C) $(SRC_CPP) $(SRC_HS) $(SRC_PY) $(SRC_RS) $(SRC_SH)
-BIN_C = $(patsubst src/%.c, bin/%_c, $(SRC_C))
-BIN_CPP = $(patsubst src/%.cpp, bin/%_cpp, $(SRC_CPP))
-BIN_HS = $(patsubst src/%.hs, bin/%_hs, $(SRC_HS))
-BIN_PY = $(patsubst src/%.py, bin/%_py, $(SRC_PY))
-BIN_RS = $(patsubst src/%.rs, bin/%_rs, $(SRC_RS))
-BIN_SH = $(patsubst src/%.sh, bin/%_sh, $(SRC_SH))
-BIN = $(BIN_C) $(BIN_CPP) $(BIN_HS) $(BIN_PY) $(BIN_RS) $(BIN_SH)
+SRC = $(wildcard src/*.c src/*.cpp src/*.hs src/*.py src/*.rs src/*.sh)
+BIN = $(patsubst src/%,bin/%,$(subst .,_,$(SRC)))
 
 # C
 CC = gcc
@@ -28,21 +16,9 @@ ARG_HS = -O2
 ARGS_RS = -C opt-level=3 -C target-cpu=native --edition=2021
 
 # test & benchmark
-TXT_C = $(patsubst src/%.c, out/c.txt, $(SRC_C))
-TXT_CPP = $(patsubst src/%.cpp, out/cpp.txt, $(SRC_CPP))
-TXT_HS = $(patsubst src/%.hs, out/hs.txt, $(SRC_HS))
-TXT_PY = $(patsubst src/%.py, out/py.txt, $(SRC_PY))
-TXT_RS = $(patsubst src/%.rs, out/rs.txt, $(SRC_RS))
-TXT_SH = $(patsubst src/%.sh, out/sh.txt, $(SRC_SH))
-TXT = $(TXT_C) $(TXT_CPP) $(TXT_HS) $(TXT_PY) $(TXT_RS) $(TXT_SH)
+TXT = $(patsubst bin/%,out/%.txt,$(BIN))
 TIME = $(patsubst %.txt, %.time, $(TXT))
-BENCH_C = $(patsubst src/%.c, out/c.hyperfine, $(SRC_C))
-BENCH_CPP = $(patsubst src/%.cpp, out/cpp.hyperfine, $(SRC_CPP))
-BENCH_HS = $(patsubst src/%.hs, out/hs.hyperfine, $(SRC_HS))
-BENCH_PY = $(patsubst src/%.py, out/py.hyperfine, $(SRC_PY))
-BENCH_RS = $(patsubst src/%.rs, out/rs.hyperfine, $(SRC_RS))
-BENCH_SH = $(patsubst src/%.sh, out/sh.hyperfine, $(SRC_SH))
-BENCH = $(BENCH_C) $(BENCH_CPP) $(BENCH_HS) $(BENCH_PY) $(BENCH_RS) $(BENCH_SH)
+BENCH = $(patsubst %.txt, %.bench, $(TXT))
 
 PATH1 = /usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin
 PATH2 = /run/current-system/sw/bin:/nix/var/nix/profiles/default/bin
@@ -83,7 +59,7 @@ clean_compile:  ## clean compiled files
 # run
 .PHONY: run
 run: $(TXT)  ## run all
-out/%.txt: bin/diffpath_%
+out/%.txt: bin/%
 	@mkdir -p $(@D)
 	command time -v $< $(PATH1) $(PATH2) > $@ 2> $(@:.txt=.time)
 
@@ -94,7 +70,7 @@ clean_run:  ## clean run files
 # bench
 .PHONY: bench
 bench: $(BENCH)  ## benchmark all
-out/%.hyperfine: bin/diffpath_%
+out/%.bench: bin/%
 	@mkdir -p $(@D)
 	hyperfine --warmup 1 '$< $(PATH1) $(PATH2)' | tee $@
 
@@ -105,11 +81,7 @@ clean_bench:  ## clean benchmark files
 # diff
 .PHONY: diff
 diff: $(TXT)  ## diff all
-	difft out/c.txt out/cpp.txt
-	difft out/c.txt out/hs.txt
-	difft out/c.txt out/py.txt
-	difft out/c.txt out/rs.txt
-	difft out/c.txt out/sh.txt
+	for i in $(TXT); do difft out/diffpath_c.txt $$i; done
 
 # format
 .PHONY: format \
