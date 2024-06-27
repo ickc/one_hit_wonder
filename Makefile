@@ -39,7 +39,7 @@ BENCH_SH = $(patsubst src/%.sh, out/sh.hyperfine, $(SRC_SH))
 BENCH = $(BENCH_C) $(BENCH_CPP) $(BENCH_PY) $(BENCH_RS) $(BENCH_SH)
 
 PATH1 = /usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin
-PATH2 = ~/.nix-profile/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin
+PATH2 = /run/current-system/sw/bin:/nix/var/nix/profiles/default/bin
 
 .PHONY: all
 all:  ## compile, run, diff, and bench
