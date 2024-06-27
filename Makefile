@@ -84,13 +84,14 @@ diff: $(TXT)  ## diff all
 	for i in $(TXT); do difft out/diffpath_c.txt $$i; done
 
 # format
-.PHONY: format \
+.PHONY: \
 	format_c \
 	format_cpp \
 	format_hs \
 	format_py \
 	format_rs \
-	format_sh
+	format_sh \
+	format
 format: \
 	format_c \
 	format_cpp \
