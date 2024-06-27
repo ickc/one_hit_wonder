@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 #define MAX_PATH 4096
+#define INITIAL_CAPACITY 2048
 
 // Function to check if a path is a regular file and executable
 static inline int is_executable(const char* path)
@@ -38,6 +39,7 @@ void get_executables(const char* path, char*** executables, size_t* count, size_
             if (is_executable(full_path)) {
                 if (*count >= *capacity) {
                     *capacity *= 2;
+                    // fprintf(stderr, "Warning: Capacity exceeded. Resizing array to %zu\n", *capacity);
                     *executables = realloc(*executables, *capacity * sizeof(char*));
                     if (!*executables) {
                         fprintf(stderr, "Error: Memory allocation failed.\n");
@@ -88,7 +90,7 @@ void remove_duplicates(char** arr, size_t* size)
 // Function to get unique sorted executables
 void get_unique_sorted_executables(const char* path, char*** executables, size_t* count)
 {
-    size_t capacity = 1024;
+    size_t capacity = INITIAL_CAPACITY;
     *executables = malloc(capacity * sizeof(char*));
     if (!*executables) {
         fprintf(stderr, "Error: Memory allocation failed.\n");
