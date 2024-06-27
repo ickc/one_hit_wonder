@@ -52,10 +52,10 @@ fn main() {
         .collect();
 
     for exe in symmetric_difference {
-        if executables2.contains(&exe) {
-            println!("\t{}", exe);
-        } else {
+        if executables1.contains(&exe) {
             println!("{}", exe);
+        } else {
+            println!("\t{}", exe);
         }
     }
 }
