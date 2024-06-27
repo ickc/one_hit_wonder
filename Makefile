@@ -20,6 +20,8 @@ ARG_C = -O3 -march=armv8.5-a -mtune=native -std=c23
 # CXX
 CXX = g++
 ARG_CPP = -O3 -march=armv8.5-a -mtune=native -std=c++23
+# RS
+ARGS_RS = -C opt-level=3 -C target-cpu=native --edition=2021
 
 # test & benchmark
 TXT_C = $(patsubst src/%.c, out/c.txt, $(SRC_C))
@@ -51,19 +53,19 @@ compile: $(BIN)  ## compile all
 # C
 bin/%_c: src/%.c
 	@mkdir -p $(@D)
-	$(CC) -o $@ $< $(ARG_C)
+	$(CC) $< -o $@ $(ARG_C)
 bin/%_cpp: src/%.cpp
 	@mkdir -p $(@D)
-	$(CXX) -o $@ $< $(ARG_CPP)
+	$(CXX) $< -o $@ $(ARG_CPP)
 bin/%_py: src/%.py
 	@mkdir -p $(@D)
-	ln -s ../$< $@
+	ln -sf ../$< $@
 bin/%_rs: src/%.rs
 	@mkdir -p $(@D)
-	rustc -o $@ $<
+	rustc $< -o $@ $(ARGS_RS)
 bin/%_sh: src/%.sh
 	@mkdir -p $(@D)
-	ln -s ../$< $@
+	ln -sf ../$< $@
 
 .PHONY: clean_compile
 clean_compile:  ## clean compiled files
