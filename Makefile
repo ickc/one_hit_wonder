@@ -72,7 +72,7 @@ clean_run:  ## clean run files
 bench: $(BENCH)  ## benchmark all
 $(BENCH): $(BIN)
 	@mkdir -p $(@D)
-	hyperfine --shell=none --warmup 1 --sort mean-time --export-markdown $@ $(foreach bin,$^,'$(bin) $(PATH1) $(PATH2)')
+	hyperfine --shell=none --warmup 1 --sort mean-time --export-markdown $@ $(foreach bin,$^,--command-name $(notdir $(bin)) '$(bin) $(PATH1) $(PATH2)')
 
 .PHONY: clean_bench
 clean_bench:  ## clean benchmark files
