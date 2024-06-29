@@ -57,13 +57,13 @@ bin/%_hs: src/%.hs
 	ghc $< -o $@ $(ARG_HS)
 bin/%_py: src/%.py
 	@mkdir -p $(@D)
-	ln -sf ../$< $@
+	ln -f $< $@
 bin/%_rs: src/%.rs
 	@mkdir -p $(@D)
 	rustc $< -o $@ $(ARGS_RS)
 bin/%_sh: src/%.sh
 	@mkdir -p $(@D)
-	ln -sf ../$< $@
+	ln -f $< $@
 
 .PHONY: clean_compile
 clean_compile:  ## clean compiled files
