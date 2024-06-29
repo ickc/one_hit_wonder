@@ -1,7 +1,15 @@
 .DEFAULT_GOAL = help
 
 # compile
-SRC = $(wildcard src/*.c src/*.cpp src/*.hs src/*.py src/*.rs src/*.sh)
+SRC = $(wildcard \
+	src/*.c \
+	src/*.cpp \
+	src/*.go \
+	src/*.hs \
+	src/*.py \
+	src/*.rs \
+	src/*.sh \
+)
 BIN = $(patsubst src/%,bin/%,$(subst .,_,$(SRC)))
 
 # C
@@ -10,6 +18,8 @@ ARG_C = -O3 -march=armv8.5-a -mtune=native -std=c23
 # CXX
 CXX = g++
 ARG_CPP = -O3 -march=armv8.5-a -mtune=native -std=c++23
+# GO
+ARG_GO = -ldflags="-s -w" -trimpath
 # HS
 ARG_HS = -O2
 # RS
@@ -39,6 +49,9 @@ bin/%_c: src/%.c
 bin/%_cpp: src/%.cpp
 	@mkdir -p $(@D)
 	$(CXX) $< -o $@ $(ARG_CPP)
+bin/%_go: src/%.go
+	@mkdir -p $(@D)
+	go build -o $@ $(ARG_GO) $<
 bin/%_hs: src/%.hs
 	@mkdir -p $(@D)
 	ghc $< -o $@ $(ARG_HS)
@@ -104,6 +117,8 @@ format_c:  ## format C files
 	find src -type f -name '*.c' -exec clang-format -i -style=WebKit {} +
 format_cpp:  ## format C++ files
 	find src -type f -name '*.cpp' -exec clang-format -i -style=WebKit {} +
+format_go:  ## format Go files
+	find src -type f -name '*.go' -exec gofmt -w {} +
 format_hs:  ## format Haskell files
 	find src -type f -name '*.hs' -exec stylish-haskell -i {} +
 format_py:  ## format Python files
