@@ -15,14 +15,29 @@ static inline int is_executable(const char* path)
     return (stat(path, &st) == 0) && S_ISREG(st.st_mode) && (st.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH));
 }
 
+// Function to compare strings for qsort
+int compare_strings(const void* a, const void* b)
+{
+    return strcmp(*(const char**)a, *(const char**)b);
+}
+
 // Function to get executables from a PATH
-void get_executables(const char* path, char*** executables, size_t* count, size_t* capacity)
+// return a sorted but not necessarily unique list of executables
+void get_executables(const char* path, char*** executables, size_t* count)
 {
     char* path_copy = strdup(path);
     if (!path_copy) {
         fprintf(stderr, "Error: Memory allocation failed.\n");
         return;
     }
+
+    size_t capacity = INITIAL_CAPACITY;
+    *executables = malloc(capacity * sizeof(char*));
+    if (!*executables) {
+        fprintf(stderr, "Error: Memory allocation failed.\n");
+        return;
+    }
+    *count = 0;
 
     char* saveptr;
     for (char* dir = strtok_r(path_copy, ":", &saveptr); dir != NULL; dir = strtok_r(NULL, ":", &saveptr)) {
@@ -37,10 +52,11 @@ void get_executables(const char* path, char*** executables, size_t* count, size_
             char full_path[MAX_PATH];
             snprintf(full_path, MAX_PATH, "%s/%s", dir, entry->d_name);
             if (is_executable(full_path)) {
-                if (*count >= *capacity) {
-                    *capacity *= 2;
-                    // fprintf(stderr, "Warning: Capacity exceeded. Resizing array to %zu\n", *capacity);
-                    *executables = realloc(*executables, *capacity * sizeof(char*));
+                // check if we need to resize the array
+                if (*count >= capacity) {
+                    capacity *= 2;
+                    // fprintf(stderr, "Warning: Capacity exceeded. Resizing array to %zu\n", capacity);
+                    *executables = realloc(*executables, capacity * sizeof(char*));
                     if (!*executables) {
                         fprintf(stderr, "Error: Memory allocation failed.\n");
                         free(path_copy);
@@ -61,46 +77,7 @@ void get_executables(const char* path, char*** executables, size_t* count, size_
         closedir(d);
     }
     free(path_copy);
-}
-
-// Function to compare strings for qsort
-int compare_strings(const void* a, const void* b)
-{
-    return strcmp(*(const char**)a, *(const char**)b);
-}
-
-// Function to remove duplicates from sorted array
-void remove_duplicates(char** arr, size_t* size)
-{
-    if (*size <= 1)
-        return;
-
-    size_t i, j = 1;
-    for (i = 1; i < *size; i++) {
-        if (strcmp(arr[i], arr[i - 1]) != 0) {
-            arr[j] = arr[i];
-            j++;
-        } else {
-            free(arr[i]);
-        }
-    }
-    *size = j;
-}
-
-// Function to get unique sorted executables
-void get_unique_sorted_executables(const char* path, char*** executables, size_t* count)
-{
-    size_t capacity = INITIAL_CAPACITY;
-    *executables = malloc(capacity * sizeof(char*));
-    if (!*executables) {
-        fprintf(stderr, "Error: Memory allocation failed.\n");
-        return;
-    }
-
-    *count = 0;
-    get_executables(path, executables, count, &capacity);
     qsort(*executables, *count, sizeof(char*), compare_strings);
-    remove_duplicates(*executables, count);
 }
 
 // Function to print the executable diff
@@ -112,23 +89,47 @@ void print_executable_diff(char** executables1, const size_t count1, char** exec
         if (cmp < 0) {
             printf("%s\n", executables1[i]);
             i++;
+            // skip duplicates
+            while (i < count1 && strcmp(executables1[i], executables1[i - 1]) == 0) {
+                i++;
+            }
         } else if (cmp > 0) {
             printf("\t%s\n", executables2[j]);
             j++;
+            // skip duplicates
+            while (j < count2 && strcmp(executables2[j], executables2[j - 1]) == 0) {
+                j++;
+            }
         } else {
             i++;
+            // skip duplicates
+            while (i < count1 && strcmp(executables1[i], executables1[i - 1]) == 0) {
+                i++;
+            }
             j++;
+            // skip duplicates
+            while (j < count2 && strcmp(executables2[j], executables2[j - 1]) == 0) {
+                j++;
+            }
         }
     }
 
     while (i < count1) {
         printf("%s\n", executables1[i]);
         i++;
+        // skip duplicates
+        while (i < count1 && strcmp(executables1[i], executables1[i - 1]) == 0) {
+            i++;
+        }
     }
 
     while (j < count2) {
         printf("\t%s\n", executables2[j]);
         j++;
+        // skip duplicates
+        while (j < count2 && strcmp(executables2[j], executables2[j - 1]) == 0) {
+            j++;
+        }
     }
 }
 
@@ -150,10 +151,10 @@ int main(int argc, char* argv[])
 
     char** executables1 = NULL;
     char** executables2 = NULL;
-    size_t count1 = 0, count2 = 0;
+    size_t count1, count2;
 
-    get_unique_sorted_executables(argv[1], &executables1, &count1);
-    get_unique_sorted_executables(argv[2], &executables2, &count2);
+    get_executables(argv[1], &executables1, &count1);
+    get_executables(argv[2], &executables2, &count2);
 
     print_executable_diff(executables1, count1, executables2, count2);
 
