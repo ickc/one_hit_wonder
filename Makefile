@@ -12,19 +12,6 @@ SRC = $(wildcard \
 )
 BIN = $(patsubst src/%,bin/%,$(subst .,_,$(SRC)))
 
-# C
-CC = gcc
-ARG_C = -O3 -march=armv8.5-a -mtune=native -std=c23
-# CXX
-CXX = g++
-ARG_CPP = -O3 -march=armv8.5-a -mtune=native -std=c++23
-# GO
-ARG_GO = -ldflags="-s -w" -trimpath
-# HS
-ARG_HS = -O2
-# RS
-ARGS_RS = -C opt-level=3 -C target-cpu=native --edition=2021
-
 # test & benchmark
 TXT = $(patsubst bin/%,out/%.txt,$(BIN))
 TIME = $(patsubst %.txt, %.time, $(TXT))
@@ -45,29 +32,29 @@ compile: $(BIN)  ## compile all
 # C
 bin/%_c: src/%.c
 	@mkdir -p $(@D)
-	$(CC) $< -o $@ $(ARG_C)
+	gcc -o $@ -O3 -march=armv8.5-a -mtune=native -std=c23 $<
 bin/%_cpp: src/%.cpp
 	@mkdir -p $(@D)
-	$(CXX) $< -o $@ $(ARG_CPP)
+	g++ -o $@ -O3 -march=armv8.5-a -mtune=native -std=c++23 $<
 bin/%_go: src/%.go
 	@mkdir -p $(@D)
-	go build -o $@ $(ARG_GO) $<
+	go build -o $@ -ldflags="-s -w" -trimpath $<
 bin/%_hs: src/%.hs
 	@mkdir -p $(@D)
-	ghc $< -o $@ $(ARG_HS)
+	ghc -o $@ -O2 $<
 bin/%_py: src/%.py
 	@mkdir -p $(@D)
 	ln -f $< $@
 bin/%_rs: src/%.rs
 	@mkdir -p $(@D)
-	rustc $< -o $@ $(ARGS_RS)
+	rustc -o $@ -C opt-level=3 -C target-cpu=native --edition=2021 $<
 bin/%_sh: src/%.sh
 	@mkdir -p $(@D)
 	ln -f $< $@
 
 .PHONY: clean_compile
 clean_compile:  ## clean compiled files
-	rm -f $(BIN)
+	rm -f $(BIN) src/*.o src/*.hi
 
 # run
 .PHONY: run
