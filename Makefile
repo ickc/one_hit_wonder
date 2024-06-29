@@ -16,6 +16,7 @@ BIN = $(patsubst src/%,bin/%,$(subst .,_,$(SRC)))
 TXT = $(patsubst bin/%,out/%.txt,$(BIN))
 TIME = $(patsubst %.txt, %.time, $(TXT))
 CSV = $(patsubst %.txt, %.csv, $(TXT))
+CSV_SUMMARY = out/summary.csv
 
 PATH1 = /usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin
 PATH2 = /run/current-system/sw/bin:/nix/var/nix/profiles/default/bin
@@ -69,10 +70,13 @@ clean_run:  ## clean run files
 
 # bench
 .PHONY: bench
-bench: $(CSV)  ## benchmark all
+bench: $(CSV) $(CSV_SUMMARY)  ## benchmark all
 out/%.csv: bin/%
 	@mkdir -p $(@D)
 	hyperfine --warmup 1 '$< $(PATH1) $(PATH2)' --export-csv $@
+# remove first line of each csv file and concat
+out/summary.csv: $(CSV)
+	cat $^ | sort -ru > $@
 
 .PHONY: clean_bench
 clean_bench:  ## clean benchmark files
