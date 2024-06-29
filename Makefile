@@ -141,6 +141,14 @@ format_sh:  ## format Shell files
 		--space-redirects \
 		{} +
 
+.PHONY: list_link
+list_link:  ## list dynamically linked libraries
+	if [[ $$(uname) == Darwin ]]; then \
+		find bin -type f -executable -exec otool -L {} +; \
+	else \
+		find bin -type f -executable -exec readelf --needed-libs {} +; \
+	fi
+
 .PHONY: clean
 clean: \
 	clean_compile \
