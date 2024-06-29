@@ -29,7 +29,7 @@ all:  ## compile, run, diff, and bench
 .PHONY: compile
 compile: $(BIN)  ## compile all
 
-# C
+# language specific
 bin/%_c: src/%.c
 	@mkdir -p $(@D)
 	gcc -o $@ -O3 -march=armv8.5-a -mtune=native -std=c23 $<
@@ -52,9 +52,11 @@ bin/%_sh: src/%.sh
 	@mkdir -p $(@D)
 	ln -f $< $@
 
-.PHONY: clean_compile
-clean_compile:  ## clean compiled files
-	rm -f $(BIN) src/*.o src/*.hi
+.PHONY: clean_hs clean_compile
+clean_hs:  ## clean auxiliary Haskell files
+	rm -f src/*.o src/*.hi
+clean_compile: clean_hs   ## clean compiled files
+	rm -f $(BIN)
 
 # run
 .PHONY: run
