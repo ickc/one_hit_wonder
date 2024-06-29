@@ -6,6 +6,7 @@ SRC = $(wildcard \
 	src/*.cpp \
 	src/*.go \
 	src/*.hs \
+	src/*.js \
 	src/*.py \
 	src/*.rs \
 	src/*.sh \
@@ -42,13 +43,19 @@ bin/%_go: src/%.go
 bin/%_hs: src/%.hs
 	@mkdir -p $(@D)
 	ghc -o $@ -O2 $<
+bin/%_js: src/%.js
+	chmod +x $<
+	@mkdir -p $(@D)
+	ln -f $< $@
 bin/%_py: src/%.py
+	chmod +x $<
 	@mkdir -p $(@D)
 	ln -f $< $@
 bin/%_rs: src/%.rs
 	@mkdir -p $(@D)
 	rustc -o $@ -C opt-level=3 -C target-cpu=native --edition=2021 $<
 bin/%_sh: src/%.sh
+	chmod +x $<
 	@mkdir -p $(@D)
 	ln -f $< $@
 
@@ -90,6 +97,7 @@ diff: $(TXT)  ## diff all
 	format_c \
 	format_cpp \
 	format_hs \
+	format_js \
 	format_py \
 	format_rs \
 	format_sh \
@@ -98,6 +106,7 @@ format: \
 	format_c \
 	format_cpp \
 	format_hs \
+	format_js \
 	format_py \
 	format_rs \
 	format_sh \
@@ -110,6 +119,8 @@ format_go:  ## format Go files
 	find src -type f -name '*.go' -exec gofmt -w {} +
 format_hs:  ## format Haskell files
 	find src -type f -name '*.hs' -exec stylish-haskell -i {} +
+format_js:  ## format JavaScript files
+	find src -type f -name '*.js' -exec prettier --write {} +
 format_py:  ## format Python files
 	autoflake --in-place --recursive --expand-star-imports --remove-all-unused-imports --ignore-init-module-imports --remove-duplicate-keys --remove-unused-variables src
 	black src
