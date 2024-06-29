@@ -15,7 +15,7 @@ BIN = $(patsubst src/%,bin/%,$(subst .,_,$(SRC)))
 # test & benchmark
 TXT = $(patsubst bin/%,out/%.txt,$(BIN))
 TIME = $(patsubst %.txt, %.time, $(TXT))
-BENCH = $(patsubst %.txt, %.bench, $(TXT))
+CSV = $(patsubst %.txt, %.csv, $(TXT))
 
 PATH1 = /usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin
 PATH2 = /run/current-system/sw/bin:/nix/var/nix/profiles/default/bin
@@ -69,14 +69,14 @@ clean_run:  ## clean run files
 
 # bench
 .PHONY: bench
-bench: $(BENCH)  ## benchmark all
-out/%.bench: bin/%
+bench: $(CSV)  ## benchmark all
+out/%.csv: bin/%
 	@mkdir -p $(@D)
-	hyperfine --warmup 1 '$< $(PATH1) $(PATH2)' | tee $@
+	hyperfine --warmup 1 '$< $(PATH1) $(PATH2)' --export-csv $@
 
 .PHONY: clean_bench
 clean_bench:  ## clean benchmark files
-	rm -f $(BENCH)
+	rm -f $(CSV)
 
 # diff
 .PHONY: diff
