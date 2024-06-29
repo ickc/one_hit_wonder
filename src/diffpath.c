@@ -88,48 +88,36 @@ void print_executable_diff(char** executables1, const size_t count1, char** exec
         int cmp = strcmp(executables1[i], executables2[j]);
         if (cmp < 0) {
             printf("%s\n", executables1[i]);
-            i++;
-            // skip duplicates
-            while (i < count1 && strcmp(executables1[i], executables1[i - 1]) == 0) {
+            do {
                 i++;
-            }
+            } while (i < count1 && strcmp(executables1[i], executables1[i - 1]) == 0);
         } else if (cmp > 0) {
             printf("\t%s\n", executables2[j]);
-            j++;
-            // skip duplicates
-            while (j < count2 && strcmp(executables2[j], executables2[j - 1]) == 0) {
+            do {
                 j++;
-            }
+            } while (j < count2 && strcmp(executables2[j], executables2[j - 1]) == 0);
         } else {
-            i++;
-            // skip duplicates
-            while (i < count1 && strcmp(executables1[i], executables1[i - 1]) == 0) {
+            do {
                 i++;
-            }
-            j++;
-            // skip duplicates
-            while (j < count2 && strcmp(executables2[j], executables2[j - 1]) == 0) {
+            } while (i < count1 && strcmp(executables1[i], executables1[i - 1]) == 0);
+            do {
                 j++;
-            }
+            } while (j < count2 && strcmp(executables2[j], executables2[j - 1]) == 0);
         }
     }
 
     while (i < count1) {
         printf("%s\n", executables1[i]);
-        i++;
-        // skip duplicates
-        while (i < count1 && strcmp(executables1[i], executables1[i - 1]) == 0) {
+        do {
             i++;
-        }
+        } while (i < count1 && strcmp(executables1[i], executables1[i - 1]) == 0);
     }
 
     while (j < count2) {
         printf("\t%s\n", executables2[j]);
-        j++;
-        // skip duplicates
-        while (j < count2 && strcmp(executables2[j], executables2[j - 1]) == 0) {
+        do {
             j++;
-        }
+        } while (j < count2 && strcmp(executables2[j], executables2[j - 1]) == 0);
     }
 }
 
