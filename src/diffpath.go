@@ -2,28 +2,31 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"sort"
 	"strings"
 )
 
 // Function to check if a path is a regular file and executable
-func isExecutable(path os.FileInfo) bool {
-	return !path.IsDir() && path.Mode()&0111 != 0
+func isExecutable(entry os.DirEntry) bool {
+	info, err := entry.Info()
+	if err != nil {
+		return false
+	}
+	return !entry.IsDir() && info.Mode()&0111 != 0
 }
 
 // Function to get executables from a PATH
 func getExecutables(path string) []string {
 	executables := []string{}
 	for _, dir := range strings.Split(path, ":") {
-		files, err := ioutil.ReadDir(dir)
+		entries, err := os.ReadDir(dir)
 		if err != nil {
 			continue // Skip directories that cannot be read
 		}
-		for _, file := range files {
-			if isExecutable(file) {
-				executables = append(executables, file.Name())
+		for _, entry := range entries {
+			if isExecutable(entry) {
+				executables = append(executables, entry.Name())
 			}
 		}
 	}
