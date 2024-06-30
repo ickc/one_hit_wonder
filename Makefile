@@ -24,8 +24,8 @@ PATH1 = /usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin
 PATH2 = /run/current-system/sw/bin:/nix/var/nix/profiles/default/bin
 
 .PHONY: all
-all:  ## compile, run, diff, and bench
-	@$(MAKE) compile run diff
+all:  ## compile, run, and test
+	@$(MAKE) compile run test
 
 # compile
 .PHONY: compile
@@ -94,9 +94,9 @@ $(MD_SUMMARY): $(BIN)
 clean_bench:  ## clean benchmark files
 	rm -f $(CSV)
 
-# diff
-.PHONY: diff
-diff: $(TXT)  ## diff all
+# test
+.PHONY: test
+test: $(TXT)  ## test all
 	for i in $(TXT); do difft out/diffpath_c.txt $$i; done
 
 # format
