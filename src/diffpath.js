@@ -14,7 +14,6 @@ function getExecutableFiles(paths) {
         try {
           const stats = fs.statSync(filePath);
           if (stats.isFile() && stats.mode & 0o111) {
-            // Check any execute permission
             executables.add(file);
           }
         } catch (err) {}
@@ -26,7 +25,7 @@ function getExecutableFiles(paths) {
 
 // Function to get the symmetric difference between two sets
 function symmetricDifferenceList(set1, set2) {
-  const difference = new Array();
+  const difference = [];
   set1.forEach((value) => {
     if (!set2.has(value)) {
       difference.push(value);
@@ -64,4 +63,7 @@ function main() {
   });
 }
 
-main();
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
