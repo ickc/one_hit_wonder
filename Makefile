@@ -92,7 +92,7 @@ $(MD_SUMMARY): $(BIN)
 
 .PHONY: clean_bench
 clean_bench:  ## clean benchmark files
-	rm -f $(CSV)
+	rm -f $(CSV) $(CSV_SUMMARY) $(MD_SUMMARY)
 
 # test
 .PHONY: test
