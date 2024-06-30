@@ -8,12 +8,12 @@ import sys
 
 def get_executables(path: str) -> set[str]:
     return {
-        file
-        for dir in path.split(":")
-        if os.path.isdir(dir)
-        for file in os.listdir(dir)
-        if os.path.isfile(file_path := os.path.join(dir, file))
-        and (os.stat(file_path).st_mode & 0o111)
+        entry.name
+        for directory in path.split(":")
+        if os.path.isdir(directory)
+        for entry in os.scandir(directory)
+        if (entry.is_symlink() or entry.is_file())
+        and (os.stat(entry.path, follow_symlinks=False).st_mode & 0o111)
     }
 
 
