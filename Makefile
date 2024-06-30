@@ -18,6 +18,7 @@ TXT = $(patsubst bin/%,out/%.txt,$(BIN))
 TIME = $(patsubst %.txt, %.time, $(TXT))
 CSV = $(patsubst %.txt, %.csv, $(TXT))
 CSV_SUMMARY = out/bench.csv
+MD_SUMMARY = out/bench.md
 
 PATH1 = /usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin
 PATH2 = /run/current-system/sw/bin:/nix/var/nix/profiles/default/bin
@@ -25,7 +26,6 @@ PATH2 = /run/current-system/sw/bin:/nix/var/nix/profiles/default/bin
 .PHONY: all
 all:  ## compile, run, diff, and bench
 	@$(MAKE) compile run diff
-	@$(MAKE) bench -j1
 
 # compile
 .PHONY: compile
@@ -78,13 +78,17 @@ clean_run:  ## clean run files
 	rm -f $(TXT) $(TIME)
 
 # bench
-.PHONY: bench
-bench: $(CSV_SUMMARY)  ## benchmark all
+.PHONY: bench bench_md
+bench:  ## benchmark all in csv format, this only runs benchmarks that have not updated
+	@$(MAKE) $(CSV_SUMMARY) -j1
+bench_md: $(MD_SUMMARY)  ## benchmark all in markdown format, note that this forces all benchmarks to run
 out/%.csv: bin/%
 	@mkdir -p $(@D)
 	hyperfine --warmup 1 '$< $(PATH1) $(PATH2)' --export-csv $@ --command-name $*
 $(CSV_SUMMARY): $(CSV)
 	cat $^ | sort -ru -t, -k2 > $@
+$(MD_SUMMARY): $(BIN)
+	hyperfine --shell=none --warmup 1 --sort mean-time --export-markdown $@ $(foreach bin,$^,--command-name $(notdir $(bin)) '$(bin) $(PATH1) $(PATH2)')
 
 .PHONY: clean_bench
 clean_bench:  ## clean benchmark files
