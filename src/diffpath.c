@@ -12,7 +12,7 @@
 static inline int is_executable(const char* path)
 {
     struct stat st;
-    return (stat(path, &st) == 0) && S_ISREG(st.st_mode) && (st.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH));
+    return (lstat(path, &st) == 0) && (S_ISREG(st.st_mode) || S_ISLNK(st.st_mode)) && (st.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH));
 }
 
 // Function to compare strings for qsort
