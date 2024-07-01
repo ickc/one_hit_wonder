@@ -36,7 +36,7 @@ std::set<std::string> get_executables(const std::string& PATH)
                 }
             }
         } catch (const fs::filesystem_error& e) {
-            std::cerr << "Error accessing path " << path << ": " << e.what() << std::endl;
+            // std::cerr << "Error accessing path " << path << ": " << e.what() << std::endl;
         }
     }
     return executables;
