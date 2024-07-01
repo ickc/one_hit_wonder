@@ -7,7 +7,7 @@ get_files() {
     for dir in "${dirs[@]}"; do
         if [[ -d ${dir} ]]; then
             cd "${dir}"
-            find -L . -maxdepth 1 -type f -perm /a+x -print
+            find . -maxdepth 1 \( -type f -o -type l \) -perm /a+x -print
             cd -
             # ls -a "${dir}"
         fi
