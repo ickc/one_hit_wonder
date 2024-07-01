@@ -1,7 +1,7 @@
-import           Control.Monad      (foldM)
+import           Control.Monad      (filterM)
 import           Data.Set           (Set)
 import qualified Data.Set           as Set
-import           System.Directory   (doesFileExist, listDirectory)
+import           System.Directory   (listDirectory)
 import           System.Environment (getArgs, getProgName)
 import           System.FilePath    ((</>))
 import qualified System.Posix.Files as Files
@@ -31,13 +31,8 @@ isExecutable path = do
 getExecutables :: FilePath -> IO (Set String)
 getExecutables dir = do
     allFiles <- listDirectory dir
-    foldM addIfExecutable Set.empty allFiles
-  where
-    addIfExecutable set file = do
-      isExec <- isExecutable (dir </> file)
-      return $ if isExec
-               then Set.insert file set
-               else set
+    execFiles <- filterM (isExecutable . (dir </>)) allFiles
+    return $ Set.fromList execFiles
 
 -- Get all executables from a PATH
 getAllExecutables :: String -> IO (Set String)
