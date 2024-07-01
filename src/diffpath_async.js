@@ -3,21 +3,24 @@
 const fs = require("fs").promises;
 const path = require("path");
 
+// Function to check if a file is executable
+async function isExecutable(filePath) {
+  const stats = await fs.lstat(filePath);
+  return (stats.isFile() || stats.isSymbolicLink()) && stats.mode & 0o111;
+}
+
 // Function to get all executable files in a directory
 async function getExecutableFiles(paths) {
   const executables = new Set();
-  const dirs = paths.split(":");
-
   await Promise.all(
-    dirs.map(async (dir) => {
+    paths.split(":").map(async (dir) => {
       try {
         const files = await fs.readdir(dir);
         await Promise.all(
           files.map(async (file) => {
             const filePath = path.join(dir, file);
             try {
-              const stats = await fs.stat(filePath);
-              if (stats.isFile() && stats.mode & 0o111) {
+              if (await isExecutable(filePath)) {
                 executables.add(file);
               }
             } catch (err) {}
