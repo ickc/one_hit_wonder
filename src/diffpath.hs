@@ -18,13 +18,14 @@ split delim s =
 -- Function to check if a file is executable by any user
 isExecutable :: FilePath -> IO Bool
 isExecutable path = do
-    exists <- doesFileExist path
-    if exists
-        then do
-            status <- Files.getFileStatus path
+        status <- Files.getSymbolicLinkStatus path
+        if Files.isRegularFile status || Files.isSymbolicLink status
+            then do
             let mode = Files.fileMode status
             return $ (mode `Files.intersectFileModes` executeModes /= Files.nullFileMode)
         else return False
+    where
+        executeModes = Files.ownerExecuteMode `Files.unionFileModes` Files.groupExecuteMode `Files.unionFileModes` Files.otherExecuteMode
 
 -- Get all executable files in a directory
 getExecutables :: FilePath -> IO (Set String)
@@ -37,8 +38,6 @@ getExecutables dir = do
       return $ if isExec
                then Set.insert file set
                else set
-
-executeModes = Files.ownerExecuteMode `Files.unionFileModes` Files.groupExecuteMode `Files.unionFileModes` Files.otherExecuteMode
 
 -- Get all executables from a PATH
 getAllExecutables :: String -> IO (Set String)
