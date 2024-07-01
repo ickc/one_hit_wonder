@@ -57,7 +57,7 @@ bin/%_sh: src/%.sh
 	ln -f $< $@
 bin/%_ts: src/%.ts node_modules/
 	@mkdir -p $(@D)
-	tsc $< --outDir $(@D) --target esnext --module nodenext --strict --types node
+	tsc $< --outDir $(@D) --target esnext --module nodenext --strict --types node --removeComments
 	mv bin/$*.js $@
 	chmod +x $@
 node_modules/:
