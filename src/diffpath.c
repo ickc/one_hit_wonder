@@ -46,7 +46,7 @@ void get_executables(const char* path, char*** executables, size_t* count)
     for (char* dir = strtok_r(path_copy, ":", &saveptr); dir != NULL; dir = strtok_r(NULL, ":", &saveptr)) {
         d = opendir(dir);
         if (!d) {
-            fprintf(stderr, "Warning: Could not open directory %s\n", dir);
+            // fprintf(stderr, "Warning: Could not open directory %s\n", dir);
             continue;
         }
 
