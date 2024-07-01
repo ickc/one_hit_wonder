@@ -51,11 +51,10 @@ symmetricDifference execs1 execs2 = (execs1 `Set.difference` execs2) `Set.union`
 
 -- Format a single item for output
 formatItem :: Set String -> String -> String
-formatItem execs1 x = if x `Set.member` execs1 then x else '\t' : x
+formatItem set x = if x `Set.member` set then x else '\t' : x
 
 main :: IO ()
 main = do
-    progName <- getProgName
     args <- getArgs
     case args of
         [path1, path2] -> do
@@ -63,4 +62,6 @@ main = do
             execs2 <- getAllExecutables path2
             let diff = symmetricDifference execs1 execs2
             Set.foldr (\x acc -> putStrLn (formatItem execs1 x) >> acc) (return ()) diff
-        _ -> putStrLn $ "Usage: " ++ progName ++ " PATH1 PATH2"
+        _ -> do
+            progName <- getProgName
+            putStrLn $ "Usage: " ++ progName ++ " PATH1 PATH2"
