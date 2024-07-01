@@ -1,11 +1,11 @@
 #include <dirent.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
-#define MAX_PATH 4096
 #define INITIAL_CAPACITY 2048
 
 // Function to check if a path is a regular file and executable
@@ -40,17 +40,18 @@ void get_executables(const char* path, char*** executables, size_t* count)
     *count = 0;
 
     char* saveptr;
+    DIR* d;
+    struct dirent* entry;
+    char full_path[PATH_MAX];
     for (char* dir = strtok_r(path_copy, ":", &saveptr); dir != NULL; dir = strtok_r(NULL, ":", &saveptr)) {
-        DIR* d = opendir(dir);
+        d = opendir(dir);
         if (!d) {
             fprintf(stderr, "Warning: Could not open directory %s\n", dir);
             continue;
         }
 
-        struct dirent* entry;
         while ((entry = readdir(d)) != NULL) {
-            char full_path[MAX_PATH];
-            snprintf(full_path, MAX_PATH, "%s/%s", dir, entry->d_name);
+            snprintf(full_path, PATH_MAX, "%s/%s", dir, entry->d_name);
             if (is_executable(full_path)) {
                 // check if we need to resize the array
                 if (*count >= capacity) {
@@ -81,11 +82,12 @@ void get_executables(const char* path, char*** executables, size_t* count)
 }
 
 // Function to print the executable diff
-void print_executable_diff(char** executables1, const size_t count1, char** executables2, const size_t count2)
+void print_diff(char** executables1, const size_t count1, char** executables2, const size_t count2)
 {
     size_t i = 0, j = 0;
+    int cmp;
     while (i < count1 && j < count2) {
-        int cmp = strcmp(executables1[i], executables2[j]);
+        cmp = strcmp(executables1[i], executables2[j]);
         if (cmp < 0) {
             printf("%s\n", executables1[i]);
             do {
@@ -144,7 +146,7 @@ int main(int argc, char* argv[])
     get_executables(argv[1], &executables1, &count1);
     get_executables(argv[2], &executables2, &count2);
 
-    print_executable_diff(executables1, count1, executables2, count2);
+    print_diff(executables1, count1, executables2, count2);
 
     cleanup(executables1, count1);
     cleanup(executables2, count2);
