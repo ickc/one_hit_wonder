@@ -10,6 +10,7 @@ SRC = $(wildcard \
 	src/*.py \
 	src/*.rs \
 	src/*.sh \
+	src/*.ts \
 )
 BIN = $(patsubst src/%,bin/%,$(subst .,_,$(SRC)))
 
@@ -59,11 +60,20 @@ bin/%_sh: src/%.sh
 	chmod +x $<
 	@mkdir -p $(@D)
 	ln -f $< $@
+bin/%_ts: src/%.ts node_modules/
+	@mkdir -p $(@D)
+	tsc $< --outDir $(@D) --target esnext --module nodenext --strict --types node
+	mv bin/$*.js $@
+	chmod +x $@
+node_modules/:
+	npm install @types/node --no-save
 
 .PHONY: clean_hs clean_compile
 clean_hs:  ## clean auxiliary Haskell files
 	rm -f src/*.o src/*.hi
-clean_compile: clean_hs   ## clean compiled files
+clean_ts:  ## clean auxiliary TypeScript files
+	rm -rf node_modules
+clean_compile: clean_hs clean_ts  ## clean compiled files
 	rm -f $(BIN)
 
 # run
@@ -108,6 +118,7 @@ test: $(TXT)  ## test all
 	format_py \
 	format_rs \
 	format_sh \
+	format_ts \
 	format
 format: \
 	format_c \
@@ -117,6 +128,7 @@ format: \
 	format_py \
 	format_rs \
 	format_sh \
+	format_ts \
 	## format all
 format_c:  ## format C files
 	find src -type f -name '*.c' -exec clang-format -i -style=WebKit {} +
@@ -147,6 +159,8 @@ format_sh:  ## format Shell files
 		--case-indent \
 		--space-redirects \
 		{} +
+format_ts:  ## format TypeScript files
+	find src -type f -name '*.ts' -exec prettier --write {} +
 
 .PHONY: list_link
 list_link:  ## list dynamically linked libraries
