@@ -3,6 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 
+// Function to check if a file is executable
 function isExecutable(filePath) {
   const stats = fs.lstatSync(filePath);
   return (stats.isFile() || stats.isSymbolicLink()) && stats.mode & 0o111;
