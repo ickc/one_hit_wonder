@@ -5,8 +5,9 @@ use std::os::unix::fs::PermissionsExt;
 use std::path::Path;
 
 fn is_executable(file_path: &Path) -> bool {
-    if let Ok(metadata) = fs::metadata(file_path) {
-        if metadata.is_file() {
+    if let Ok(metadata) = fs::symlink_metadata(file_path) {
+        let file_type = metadata.file_type();
+        if file_type.is_file() || file_type.is_symlink() {
             let permissions = metadata.permissions();
             return permissions.mode() & 0o111 != 0;
         }
