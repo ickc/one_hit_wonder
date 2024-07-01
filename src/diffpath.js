@@ -3,6 +3,11 @@
 const fs = require("fs");
 const path = require("path");
 
+function isExecutable(filePath) {
+  const stats = fs.lstatSync(filePath);
+  return (stats.isFile() || stats.isSymbolicLink()) && stats.mode & 0o111;
+}
+
 // Function to get all executable files in a directory
 function getExecutableFiles(paths) {
   const executables = new Set();
@@ -12,8 +17,7 @@ function getExecutableFiles(paths) {
       files.forEach((file) => {
         const filePath = path.join(dir, file);
         try {
-          const stats = fs.statSync(filePath);
-          if (stats.isFile() && stats.mode & 0o111) {
+          if (isExecutable(filePath)) {
             executables.add(file);
           }
         } catch (err) {}
