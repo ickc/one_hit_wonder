@@ -25,8 +25,7 @@ PATH1 = /usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin
 PATH2 = /run/current-system/sw/bin:/nix/var/nix/profiles/default/bin
 
 .PHONY: all
-all:  ## compile, run, and test
-	@$(MAKE) compile run test
+all: compile run test  ## compile, run, and test
 
 # compile
 .PHONY: compile
@@ -90,12 +89,12 @@ clean_run:  ## clean run files
 
 # bench
 .PHONY: bench bench_md
-bench:  ## benchmark all in csv format, this only runs benchmarks that have not updated
-	@$(MAKE) $(CSV_SUMMARY) -j1
+bench: $(CSV_SUMMARY)  ## benchmark all in csv format, this only runs benchmarks that have not updated
 bench_md: $(MD_SUMMARY)  ## benchmark all in markdown format, note that this forces all benchmarks to run
 out/%.csv: bin/%
 	@mkdir -p $(@D)
 	hyperfine --warmup 1 '$< $(PATH1) $(PATH2)' --export-csv $@ --command-name $*
+.NOTPARALLEL: $(CSV_SUMMARY)
 $(CSV_SUMMARY): $(CSV)
 	cat $^ | sort -ru -t, -k2 > $@
 $(MD_SUMMARY): $(BIN)
@@ -177,7 +176,8 @@ clean: \
 	clean_run \
 	clean_bench \
 	## clean all
-	rm -rf bin out
+	rm -f bin/.DS_Store out/.DS_Store
+	rmdir --ignore-fail-on-non-empty bin out 2> /dev/null || true
 
 .PHONY: help
 # modified from https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
