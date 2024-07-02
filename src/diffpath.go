@@ -39,29 +39,32 @@ func getExecutables(path string) []string {
 func printDiff(execs1, execs2 []string) {
 	// note that execs1 and execs2 are sorted but not necessarily unique
 	i, j := 0, 0
+	var elem1, elem2 string
 	for i < len(execs1) && j < len(execs2) {
-		if execs1[i] < execs2[j] {
-			fmt.Println(execs1[i])
+		elem1 = execs1[i]
+		elem2 = execs2[j]
+		if elem1 < elem2 {
+			fmt.Println(elem1)
 			i++
 			// skip duplicates
-			for i < len(execs1) && execs1[i] == execs1[i-1] {
+			for i < len(execs1) && execs1[i] == elem1 {
 				i++
 			}
-		} else if execs1[i] > execs2[j] {
-			fmt.Println("\t" + execs2[j])
+		} else if elem1 > elem2 {
+			fmt.Println("\t" + elem2)
 			j++
 			// skip duplicates
-			for j < len(execs2) && execs2[j] == execs2[j-1] {
+			for j < len(execs2) && execs2[j] == elem2 {
 				j++
 			}
 		} else {
 			i++
 			// skip duplicates
-			for i < len(execs1) && execs1[i] == execs1[i-1] {
+			for i < len(execs1) && execs1[i] == elem1 {
 				i++
 			}
 			j++
-			for j < len(execs2) && execs2[j] == execs2[j-1] {
+			for j < len(execs2) && execs2[j] == elem2 {
 				j++
 			}
 
@@ -69,18 +72,20 @@ func printDiff(execs1, execs2 []string) {
 	}
 	// print the rest of the elements
 	for i < len(execs1) {
-		fmt.Println(execs1[i])
+		elem1 = execs1[i]
+		fmt.Println(elem1)
 		i++
 		// skip duplicates
-		for i < len(execs1) && execs1[i] == execs1[i-1] {
+		for i < len(execs1) && execs1[i] == elem1 {
 			i++
 		}
 	}
 	for j < len(execs2) {
-		fmt.Println("\t" + execs2[j])
+		elem2 = execs2[j]
+		fmt.Println("\t" + elem2)
 		j++
 		// skip duplicates
-		for j < len(execs2) && execs2[j] == execs2[j-1] {
+		for j < len(execs2) && execs2[j] == elem2 {
 			j++
 		}
 	}

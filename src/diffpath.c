@@ -86,40 +86,45 @@ void print_diff(char** executables1, const size_t count1, char** executables2, c
 {
     size_t i = 0, j = 0;
     int cmp;
+    char *elem1, *elem2;
     while (i < count1 && j < count2) {
-        cmp = strcmp(executables1[i], executables2[j]);
+        elem1 = executables1[i];
+        elem2 = executables2[j];
+        cmp = strcmp(elem1, elem2);
         if (cmp < 0) {
-            printf("%s\n", executables1[i]);
+            printf("%s\n", elem1);
             do {
                 i++;
-            } while (i < count1 && strcmp(executables1[i], executables1[i - 1]) == 0);
+            } while (i < count1 && strcmp(executables1[i], elem1) == 0);
         } else if (cmp > 0) {
-            printf("\t%s\n", executables2[j]);
+            printf("\t%s\n", elem2);
             do {
                 j++;
-            } while (j < count2 && strcmp(executables2[j], executables2[j - 1]) == 0);
+            } while (j < count2 && strcmp(executables2[j], elem2) == 0);
         } else {
             do {
                 i++;
-            } while (i < count1 && strcmp(executables1[i], executables1[i - 1]) == 0);
+            } while (i < count1 && strcmp(executables1[i], elem1) == 0);
             do {
                 j++;
-            } while (j < count2 && strcmp(executables2[j], executables2[j - 1]) == 0);
+            } while (j < count2 && strcmp(executables2[j], elem2) == 0);
         }
     }
 
     while (i < count1) {
-        printf("%s\n", executables1[i]);
+        elem1 = executables1[i];
+        printf("%s\n", elem1);
         do {
             i++;
-        } while (i < count1 && strcmp(executables1[i], executables1[i - 1]) == 0);
+        } while (i < count1 && strcmp(executables1[i], elem1) == 0);
     }
 
     while (j < count2) {
-        printf("\t%s\n", executables2[j]);
+        elem2 = executables2[j];
+        printf("\t%s\n", elem2);
         do {
             j++;
-        } while (j < count2 && strcmp(executables2[j], executables2[j - 1]) == 0);
+        } while (j < count2 && strcmp(executables2[j], elem2) == 0);
     }
 }
 
