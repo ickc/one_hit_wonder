@@ -182,6 +182,23 @@ clean: \
 .PHONY: help
 # modified from https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 help:
-	@sed ':a;N;$$!ba;s/\\\n//g' $(MAKEFILE_LIST) | grep -E '^[a-zA-Z_-]+:.*?## .*$$' | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
+	@sed ':a;N;$$!ba;s/\\\n//g' $(MAKEFILE_LIST) | \
+	grep -E '^[a-zA-Z_-]+:.*?## .*$$' | \
+	awk ' \
+		BEGIN { \
+			FS = ":.*?## "; \
+			maxlen = 0; \
+		} \
+		{ \
+			if (length($$1) > maxlen) \
+				maxlen = length($$1); \
+			lines[NR] = $$0; \
+		} \
+		END { \
+			for (i = 1; i <= NR; i++) { \
+				split(lines[i], a, FS); \
+				printf "\033[1m\033[93m%-*s\033[0m %s\n", maxlen + 1, a[1] ":", a[2]; \
+			} \
+		}'
 print-%:
 	$(info $* = $($*))
