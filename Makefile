@@ -15,10 +15,13 @@ endef
 # C
 EXT += c
 SRC_c = $(wildcard src/*.c)
-BIN_c = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_c)))
-bin/%_c: src/%.c
+BIN_c = $(patsubst src/%,bin/%_gcc,$(subst .,_,$(SRC_c))) $(patsubst src/%,bin/%_clang,$(subst .,_,$(SRC_c)))
+bin/%_c_gcc: src/%.c
 	@mkdir -p $(@D)
 	gcc -o $@ -O3 -march=armv8.5-a -mtune=native -std=c23 $<
+bin/%_c_clang: src/%.c
+	@mkdir -p $(@D)
+	clang -o $@ -O3 -march=native -mtune=native -std=c17 $<
 .PHONY: clean_c format_c
 clean_c:  ## clean C binaries
 	rm -f $(BIN_c)
