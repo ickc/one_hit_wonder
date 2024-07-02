@@ -1,6 +1,9 @@
 .DEFAULT_GOAL = help
+.PHONY: all
+all: compile run test  ## compile, run, and test
 
-# compile
+# compile ######################################################################
+
 SRC = $(wildcard \
 	src/*.c \
 	src/*.cpp \
@@ -14,29 +17,17 @@ SRC = $(wildcard \
 )
 BIN = $(patsubst src/%,bin/%,$(subst .,_,$(SRC)))
 
-# test & benchmark
-TXT = $(patsubst bin/%,out/%.txt,$(BIN))
-TIME = $(patsubst %.txt, %.time, $(TXT))
-CSV = $(patsubst %.txt, %.csv, $(TXT))
-CSV_SUMMARY = out/bench.csv
-MD_SUMMARY = out/bench.md
-
-PATH1 = /usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin
-PATH2 = /run/current-system/sw/bin:/nix/var/nix/profiles/default/bin
-
-.PHONY: all
-all: compile run test  ## compile, run, and test
-
-# compile
 .PHONY: compile
 compile: $(BIN)  ## compile all
+
+# language specific ============================================================
 
 define symlink
 	chmod +x $<
 	@mkdir -p $(@D)
 	ln -f $< $@
 endef
-# language specific
+
 bin/%_c: src/%.c
 	@mkdir -p $(@D)
 	gcc -o $@ -O3 -march=armv8.5-a -mtune=native -std=c23 $<
@@ -75,40 +66,8 @@ clean_ts:  ## clean auxiliary TypeScript files
 clean_compile: clean_hs clean_ts  ## clean compiled files
 	rm -f $(BIN)
 
-# run
-.PHONY: run
-run: $(TXT) $(TIME)  ## run all
-out/%.txt out/%.time &: bin/%
-	@mkdir -p $(@D)
-	command time -v $< $(PATH1) $(PATH2) > out/$*.txt 2> out/$*.time
+# format =======================================================================
 
-.PHONY: clean_run
-clean_run:  ## clean run files
-	rm -f $(TXT) $(TIME)
-
-# bench
-.PHONY: bench bench_md
-bench: $(CSV_SUMMARY)  ## benchmark all in csv format, this only runs benchmarks that have not updated
-bench_md: $(MD_SUMMARY)  ## benchmark all in markdown format, note that this forces all benchmarks to run
-out/%.csv: bin/%
-	@mkdir -p $(@D)
-	hyperfine --warmup 1 '$< $(PATH1) $(PATH2)' --export-csv $@ --command-name $*
-.NOTPARALLEL: $(CSV_SUMMARY)
-$(CSV_SUMMARY): $(CSV)
-	cat $^ | sort -ru -t, -k2 > $@
-$(MD_SUMMARY): $(BIN)
-	hyperfine --shell=none --warmup 1 --sort mean-time --export-markdown $@ $(foreach bin,$^,--command-name $(notdir $(bin)) '$(bin) $(PATH1) $(PATH2)')
-
-.PHONY: clean_bench
-clean_bench:  ## clean benchmark files
-	rm -f $(CSV) $(CSV_SUMMARY) $(MD_SUMMARY)
-
-# test
-.PHONY: test
-test: $(TXT)  ## test all
-	for i in $(TXT); do difft out/diffpath_c.txt $$i; done
-
-# format
 .PHONY: \
 	format_c \
 	format_cpp \
@@ -161,6 +120,53 @@ format_sh:  ## format Shell files
 format_ts:  ## format TypeScript files
 	find src -type f -name '*.ts' -exec prettier --write {} +
 
+# run & benchmark #############################################################
+
+TXT  = $(patsubst bin/%,out/%.txt , $(BIN))
+TIME = $(patsubst bin/%,out/%.time, $(BIN))
+CSV  = $(patsubst bin/%,out/%.csv , $(BIN))
+
+CSV_SUMMARY = out/bench.csv
+MD_SUMMARY  = out/bench.md
+
+PATH1 = /usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin
+PATH2 = /run/current-system/sw/bin:/nix/var/nix/profiles/default/bin
+
+# run
+.PHONY: run
+run: $(TXT) $(TIME)  ## run all
+out/%.txt out/%.time &: bin/%
+	@mkdir -p $(@D)
+	command time -v $< $(PATH1) $(PATH2) > out/$*.txt 2> out/$*.time
+
+.PHONY: clean_run
+clean_run:  ## clean run files
+	rm -f $(TXT) $(TIME)
+
+# bench
+.PHONY: bench bench_md
+bench: $(CSV_SUMMARY)  ## benchmark all in csv format, this only runs benchmarks that have not updated
+bench_md: $(MD_SUMMARY)  ## benchmark all in markdown format, note that this forces all benchmarks to run
+out/%.csv: bin/%
+	@mkdir -p $(@D)
+	hyperfine --warmup 1 '$< $(PATH1) $(PATH2)' --export-csv $@ --command-name $*
+.NOTPARALLEL: $(CSV_SUMMARY)
+$(CSV_SUMMARY): $(CSV)
+	cat $^ | sort -un -t, -k2 > $@
+$(MD_SUMMARY): $(BIN)
+	hyperfine --shell=none --warmup 1 --sort mean-time --export-markdown $@ $(foreach bin,$^,--command-name $(notdir $(bin)) '$(bin) $(PATH1) $(PATH2)')
+
+.PHONY: clean_bench
+clean_bench:  ## clean benchmark files
+	rm -f $(CSV) $(CSV_SUMMARY) $(MD_SUMMARY)
+
+# misc #########################################################################
+
+# test
+.PHONY: test
+test: $(TXT)  ## test all
+	for i in $(TXT); do difft out/diffpath_c.txt $$i; done
+
 .PHONY: list_link
 list_link:  ## list dynamically linked libraries
 	if [[ $$(uname) == Darwin ]]; then \
@@ -199,5 +205,6 @@ help:
 				printf "\033[1m\033[93m%-*s\033[0m %s\n", maxlen + 1, a[1] ":", a[2]; \
 			} \
 		}'
+
 print-%:
 	$(info $* = $($*))
