@@ -4,23 +4,7 @@ all: compile run test  ## compile, run, and test
 
 # compile ######################################################################
 
-SRC = $(wildcard \
-	src/*.c \
-	src/*.cpp \
-	src/*.go \
-	src/*.hs \
-	src/*.lua \
-	src/*.py \
-	src/*.rs \
-	src/*.sh \
-	src/*.ts \
-)
-BIN = $(patsubst src/%,bin/%,$(subst .,_,$(SRC)))
-
-.PHONY: compile
-compile: $(BIN)  ## compile all
-
-# language specific ============================================================
+EXT =
 
 define symlink
 	chmod +x $<
@@ -28,82 +12,107 @@ define symlink
 	ln -f $< $@
 endef
 
+# C
+EXT += c
+SRC_c = $(wildcard src/*.c)
+BIN_c = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_c)))
 bin/%_c: src/%.c
 	@mkdir -p $(@D)
 	gcc -o $@ -O3 -march=armv8.5-a -mtune=native -std=c23 $<
+.PHONY: clean_c format_c
+clean_c:  ## clean C binaries
+	rm -f $(BIN_c)
+format_c:  ## format C files
+	find src -type f -name '*.c' -exec clang-format -i -style=WebKit {} +
+
+# C++
+EXT += cpp
+SRC_cpp = $(wildcard src/*.cpp)
+BIN_cpp = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_cpp)))
 bin/%_cpp: src/%.cpp
 	@mkdir -p $(@D)
 	g++ -o $@ -O3 -march=armv8.5-a -mtune=native -std=c++23 $<
+.PHONY: clean_cpp format_cpp
+clean_cpp:  ## clean C++ binaries
+	rm -f $(BIN_cpp)
+format_cpp:  ## format C++ files
+	find src -type f -name '*.cpp' -exec clang-format -i -style=WebKit {} +
+
+# Go
+EXT += go
+SRC_go = $(wildcard src/*.go)
+BIN_go = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_go)))
 bin/%_go: src/%.go
 	@mkdir -p $(@D)
 	go build -o $@ -ldflags="-s -w" -trimpath $<
+.PHONY: clean_go format_go
+clean_go:  ## clean Go binaries
+	rm -f $(BIN_go)
+format_go:  ## format Go files
+	find src -type f -name '*.go' -exec gofmt -w {} +
+
+# Haskell
+EXT += hs
+SRC_hs = $(wildcard src/*.hs)
+BIN_hs = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_hs)))
 bin/%_hs: src/%.hs
 	@mkdir -p $(@D)
 	ghc -o $@ -O2 $<
+.PHONY: clean_hs format_hs
+clean_hs:  ## clean Haskell files
+	rm -f $(BIN_hs) src/*.o src/*.hi
+format_hs:  ## format Haskell files
+	find src -type f -name '*.hs' -exec stylish-haskell -i {} +
+
+# Lua
+EXT += lua
+SRC_lua = $(wildcard src/*.lua)
+BIN_lua = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_lua)))
 # this depends on 3rd party: `luarocks install luafilesystem --local`
 bin/%_lua: src/%.lua
 	$(symlink)
-bin/%_py: src/%.py
-	$(symlink)
-bin/%_rs: src/%.rs
-	@mkdir -p $(@D)
-	rustc -o $@ -C opt-level=3 -C target-cpu=native --edition=2021 $<
-bin/%_sh: src/%.sh
-	$(symlink)
-bin/%_ts: src/%.ts node_modules/
-	@mkdir -p $(@D)
-	tsc $< --outDir $(@D) --target esnext --module nodenext --strict --types node --removeComments
-	mv bin/$*.js $@
-	chmod +x $@
-node_modules/:
-	npm install @types/node --no-save
-
-.PHONY: clean_hs clean_compile
-clean_hs:  ## clean auxiliary Haskell files
-	rm -f src/*.o src/*.hi
-clean_ts:  ## clean auxiliary TypeScript files
-	rm -rf node_modules
-clean_compile: clean_hs clean_ts  ## clean compiled files
-	rm -f $(BIN)
-
-# format =======================================================================
-
-.PHONY: \
-	format_c \
-	format_cpp \
-	format_hs \
-	format_lua \
-	format_py \
-	format_rs \
-	format_sh \
-	format_ts \
-	format
-format: \
-	format_c \
-	format_cpp \
-	format_hs \
-	format_lua \
-	format_py \
-	format_rs \
-	format_sh \
-	format_ts \
-	## format all
-format_c:  ## format C files
-	find src -type f -name '*.c' -exec clang-format -i -style=WebKit {} +
-format_cpp:  ## format C++ files
-	find src -type f -name '*.cpp' -exec clang-format -i -style=WebKit {} +
-format_go:  ## format Go files
-	find src -type f -name '*.go' -exec gofmt -w {} +
-format_hs:  ## format Haskell files
-	find src -type f -name '*.hs' -exec stylish-haskell -i {} +
+.PHONY: clean_lua format_lua
+clean_lua:  ## clean Lua binaries
+	rm -f $(BIN_lua)
 format_lua:  ## format Lua files
 	find src -type f -name '*.lua' -exec stylua --indent-type Spaces {} +
+
+# Python
+EXT += py
+SRC_py = $(wildcard src/*.py)
+BIN_py = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_py)))
+bin/%_py: src/%.py
+	$(symlink)
+.PHONY: clean_py format_py
+clean_py:  ## clean Python binaries
+	rm -f $(BIN_py)
 format_py:  ## format Python files
 	autoflake --in-place --recursive --expand-star-imports --remove-all-unused-imports --ignore-init-module-imports --remove-duplicate-keys --remove-unused-variables src
 	black src
 	isort src
+
+# Rust
+EXT += rs
+SRC_rs = $(wildcard src/*.rs)
+BIN_rs = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_rs)))
+bin/%_rs: src/%.rs
+	@mkdir -p $(@D)
+	rustc -o $@ -C opt-level=3 -C target-cpu=native --edition=2021 $<
+.PHONY: clean_rs format_rs
+clean_rs:  ## clean Rust binaries
+	rm -f $(BIN_rs)
 format_rs:  ## format Rust files
 	find src -type f -name '*.rs' -exec rustfmt {} +
+
+# bash
+EXT += sh
+SRC_sh = $(wildcard src/*.sh)
+BIN_sh = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_sh)))
+bin/%_sh: src/%.sh
+	$(symlink)
+.PHONY: clean_sh format_sh
+clean_sh:  ## clean Shell binaries
+	rm -f $(BIN_sh)
 format_sh:  ## format Shell files
 	find src -type f -name '*.sh' \
 	-exec sed -i -E \
@@ -117,17 +126,45 @@ format_sh:  ## format Shell files
 		--case-indent \
 		--space-redirects \
 		{} +
+
+# TypeScript
+EXT += ts
+SRC_ts = $(wildcard src/*.ts)
+BIN_ts = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_ts)))
+bin/%_ts: src/%.ts node_modules/
+	@mkdir -p $(@D)
+	tsc $< --outDir $(@D) --target esnext --module nodenext --strict --types node --removeComments
+	mv bin/$*.js $@
+	chmod +x $@
+node_modules/:
+	npm install @types/node --no-save
+.PHONY: clean_ts format_ts
+clean_ts:  ## clean auxiliary TypeScript files
+	rm -f $(BIN_ts)
+	rm -rf node_modules
 format_ts:  ## format TypeScript files
 	find src -type f -name '*.ts' -exec prettier --write {} +
 
+# all
+
+BIN = $(foreach ext,$(EXT),$(BIN_$(ext)))
+.PHONY: compile
+compile: $(BIN)  ## compile all
+
+.PHONY: clean_compile
+clean_compile: $(foreach ext,$(EXT),clean_$(ext))  ## clean compiled files
+
+.PHONY: format
+format: $(foreach ext,$(EXT),format_$(ext))  ## format all
+
 # run & benchmark #############################################################
 
-TXT  = $(patsubst bin/%,out/%.txt , $(BIN))
+TXT = $(patsubst bin/%,out/%.txt , $(BIN))
 TIME = $(patsubst bin/%,out/%.time, $(BIN))
-CSV  = $(patsubst bin/%,out/%.csv , $(BIN))
+CSV = $(patsubst bin/%,out/%.csv , $(BIN))
 
 CSV_SUMMARY = out/bench.csv
-MD_SUMMARY  = out/bench.md
+MD_SUMMARY = out/bench.md
 
 PATH1 = /usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin
 PATH2 = /run/current-system/sw/bin:/nix/var/nix/profiles/default/bin
