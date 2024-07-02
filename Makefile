@@ -15,13 +15,16 @@ endef
 # C
 EXT += c
 SRC_c = $(wildcard src/*.c)
-BIN_c = $(patsubst src/%,bin/%_gcc,$(subst .,_,$(SRC_c))) $(patsubst src/%,bin/%_clang,$(subst .,_,$(SRC_c)))
-bin/%_c_gcc: src/%.c
+GCC = gcc
+CLANG = clang
+COMPILER_c = $(GCC) $(CLANG)
+BIN_c = $(foreach compiler,$(COMPILER_c),$(patsubst src/%,bin/%_$(compiler),$(subst .,_,$(SRC_c))))
+bin/%_c_$(GCC): src/%.c
 	@mkdir -p $(@D)
-	gcc -o $@ -O3 -march=armv8.5-a -mtune=native -std=c23 $<
-bin/%_c_clang: src/%.c
+	$(GCC) -o $@ -O3 -march=armv8.5-a -mtune=native -std=c23 $<
+bin/%_c_$(CLANG): src/%.c
 	@mkdir -p $(@D)
-	clang -o $@ -O3 -march=native -mtune=native -std=c17 $<
+	$(CLANG) -o $@ -O3 -march=native -mtune=native -std=c17 $<
 .PHONY: clean_c format_c
 clean_c:  ## clean C binaries
 	rm -f $(BIN_c)
@@ -31,10 +34,16 @@ format_c:  ## format C files
 # C++
 EXT += cpp
 SRC_cpp = $(wildcard src/*.cpp)
-BIN_cpp = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_cpp)))
-bin/%_cpp: src/%.cpp
+GXX = g++
+CLANGXX = clang++
+COMPILER_cpp = $(GXX) $(CLANGXX)
+BIN_cpp = $(foreach compiler,$(COMPILER_cpp),$(patsubst src/%,bin/%_$(compiler),$(subst .,_,$(SRC_cpp))))
+bin/%_cpp_$(GXX): src/%.cpp
 	@mkdir -p $(@D)
-	g++ -o $@ -O3 -march=armv8.5-a -mtune=native -std=c++23 $<
+	$(GXX) -o $@ -O3 -march=armv8.5-a -mtune=native -std=c++23 $<
+bin/%_cpp_$(CLANGXX): src/%.cpp
+	@mkdir -p $(@D)
+	$(CLANGXX) -o $@ -O3 -march=native -mtune=native -std=c++20 $<
 .PHONY: clean_cpp format_cpp
 clean_cpp:  ## clean C++ binaries
 	rm -f $(BIN_cpp)
@@ -44,10 +53,12 @@ format_cpp:  ## format C++ files
 # Go
 EXT += go
 SRC_go = $(wildcard src/*.go)
+GO = go
+COMPILER_go = $(GO)
 BIN_go = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_go)))
 bin/%_go: src/%.go
 	@mkdir -p $(@D)
-	go build -o $@ -ldflags="-s -w" -trimpath $<
+	$(GO) build -o $@ -ldflags="-s -w" -trimpath $<
 .PHONY: clean_go format_go
 clean_go:  ## clean Go binaries
 	rm -f $(BIN_go)
@@ -57,10 +68,12 @@ format_go:  ## format Go files
 # Haskell
 EXT += hs
 SRC_hs = $(wildcard src/*.hs)
+GHC = ghc
+COMPILER_hs = $(GHC)
 BIN_hs = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_hs)))
 bin/%_hs: src/%.hs
 	@mkdir -p $(@D)
-	ghc -o $@ -O2 $<
+	$(GHC) -o $@ -O2 $<
 .PHONY: clean_hs format_hs
 clean_hs:  ## clean Haskell files
 	rm -f $(BIN_hs) src/*.o src/*.hi
@@ -70,6 +83,8 @@ format_hs:  ## format Haskell files
 # Lua
 EXT += lua
 SRC_lua = $(wildcard src/*.lua)
+LUA = lua
+COMPILER_lua = $(LUA)
 BIN_lua = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_lua)))
 # this depends on 3rd party: `luarocks install luafilesystem --local`
 bin/%_lua: src/%.lua
@@ -83,6 +98,8 @@ format_lua:  ## format Lua files
 # Python
 EXT += py
 SRC_py = $(wildcard src/*.py)
+PYTHON = python
+COMPILER_py = $(PYTHON)
 BIN_py = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_py)))
 bin/%_py: src/%.py
 	$(symlink)
@@ -97,10 +114,12 @@ format_py:  ## format Python files
 # Rust
 EXT += rs
 SRC_rs = $(wildcard src/*.rs)
+RUSTC = rustc
+COMPILER_rs = $(RUSTC)
 BIN_rs = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_rs)))
 bin/%_rs: src/%.rs
 	@mkdir -p $(@D)
-	rustc -o $@ -C opt-level=3 -C target-cpu=native --edition=2021 $<
+	$(RUSTC) -o $@ -C opt-level=3 -C target-cpu=native --edition=2021 $<
 .PHONY: clean_rs format_rs
 clean_rs:  ## clean Rust binaries
 	rm -f $(BIN_rs)
@@ -110,6 +129,8 @@ format_rs:  ## format Rust files
 # bash
 EXT += sh
 SRC_sh = $(wildcard src/*.sh)
+BASH = bash
+COMPILER_sh = $(BASH)
 BIN_sh = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_sh)))
 bin/%_sh: src/%.sh
 	$(symlink)
@@ -133,10 +154,12 @@ format_sh:  ## format Shell files
 # TypeScript
 EXT += ts
 SRC_ts = $(wildcard src/*.ts)
+TSC = tsc
+COMPILER_ts = $(TSC)
 BIN_ts = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_ts)))
 bin/%_ts: src/%.ts node_modules/
 	@mkdir -p $(@D)
-	tsc $< --outDir $(@D) --target esnext --module nodenext --strict --types node --removeComments
+	$(TSC) $< --outDir $(@D) --target esnext --module nodenext --strict --types node --removeComments
 	mv bin/$*.js $@
 	chmod +x $@
 node_modules/:
@@ -151,14 +174,22 @@ format_ts:  ## format TypeScript files
 # all
 
 BIN = $(foreach ext,$(EXT),$(BIN_$(ext)))
-.PHONY: compile
+COMPILER = $(foreach ext,$(EXT),$(COMPILER_$(ext)))
+
+.PHONY: compile clean_compile format compiler_version
 compile: $(BIN)  ## compile all
-
-.PHONY: clean_compile
 clean_compile: $(foreach ext,$(EXT),clean_$(ext))  ## clean compiled files
-
-.PHONY: format
 format: $(foreach ext,$(EXT),format_$(ext))  ## format all
+compiler_version:  ## show compilers versions
+	@for compiler in $(COMPILER); do \
+		 eval printf %.0s= '{1..'"$${COLUMNS:-$$(tput cols)}"\}; \
+		which $$compiler; \
+		case $$compiler in \
+			go) go version ;; \
+			lua) lua -v ;; \
+			*) $$compiler --version ;; \
+		esac; \
+	done
 
 # run & benchmark #############################################################
 
