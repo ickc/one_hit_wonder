@@ -78,10 +78,10 @@ clean_compile: clean_hs clean_ts  ## clean compiled files
 
 # run
 .PHONY: run
-run: $(TXT)  ## run all
-out/%.txt: bin/%
+run: $(TXT) $(TIME)  ## run all
+out/%.txt out/%.time &: bin/%
 	@mkdir -p $(@D)
-	command time -v $< $(PATH1) $(PATH2) > $@ 2> $(@:.txt=.time)
+	command time -v $< $(PATH1) $(PATH2) > out/$*.txt 2> out/$*.time
 
 .PHONY: clean_run
 clean_run:  ## clean run files
