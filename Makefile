@@ -31,6 +31,11 @@ all: compile run test  ## compile, run, and test
 .PHONY: compile
 compile: $(BIN)  ## compile all
 
+define symlink
+	chmod +x $<
+	@mkdir -p $(@D)
+	ln -f $< $@
+endef
 # language specific
 bin/%_c: src/%.c
 	@mkdir -p $(@D)
@@ -46,20 +51,14 @@ bin/%_hs: src/%.hs
 	ghc -o $@ -O2 $<
 # this depends on 3rd party: `luarocks install luafilesystem --local`
 bin/%_lua: src/%.lua
-	chmod +x $<
-	@mkdir -p $(@D)
-	ln -f $< $@
+	$(symlink)
 bin/%_py: src/%.py
-	chmod +x $<
-	@mkdir -p $(@D)
-	ln -f $< $@
+	$(symlink)
 bin/%_rs: src/%.rs
 	@mkdir -p $(@D)
 	rustc -o $@ -C opt-level=3 -C target-cpu=native --edition=2021 $<
 bin/%_sh: src/%.sh
-	chmod +x $<
-	@mkdir -p $(@D)
-	ln -f $< $@
+	$(symlink)
 bin/%_ts: src/%.ts node_modules/
 	@mkdir -p $(@D)
 	tsc $< --outDir $(@D) --target esnext --module nodenext --strict --types node --removeComments
