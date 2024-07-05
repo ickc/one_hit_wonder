@@ -84,11 +84,19 @@ format_hs:  ## format Haskell files
 EXT += lua
 SRC_lua = $(wildcard src/*.lua)
 LUA = lua
-COMPILER_lua = $(LUA)
-BIN_lua = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_lua)))
+LUAC = luac
+COMPILER_lua = $(LUA) $(LUAC)
+BIN_lua = $(foreach compiler,$(COMPILER_lua),$(patsubst src/%,bin/%_$(compiler),$(subst .,_,$(SRC_lua))))
 # this depends on 3rd party: `luarocks install luafilesystem --local`
-bin/%_lua: src/%.lua
+bin/%_lua_lua: src/%.lua
 	$(symlink)
+bin/%_lua_luac: src/%.lua
+	@mkdir -p $(@D)
+	$(LUAC) -o $@.temp $<
+	echo '#!/usr/bin/env lua' > $@
+	cat $@.temp >> $@
+	rm $@.temp
+	chmod +x $@
 .PHONY: clean_lua format_lua
 clean_lua:  ## clean Lua binaries
 	rm -f $(BIN_lua)
@@ -236,7 +244,7 @@ clean_bench:  ## clean benchmark files
 # test
 .PHONY: test
 test: $(TXT)  ## test all
-	for i in $(TXT); do difft out/diffpath_c.txt $$i; done
+	for i in $(TXT); do difft out/diffpath_c_gcc.txt $$i; done
 
 .PHONY: list_link
 list_link:  ## list dynamically linked libraries
@@ -253,7 +261,8 @@ clean: \
 	clean_bench \
 	## clean all
 	rm -f bin/.DS_Store out/.DS_Store
-	rmdir --ignore-fail-on-non-empty bin out 2> /dev/null || true
+	@ls bin out 2>/dev/null || true
+	rm -rf bin out
 
 .PHONY: help
 # modified from https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
