@@ -219,7 +219,7 @@ clean_compile: $(foreach ext,$(EXT),clean_$(ext))  ## clean compiled files
 format: $(foreach ext,$(EXT),format_$(ext))  ## format all
 compiler_version:  ## show compilers versions
 	@for compiler in $(COMPILER); do \
-		 eval printf %.0s= '{1..'"$${COLUMNS:-$$(tput cols)}"\}; \
+		 eval printf %.0s= '{1..'"$${COLUMNS:-72}"\}; \
 		which $$compiler; \
 		case $$compiler in \
 			*/go) $$compiler version ;; \
