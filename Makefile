@@ -10,6 +10,14 @@ all: compile run test  ## compile, run, and test
 
 EXT =
 
+GCC_MARCH = native
+# fix gcc not recognizing M1 mac
+ifeq ($(shell uname), Darwin)
+    ifeq ($(shell uname -m), arm64)
+        GCC_MARCH = armv8.5-a
+    endif
+endif
+
 # C
 EXT += c
 SRC_c = $(wildcard src/*.c)
@@ -17,7 +25,7 @@ COMPILER_c = $(GCC) $(CLANG)
 BIN_c = $(foreach compiler,$(COMPILER_c),$(patsubst src/%,bin/%_$(notdir $(compiler)),$(subst .,_,$(SRC_c))))
 bin/%_c_$(notdir $(GCC)): src/%.c
 	@mkdir -p $(@D)
-	$(GCC) -o $@ -O3 -march=armv8.5-a -mtune=native -std=c23 $<
+	$(GCC) -o $@ -O3 -march=$(GCC_MARCH) -mtune=native -std=c23 $<
 bin/%_c_$(notdir $(CLANG)): src/%.c
 	@mkdir -p $(@D)
 	$(CLANG) -o $@ -O3 -march=native -mtune=native -std=c23 $<
@@ -43,7 +51,7 @@ COMPILER_cpp = $(GXX) $(CLANGXX)
 BIN_cpp = $(foreach compiler,$(COMPILER_cpp),$(patsubst src/%,bin/%_$(notdir $(compiler)),$(subst .,_,$(SRC_cpp))))
 bin/%_cpp_$(notdir $(GXX)): src/%.cpp
 	@mkdir -p $(@D)
-	$(GXX) -o $@ -O3 -march=armv8.5-a -mtune=native -std=c++23 $<
+	$(GXX) -o $@ -O3 -march=$(GCC_MARCH) -mtune=native -std=c++23 $<
 bin/%_cpp_$(notdir $(CLANGXX)): src/%.cpp
 	@mkdir -p $(@D)
 	$(CLANGXX) -o $@ -O3 -march=native -mtune=native -std=c++23 $<
