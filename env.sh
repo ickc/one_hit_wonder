@@ -7,6 +7,8 @@ if ! command -v nix &> /dev/null; then
     exit 1
 fi
 
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null 2>&1 && pwd)"
+
 # Check number of arguments
 if [[ $# != 1 ]]; then
     echo "Usage: $0 <outfile>"
@@ -61,7 +63,8 @@ get_command_path TSC envs/typescript tsc
 
 get_command_path HYPERFINE envs/system hyperfine
 get_command_path DIFFT envs/system difft
-get_command_path GNUTIME envs/system time
+# special case for time as time is a built in command in bash
+echo "GNUTIME=${DIR}/envs/system/.devbox/nix/profile/default/bin/time" >> "${outfile}"
 
 # OS specific settings
 case "$(uname -s)" in
