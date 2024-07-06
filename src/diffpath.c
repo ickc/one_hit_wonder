@@ -35,6 +35,7 @@ void get_executables(const char* path, char*** executables, size_t* count)
     *executables = malloc(capacity * sizeof(char*));
     if (!*executables) {
         fprintf(stderr, "Error: Memory allocation failed.\n");
+        free(path_copy);
         return;
     }
     *count = 0;
@@ -61,13 +62,14 @@ void get_executables(const char* path, char*** executables, size_t* count)
                 if (*count >= capacity) {
                     capacity *= 2;
                     // fprintf(stderr, "Warning: Capacity exceeded. Resizing array to %zu\n", capacity);
-                    *executables = realloc(*executables, capacity * sizeof(char*));
-                    if (!*executables) {
+                    char** new_executables = realloc(*executables, capacity * sizeof(char*));
+                    if (!new_executables) {
                         fprintf(stderr, "Error: Memory allocation failed.\n");
                         free(path_copy);
                         closedir(d);
                         return;
                     }
+                    *executables = new_executables;
                 }
                 (*executables)[*count] = strdup(entry->d_name);
                 if (!(*executables)[*count]) {
