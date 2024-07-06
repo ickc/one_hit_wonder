@@ -1,5 +1,5 @@
 #include <dirent.h>
-#include <limits.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,10 +9,10 @@
 #define INITIAL_CAPACITY 2048
 
 // Function to check if a path is a regular file and executable
-static inline int is_executable(const char* path)
+static inline int is_executable(const int dir_fd, const struct dirent* entry)
 {
     struct stat st;
-    return (lstat(path, &st) == 0) && (S_ISREG(st.st_mode) || S_ISLNK(st.st_mode)) && (st.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH));
+    return (fstatat(dir_fd, entry->d_name, &st, AT_SYMLINK_NOFOLLOW) == 0) && (S_ISREG(st.st_mode) || S_ISLNK(st.st_mode)) && (st.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH));
 }
 
 // Function to compare strings for qsort
@@ -42,17 +42,21 @@ void get_executables(const char* path, char*** executables, size_t* count)
     char* saveptr;
     DIR* d;
     struct dirent* entry;
-    char full_path[PATH_MAX];
     for (char* dir = strtok_r(path_copy, ":", &saveptr); dir != NULL; dir = strtok_r(NULL, ":", &saveptr)) {
         d = opendir(dir);
         if (!d) {
             // fprintf(stderr, "Warning: Could not open directory %s\n", dir);
             continue;
         }
+        // Get file descriptor for the directory
+        int dir_fd = dirfd(d);
+        if (dir_fd == -1) {
+            closedir(d);
+            continue;
+        }
 
         while ((entry = readdir(d)) != NULL) {
-            snprintf(full_path, PATH_MAX, "%s/%s", dir, entry->d_name);
-            if (is_executable(full_path)) {
+            if (is_executable(dir_fd, entry)) {
                 // check if we need to resize the array
                 if (*count >= capacity) {
                     capacity *= 2;
