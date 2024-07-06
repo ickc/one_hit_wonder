@@ -172,7 +172,7 @@ bin/%_sh: src/%.sh
 clean_sh:  ## clean Shell binaries
 	rm -f $(BIN_sh)
 format_sh:  ## format Shell files
-	find src -type f -name '*.sh' \
+	find . src -maxdepth 1 -type f -name '*.sh' \
 	-exec sed -i -E \
 		-e 's/\$$([a-zA-Z_][a-zA-Z0-9_]*)/$${\1}/g' \
 		-e 's/([^[])\[ ([^]]+) \]/\1[[ \2 ]]/g' \
