@@ -1,3 +1,6 @@
+INCLUDEFILE = .env
+include $(INCLUDEFILE)
+
 .DEFAULT_GOAL = help
 .PHONY: all
 all: compile run test  ## compile, run, and test
@@ -6,54 +9,61 @@ all: compile run test  ## compile, run, and test
 
 EXT =
 
-define symlink
-	chmod +x $<
-	@mkdir -p $(@D)
-	ln -f $< $@
-endef
-
 # C
 EXT += c
 SRC_c = $(wildcard src/*.c)
-GCC = gcc
-CLANG = clang
 COMPILER_c = $(GCC) $(CLANG)
-BIN_c = $(foreach compiler,$(COMPILER_c),$(patsubst src/%,bin/%_$(compiler),$(subst .,_,$(SRC_c))))
-bin/%_c_$(GCC): src/%.c
+BIN_c = $(foreach compiler,$(COMPILER_c),$(patsubst src/%,bin/%_$(notdir $(compiler)),$(subst .,_,$(SRC_c))))
+bin/%_c_$(notdir $(GCC)): src/%.c
 	@mkdir -p $(@D)
 	$(GCC) -o $@ -O3 -march=armv8.5-a -mtune=native -std=c23 $<
-bin/%_c_$(CLANG): src/%.c
+bin/%_c_$(notdir $(CLANG)): src/%.c
 	@mkdir -p $(@D)
-	$(CLANG) -o $@ -O3 -march=native -mtune=native -std=c17 $<
+	$(CLANG) -o $@ -O3 -march=native -mtune=native -std=c23 $<
+ifdef CLANG_SYSTEM
+COMPILER_c += $(CLANG_SYSTEM)
+BIN_c += $(patsubst src/%,bin/%_clang_system,$(subst .,_,$(SRC_c)))
+bin/%_c_clang_system: src/%.c
+	@mkdir -p $(@D)
+	$(CLANG_SYSTEM) -o $@ -O3 -march=native -mtune=native -std=c17 $<
+endif
+
 .PHONY: clean_c format_c
 clean_c:  ## clean C binaries
 	rm -f $(BIN_c)
 format_c:  ## format C files
-	find src -type f -name '*.c' -exec clang-format -i -style=WebKit {} +
+	find src -type f -name '*.c' -exec \
+		$(CLANG_FORMAT) -i -style=WebKit {} +
 
 # C++
 EXT += cpp
 SRC_cpp = $(wildcard src/*.cpp)
-GXX = g++
-CLANGXX = clang++
 COMPILER_cpp = $(GXX) $(CLANGXX)
-BIN_cpp = $(foreach compiler,$(COMPILER_cpp),$(patsubst src/%,bin/%_$(compiler),$(subst .,_,$(SRC_cpp))))
-bin/%_cpp_$(GXX): src/%.cpp
+BIN_cpp = $(foreach compiler,$(COMPILER_cpp),$(patsubst src/%,bin/%_$(notdir $(compiler)),$(subst .,_,$(SRC_cpp))))
+bin/%_cpp_$(notdir $(GXX)): src/%.cpp
 	@mkdir -p $(@D)
 	$(GXX) -o $@ -O3 -march=armv8.5-a -mtune=native -std=c++23 $<
-bin/%_cpp_$(CLANGXX): src/%.cpp
+bin/%_cpp_$(notdir $(CLANGXX)): src/%.cpp
 	@mkdir -p $(@D)
-	$(CLANGXX) -o $@ -O3 -march=native -mtune=native -std=c++20 $<
+	$(CLANGXX) -o $@ -O3 -march=native -mtune=native -std=c++23 $<
+ifdef CLANGXX_SYSTEM
+COMPILER_cpp += $(CLANGXX_SYSTEM)
+BIN_cpp += $(patsubst src/%,bin/%_clangxx_system,$(subst .,_,$(SRC_cpp)))
+bin/%_cpp_clangxx_system: src/%.cpp
+	@mkdir -p $(@D)
+	$(CLANGXX_SYSTEM) -o $@ -O3 -march=native -mtune=native -std=c++20 $<
+endif
+
 .PHONY: clean_cpp format_cpp
 clean_cpp:  ## clean C++ binaries
 	rm -f $(BIN_cpp)
 format_cpp:  ## format C++ files
-	find src -type f -name '*.cpp' -exec clang-format -i -style=WebKit {} +
+	find src -type f -name '*.cpp' -exec \
+		$(CLANG_FORMAT) -i -style=WebKit {} +
 
 # Go
 EXT += go
 SRC_go = $(wildcard src/*.go)
-GO = go
 COMPILER_go = $(GO)
 BIN_go = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_go)))
 bin/%_go: src/%.go
@@ -63,12 +73,12 @@ bin/%_go: src/%.go
 clean_go:  ## clean Go binaries
 	rm -f $(BIN_go)
 format_go:  ## format Go files
-	find src -type f -name '*.go' -exec gofmt -w {} +
+	find src -type f -name '*.go' -exec \
+		$(GOFMT) -w {} +
 
 # Haskell
 EXT += hs
 SRC_hs = $(wildcard src/*.hs)
-GHC = ghc
 COMPILER_hs = $(GHC)
 BIN_hs = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_hs)))
 bin/%_hs: src/%.hs
@@ -78,51 +88,55 @@ bin/%_hs: src/%.hs
 clean_hs:  ## clean Haskell files
 	rm -f $(BIN_hs) src/*.o src/*.hi
 format_hs:  ## format Haskell files
-	find src -type f -name '*.hs' -exec stylish-haskell -i {} +
+	find src -type f -name '*.hs' -exec \
+		$(STYLISH_HASKELL) -i {} +
 
 # Lua
 EXT += lua
 SRC_lua = $(wildcard src/*.lua)
-LUA = lua
-LUAC = luac
-COMPILER_lua = $(LUA) $(LUAC)
-BIN_lua = $(foreach compiler,$(COMPILER_lua),$(patsubst src/%,bin/%_$(compiler),$(subst .,_,$(SRC_lua))))
+COMPILER_lua = $(LUA) $(LUAJIT)
+BIN_lua = $(foreach compiler,$(COMPILER_lua),$(patsubst src/%,bin/%_$(notdir $(compiler)),$(subst .,_,$(SRC_lua))))
 # this depends on 3rd party: `luarocks install luafilesystem --local`
-bin/%_lua_lua: src/%.lua
-	$(symlink)
-bin/%_lua_luac: src/%.lua
+bin/%_lua_$(notdir $(LUA)): src/%.lua
 	@mkdir -p $(@D)
-	$(LUAC) -o $@.temp $<
-	echo '#!/usr/bin/env lua' > $@
-	cat $@.temp >> $@
-	rm $@.temp
-	chmod +x $@
+	@echo "#!$(LUA)" > $@
+	@echo "package.cpath = \"$(LUA_LUA_CPATH);\" .. package.cpath" >> $@
+	@cat $< >> $@
+	@chmod +x $@
+bin/%_lua_$(notdir $(LUAJIT)): src/%.lua
+	@mkdir -p $(@D)
+	@echo "#!$(LUAJIT)" > $@
+	@echo "package.cpath = \"$(LUAJIT_LUA_CPATH);\" .. package.cpath" >> $@
+	@cat $< >> $@
+	@chmod +x $@
 .PHONY: clean_lua format_lua
 clean_lua:  ## clean Lua binaries
 	rm -f $(BIN_lua)
 format_lua:  ## format Lua files
-	find src -type f -name '*.lua' -exec stylua --indent-type Spaces {} +
+	find src -type f -name '*.lua' -exec \
+		$(STYLUA) --indent-type Spaces {} +
 
 # Python
 EXT += py
 SRC_py = $(wildcard src/*.py)
-PYTHON = python
 COMPILER_py = $(PYTHON)
 BIN_py = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_py)))
 bin/%_py: src/%.py
-	$(symlink)
+	@mkdir -p $(@D)
+	@echo "#!$(PYTHON)" > $@
+	@cat $< >> $@
+	@chmod +x $@
 .PHONY: clean_py format_py
 clean_py:  ## clean Python binaries
 	rm -f $(BIN_py)
 format_py:  ## format Python files
-	autoflake --in-place --recursive --expand-star-imports --remove-all-unused-imports --ignore-init-module-imports --remove-duplicate-keys --remove-unused-variables src
-	black src
-	isort src
+	$(AUTOFLAKE) --in-place --recursive --expand-star-imports --remove-all-unused-imports --ignore-init-module-imports --remove-duplicate-keys --remove-unused-variables src
+	$(BLACK) src
+	$(ISORT) src
 
 # Rust
 EXT += rs
 SRC_rs = $(wildcard src/*.rs)
-RUSTC = rustc
 COMPILER_rs = $(RUSTC)
 BIN_rs = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_rs)))
 bin/%_rs: src/%.rs
@@ -132,16 +146,19 @@ bin/%_rs: src/%.rs
 clean_rs:  ## clean Rust binaries
 	rm -f $(BIN_rs)
 format_rs:  ## format Rust files
-	find src -type f -name '*.rs' -exec rustfmt {} +
+	find src -type f -name '*.rs' -exec \
+		$(RUSTFMT) {} +
 
 # bash
 EXT += sh
 SRC_sh = $(wildcard src/*.sh)
-BASH = bash
 COMPILER_sh = $(BASH)
 BIN_sh = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_sh)))
 bin/%_sh: src/%.sh
-	$(symlink)
+	@mkdir -p $(@D)
+	@echo "#!$(BASH)" > $@
+	@cat $< >> $@
+	@chmod +x $@
 .PHONY: clean_sh format_sh
 clean_sh:  ## clean Shell binaries
 	rm -f $(BIN_sh)
@@ -151,7 +168,7 @@ format_sh:  ## format Shell files
 		-e 's/\$$([a-zA-Z_][a-zA-Z0-9_]*)/$${\1}/g' \
 		-e 's/([^[])\[ ([^]]+) \]/\1[[ \2 ]]/g' \
 		{} + \
-	-exec shfmt \
+	-exec $(SHFMT) \
 		--write \
 		--simplify \
 		--indent 4 \
@@ -162,22 +179,25 @@ format_sh:  ## format Shell files
 # TypeScript
 EXT += ts
 SRC_ts = $(wildcard src/*.ts)
-TSC = tsc
 COMPILER_ts = $(TSC)
 BIN_ts = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_ts)))
 bin/%_ts: src/%.ts node_modules/
 	@mkdir -p $(@D)
 	$(TSC) $< --outDir $(@D) --target esnext --module nodenext --strict --types node --removeComments
-	mv bin/$*.js $@
-	chmod +x $@
+	@echo "#!$(NODE)" > $@
+	@cat bin/$*.js >> $@
+	@rm -f bin/$*.js
+	@chmod +x $@
 node_modules/:
-	npm install @types/node --no-save
+	$(NPM) install @types/node --no-save
 .PHONY: clean_ts format_ts
 clean_ts:  ## clean auxiliary TypeScript files
 	rm -f $(BIN_ts)
+Clean_ts:  ## clean node modules
 	rm -rf node_modules
 format_ts:  ## format TypeScript files
-	find src -type f -name '*.ts' -exec prettier --write {} +
+	find src -type f -name '*.ts' -exec \
+		$(PRETTIER) --write {} +
 
 # all
 
@@ -193,8 +213,9 @@ compiler_version:  ## show compilers versions
 		 eval printf %.0s= '{1..'"$${COLUMNS:-$$(tput cols)}"\}; \
 		which $$compiler; \
 		case $$compiler in \
-			go) go version ;; \
-			lua) lua -v ;; \
+			*/go) $$compiler version ;; \
+			*/lua) $$compiler -v ;; \
+			*/luajit) $$compiler -v ;; \
 			*) $$compiler --version ;; \
 		esac; \
 	done
@@ -228,12 +249,12 @@ bench: $(CSV_SUMMARY)  ## benchmark all in csv format, this only runs benchmarks
 bench_md: $(MD_SUMMARY)  ## benchmark all in markdown format, note that this forces all benchmarks to run
 out/%.csv: bin/%
 	@mkdir -p $(@D)
-	hyperfine --warmup 1 '$< $(PATH1) $(PATH2)' --export-csv $@ --command-name $*
+	$(HYPERFINE) --warmup 1 '$< $(PATH1) $(PATH2)' --export-csv $@ --command-name $*
 .NOTPARALLEL: $(CSV_SUMMARY)
 $(CSV_SUMMARY): $(CSV)
 	cat $^ | sort -un -t, -k2 > $@
 $(MD_SUMMARY): $(BIN)
-	hyperfine --shell=none --warmup 1 --sort mean-time --export-markdown $@ $(foreach bin,$^,--command-name $(notdir $(bin)) '$(bin) $(PATH1) $(PATH2)')
+	$(HYPERFINE) --shell=none --warmup 1 --sort mean-time --export-markdown $@ $(foreach bin,$^,--command-name $(notdir $(bin)) '$(bin) $(PATH1) $(PATH2)')
 
 .PHONY: clean_bench
 clean_bench:  ## clean benchmark files
@@ -241,10 +262,17 @@ clean_bench:  ## clean benchmark files
 
 # misc #########################################################################
 
+.PHONY: environment
+environment: $(INCLUDEFILE)  ## prepare environment using nix & devbox
+$(INCLUDEFILE): env.sh
+	./$< $@
+
 # test
 .PHONY: test
 test: $(TXT)  ## test all
-	for i in $(TXT); do difft out/diffpath_c_gcc.txt $$i; done
+	for i in $(TXT); do \
+		$(DIFFT) out/diffpath_c_gcc.txt $$i; \
+	done
 
 .PHONY: list_link
 list_link:  ## list dynamically linked libraries
@@ -260,9 +288,11 @@ clean: \
 	clean_run \
 	clean_bench \
 	## clean all
-	rm -f bin/.DS_Store out/.DS_Store
-	@ls bin out 2>/dev/null || true
+	rm -f $(INCLUDEFILE) bin/.DS_Store out/.DS_Store
+	ls bin out 2>/dev/null || true
 	rm -rf bin out
+Clean: clean Clean_ts  ## Clean the environments too
+	find envs -type d -name '.devbox' -exec rm -rf {} +
 
 .PHONY: help
 # modified from https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html

@@ -1,5 +1,3 @@
-#!/usr/bin/env lua
-
 -- diffpath.lua
 local lfs = require("lfs")
 

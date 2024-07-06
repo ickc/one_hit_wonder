@@ -3,3 +3,4 @@ bin/
 out/
 src/*.hi
 src/*.o
+.env

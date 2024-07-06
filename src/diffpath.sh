@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 # Function to get files in a given PATH
 get_files() {
     local path="$1"
