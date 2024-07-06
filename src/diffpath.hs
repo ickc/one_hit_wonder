@@ -1,7 +1,7 @@
 import           Control.Monad      (filterM)
 import           Data.Set           (Set)
 import qualified Data.Set           as Set
-import           System.Directory   (listDirectory)
+import           System.Directory   (doesDirectoryExist, listDirectory)
 import           System.Environment (getArgs, getProgName)
 import           System.FilePath    ((</>))
 import qualified System.Posix.Files as Files
@@ -38,7 +38,8 @@ getExecutables dir = do
 getAllExecutables :: String -> IO (Set String)
 getAllExecutables path = do
     let dirs = split ':' path
-    foldl Set.union Set.empty <$> mapM getExecutables dirs
+    existingDirs <- filterM doesDirectoryExist dirs
+    foldl Set.union Set.empty <$> mapM getExecutables existingDirs
 
 -- Compute the diff and format the output
 symmetricDifference :: Set String -> Set String -> Set String
