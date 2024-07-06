@@ -239,7 +239,7 @@ CSV_SUMMARY = out/bench.csv
 MD_SUMMARY = out/bench.md
 
 PATH1 = /usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin
-PATH2 = /run/current-system/sw/bin:/nix/var/nix/profiles/default/bin
+PATH2 = ~/.nix-profile/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin
 
 # run
 .PHONY: run
