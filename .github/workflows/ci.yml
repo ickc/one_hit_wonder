@@ -24,8 +24,11 @@ jobs:
       - name: Compilers version
         run: devbox run --config envs/system 'cd ../..; make compiler_version'
 
-      - name: Test
+      - name: compile, run, and test
         run: devbox run --config envs/system 'cd ../..; make all PATH2="$PATH"'
+
+      - name: list dynamically linked libraries
+        run: devbox run --config envs/system 'cd ../..; make list_link'
         
       - name: Benchmark
         run: devbox run --config envs/system 'cd ../..; make bench_md PATH2="$PATH"'
