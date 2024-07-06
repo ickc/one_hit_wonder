@@ -22,7 +22,7 @@ jobs:
           project-path: envs/system
 
       - name: Test
-        run: make all
+        run: devbox run --config envs/system 'make all'
         
       - name: Benchmark
-        run: make bench_md
+        run: devbox run --config envs/system 'make bench_md'
