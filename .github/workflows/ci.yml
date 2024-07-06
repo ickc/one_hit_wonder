@@ -21,6 +21,9 @@ jobs:
           enable-cache: true
           project-path: envs/system
 
+      - name: Compilers version
+        run: devbox run --config envs/system 'cd ../..; make compiler_version'
+
       - name: Test
         run: devbox run --config envs/system 'cd ../..; make all PATH2="$PATH"'
         
