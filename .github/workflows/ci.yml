@@ -22,7 +22,7 @@ jobs:
           project-path: envs/system
 
       - name: Test
-        run: devbox run --config envs/system 'cd ../..; make all'
+        run: devbox run --config envs/system 'cd ../..; make all PATH2="$PATH"'
         
       - name: Benchmark
-        run: devbox run --config envs/system 'cd ../..; make bench_md'
+        run: devbox run --config envs/system 'cd ../..; make bench_md PATH2="$PATH"'
