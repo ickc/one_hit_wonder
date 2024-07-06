@@ -26,11 +26,13 @@ end
 local function get_executables(path)
     local execs = {}
     for _, dir in ipairs(split_path(path)) do
-        for file in lfs.dir(dir) do
-            if file ~= "." and file ~= ".." then
-                local filepath = dir .. "/" .. file
-                if is_executable(filepath) then
-                    execs[file] = true
+        if lfs.attributes(dir, "mode") == "directory" then
+            for file in lfs.dir(dir) do
+                if file ~= "." and file ~= ".." then
+                    local filepath = dir .. "/" .. file
+                    if is_executable(filepath) then
+                        execs[file] = true
+                    end
                 end
             end
         end
