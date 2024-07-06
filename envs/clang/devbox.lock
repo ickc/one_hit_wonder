@@ -1,0 +1,101 @@
+{
+  "lockfile_version": "1",
+  "packages": {
+    "clang-tools_18@latest": {
+      "last_modified": "2024-06-12T20:55:33Z",
+      "resolved": "github:NixOS/nixpkgs/a9858885e197f984d92d7fe64e9fff6b2e488d40#clang-tools_18",
+      "source": "devbox-search",
+      "version": "18.1.7",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/m4nmqrrjvgqfkfaxl309985zfakwn2bs-clang-tools-18.1.7",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/m4nmqrrjvgqfkfaxl309985zfakwn2bs-clang-tools-18.1.7"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/zc13bj1wh96bjha8s4hbz36677qh7sny-clang-tools-18.1.7",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/zc13bj1wh96bjha8s4hbz36677qh7sny-clang-tools-18.1.7"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/m62ij61aggrgpb6zvh2pgr2x5wi77spb-clang-tools-18.1.7",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/m62ij61aggrgpb6zvh2pgr2x5wi77spb-clang-tools-18.1.7"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/cn3xy3m0zy3vg9ah8hzirwab12c9w64y-clang-tools-18.1.7",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/cn3xy3m0zy3vg9ah8hzirwab12c9w64y-clang-tools-18.1.7"
+        }
+      }
+    },
+    "clang_18@latest": {
+      "last_modified": "2024-06-12T20:55:33Z",
+      "resolved": "github:NixOS/nixpkgs/a9858885e197f984d92d7fe64e9fff6b2e488d40#clang_18",
+      "source": "devbox-search",
+      "version": "18.1.7",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/26yb17zrwdycd7gksipxyn2difw9wmjv-clang-wrapper-18.1.7",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/26yb17zrwdycd7gksipxyn2difw9wmjv-clang-wrapper-18.1.7"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/3hlmkclvxxbmr8172rbg4q72nc6hfjah-clang-wrapper-18.1.7",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/3hlmkclvxxbmr8172rbg4q72nc6hfjah-clang-wrapper-18.1.7"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/iqzr1isfnv45yxgrkvhswzksl2vhvxnf-clang-wrapper-18.1.7",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/iqzr1isfnv45yxgrkvhswzksl2vhvxnf-clang-wrapper-18.1.7"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/4a7g4s02vr57jccasyawfwmwnw9v0bpv-clang-wrapper-18.1.7",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/4a7g4s02vr57jccasyawfwmwnw9v0bpv-clang-wrapper-18.1.7"
+        }
+      }
+    }
+  }
+}

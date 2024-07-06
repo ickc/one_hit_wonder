@@ -1,0 +1,118 @@
+{
+  "lockfile_version": "1",
+  "packages": {
+    "ghc@latest": {
+      "last_modified": "2024-06-21T06:40:32Z",
+      "plugin_version": "0.0.2",
+      "resolved": "github:NixOS/nixpkgs/ed0af8c19f55bede71dc9c2002185cf228339901#ghc",
+      "source": "devbox-search",
+      "version": "9.6.5",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/jqpn7c7csz5mhjcyqnxr7p1xgrsfmkcn-ghc-9.6.5",
+              "default": true
+            },
+            {
+              "name": "doc",
+              "path": "/nix/store/jhhhvc9ggrpnq13v58qz88lc22q2c272-ghc-9.6.5-doc"
+            }
+          ],
+          "store_path": "/nix/store/jqpn7c7csz5mhjcyqnxr7p1xgrsfmkcn-ghc-9.6.5"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/zay3ayrvmxwdj3kbxbm8jbksmzssm1iz-ghc-9.6.5",
+              "default": true
+            },
+            {
+              "name": "doc",
+              "path": "/nix/store/mq12gjr1rxpxcgx2mvhdblhgjvlz1ab8-ghc-9.6.5-doc"
+            }
+          ],
+          "store_path": "/nix/store/zay3ayrvmxwdj3kbxbm8jbksmzssm1iz-ghc-9.6.5"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/5hg3rbs1j6xhl10prh1zsq1vf12ihd1n-ghc-9.6.5",
+              "default": true
+            },
+            {
+              "name": "doc",
+              "path": "/nix/store/vhq2z5zs6x1hpkqs638q5dj5y9higl4g-ghc-9.6.5-doc"
+            }
+          ],
+          "store_path": "/nix/store/5hg3rbs1j6xhl10prh1zsq1vf12ihd1n-ghc-9.6.5"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/sk5if9vmsykj16phb87wv7a8pv08wi62-ghc-9.6.5",
+              "default": true
+            },
+            {
+              "name": "doc",
+              "path": "/nix/store/cj982ipk4q394n0dy397hiz4bmfdpyfz-ghc-9.6.5-doc"
+            }
+          ],
+          "store_path": "/nix/store/sk5if9vmsykj16phb87wv7a8pv08wi62-ghc-9.6.5"
+        }
+      }
+    },
+    "stylish-haskell@latest": {
+      "last_modified": "2024-06-21T06:40:32Z",
+      "resolved": "github:NixOS/nixpkgs/ed0af8c19f55bede71dc9c2002185cf228339901#stylish-haskell",
+      "source": "devbox-search",
+      "version": "0.14.5.0",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/yjl7rdy08ac3bg8m4kdgm56x1kjwffzz-stylish-haskell-0.14.5.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/yjl7rdy08ac3bg8m4kdgm56x1kjwffzz-stylish-haskell-0.14.5.0"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/hdnvgbv4ayv88f2lbmd4d4zqbn9gz23j-stylish-haskell-0.14.5.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/hdnvgbv4ayv88f2lbmd4d4zqbn9gz23j-stylish-haskell-0.14.5.0"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/77x8b3njcxskczfdqcxm1k7hcy81kfq9-stylish-haskell-0.14.5.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/77x8b3njcxskczfdqcxm1k7hcy81kfq9-stylish-haskell-0.14.5.0"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/ifr5bj9kdh5r4dcdq97lrw4qhn24jamg-stylish-haskell-0.14.5.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/ifr5bj9kdh5r4dcdq97lrw4qhn24jamg-stylish-haskell-0.14.5.0"
+        }
+      }
+    }
+  }
+}

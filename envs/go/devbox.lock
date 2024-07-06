@@ -1,0 +1,53 @@
+{
+  "lockfile_version": "1",
+  "packages": {
+    "go@latest": {
+      "last_modified": "2024-06-12T20:55:33Z",
+      "resolved": "github:NixOS/nixpkgs/a9858885e197f984d92d7fe64e9fff6b2e488d40#go",
+      "source": "devbox-search",
+      "version": "1.22.3",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/m4ip3yyqg4k2pilbyfczgiy8xqvh4554-go-1.22.3",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/m4ip3yyqg4k2pilbyfczgiy8xqvh4554-go-1.22.3"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/iz2bp36nbgp2l7day14186nmw2v4v0qg-go-1.22.3",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/iz2bp36nbgp2l7day14186nmw2v4v0qg-go-1.22.3"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/gl1vr9lznqg5zv2f0bvh0q469k82mjz0-go-1.22.3",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/gl1vr9lznqg5zv2f0bvh0q469k82mjz0-go-1.22.3"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/vz8d6wmfcf38l3h3vymwqr6c5zxp5jmp-go-1.22.3",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/vz8d6wmfcf38l3h3vymwqr6c5zxp5jmp-go-1.22.3"
+        }
+      }
+    }
+  }
+}
