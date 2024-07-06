@@ -61,6 +61,7 @@ get_command_path TSC envs/typescript tsc
 
 get_command_path HYPERFINE envs/system hyperfine
 get_command_path DIFFT envs/system difft
+get_command_path GNUTIME envs/system time
 
 # OS specific settings
 case "$(uname -s)" in
