@@ -246,7 +246,7 @@ PATH2 = /run/current-system/sw/bin:/nix/var/nix/profiles/default/bin
 run: $(TXT) $(TIME)  ## run all
 out/%.txt out/%.time &: bin/%
 	@mkdir -p $(@D)
-	command time -v $< $(PATH1) $(PATH2) > out/$*.txt 2> out/$*.time
+	command time -o out/$*.time -v $< $(PATH1) $(PATH2) > out/$*.txt
 
 .PHONY: clean_run
 clean_run:  ## clean run files
