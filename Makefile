@@ -1,5 +1,6 @@
 INCLUDEFILE = .env
 include $(INCLUDEFILE)
+DEVBOXS = $(wildcard envs/*/devbox.*)
 
 .DEFAULT_GOAL = help
 .PHONY: all
@@ -262,10 +263,12 @@ clean_bench:  ## clean benchmark files
 
 # misc #########################################################################
 
-.PHONY: environment
-environment: $(INCLUDEFILE)  ## prepare environment using nix & devbox
-$(INCLUDEFILE): env.sh
+.PHONY: build update
+build: $(INCLUDEFILE)  ## prepare environments using nix & devbox (should be triggered automatically)
+$(INCLUDEFILE): env.sh $(DEVBOXS)
 	./$< $@
+update:  ## update environments using nix & devbox
+	devbox update --all-projects
 
 # test
 .PHONY: test
@@ -282,7 +285,7 @@ list_link:  ## list dynamically linked libraries
 		find bin -type f -executable -exec readelf --needed-libs {} +; \
 	fi
 
-.PHONY: clean
+.PHONY: clean Clean
 clean: \
 	clean_compile \
 	clean_run \
@@ -291,8 +294,9 @@ clean: \
 	rm -f $(INCLUDEFILE) bin/.DS_Store out/.DS_Store
 	ls bin out 2>/dev/null || true
 	rm -rf bin out
-Clean: clean Clean_ts  ## Clean the environments too
+Clean: clean Clean_ts  ## Clean the environments too (this triggers redownload & rebuild next time!)
 	find envs -type d -name '.devbox' -exec rm -rf {} +
+	devbox run -- nix store gc --extra-experimental-features nix-command
 
 .PHONY: help
 # modified from https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
