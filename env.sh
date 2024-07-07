@@ -2,8 +2,8 @@
 
 # Check if 'nix' command is available
 # TODO: port to non-nix system when needed
-if ! command -v nix &> /dev/null; then
-    echo "nix command not found. Please install Nix to proceed."
+if ! command -v devbox &> /dev/null; then
+    echo "devbox command not found. Please install Nix and devbox to proceed."
     exit 1
 fi
 
