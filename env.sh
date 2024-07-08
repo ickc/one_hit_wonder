@@ -24,7 +24,7 @@ get_command_path() {
     local var_name=$1
     local env_dir=$2
     local command_name=$3
-    devbox run --config "${env_dir}" "echo ${var_name}=\"\$(command -v ${command_name})\" >> ../../${outfile}"
+    devbox run --config "${env_dir}" "echo ${var_name}=\"\$(type -P ${command_name})\" >> ../../${outfile}"
 }
 get_env_var() {
     local var_name=$1
@@ -63,8 +63,7 @@ get_command_path TSC envs/typescript tsc
 
 get_command_path HYPERFINE envs/system hyperfine
 get_command_path DIFFT envs/system difft
-# special case for time as time is a built in command in bash
-echo "GNUTIME=${DIR}/envs/system/.devbox/nix/profile/default/bin/time" >> "${outfile}"
+get_command_path GNUTIME envs/system time
 
 # OS specific settings
 case "$(uname -s)" in
