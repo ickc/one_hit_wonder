@@ -1,0 +1,53 @@
+{
+  "lockfile_version": "1",
+  "packages": {
+    "pypy310@latest": {
+      "last_modified": "2024-06-12T20:55:33Z",
+      "resolved": "github:NixOS/nixpkgs/a9858885e197f984d92d7fe64e9fff6b2e488d40#pypy310",
+      "source": "devbox-search",
+      "version": "7.3.12",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/br2hg0bhmxz8y6jl6dnndfpv1kpr599x-pypy3.10-7.3.12",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/br2hg0bhmxz8y6jl6dnndfpv1kpr599x-pypy3.10-7.3.12"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/37njjjbhiya2wijb3l934vvl7hy6gywn-pypy3.10-7.3.12",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/37njjjbhiya2wijb3l934vvl7hy6gywn-pypy3.10-7.3.12"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/90pyy0h7pvs80vyrzpd4kvpmh3kdyd3r-pypy3.10-7.3.12",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/90pyy0h7pvs80vyrzpd4kvpmh3kdyd3r-pypy3.10-7.3.12"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/qsmmfnsmmzm1xc20rgl2g155nyini5ad-pypy3.10-7.3.12",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/qsmmfnsmmzm1xc20rgl2g155nyini5ad-pypy3.10-7.3.12"
+        }
+      }
+    }
+  }
+}
