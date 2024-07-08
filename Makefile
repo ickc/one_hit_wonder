@@ -290,7 +290,7 @@ list_link:  ## list dynamically linked libraries
 	if [[ $$(uname) == Darwin ]]; then \
 		find bin -type f -executable -exec otool -L {} +; \
 	else \
-		find bin -type f -executable -exec readelf --needed-libs {} +; \
+		find bin -type f -executable -exec ldd {} +; \
 	fi
 
 .PHONY: clean Clean
