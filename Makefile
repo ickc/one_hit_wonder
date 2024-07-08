@@ -263,29 +263,24 @@ clean_bench:  ## clean benchmark files
 
 # misc #########################################################################
 
-.PHONY: build update
+.PHONY: build update test size list_link clean Clean help
 build: $(INCLUDEFILE)  ## prepare environments using nix & devbox (should be triggered automatically)
 $(INCLUDEFILE): env.sh $(DEVBOXS)
 	./$< $@
 update:  ## update environments using nix & devbox
 	devbox update --all-projects
-
-# test
-.PHONY: test
 test: $(TXT)  ## test all
 	for i in $(TXT); do \
 		$(DIFFT) out/diffpath_c_gcc.txt $$i; \
 	done
-
-.PHONY: list_link
+size:  ## show binary sizes
+	@ls -lh bin | sort -hk5
 list_link:  ## list dynamically linked libraries
 	if [[ $$(uname) == Darwin ]]; then \
 		find bin -type f -executable -exec otool -L {} +; \
 	else \
 		find bin -type f -executable -exec ldd {} + || true; \
 	fi
-
-.PHONY: clean Clean
 clean: \
 	clean_compile \
 	clean_run \
@@ -297,11 +292,8 @@ clean: \
 Clean: clean Clean_ts  ## Clean the environments too (this triggers redownload & rebuild next time!)
 	find envs -type d -name '.devbox' -exec rm -rf {} +
 	devbox run -- nix store gc --extra-experimental-features nix-command
-
-.PHONY: help
 # modified from https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 help:  ## print this help message
 	@awk 'BEGIN{w=0;n=0}{while(match($$0,/\\$$/)){sub(/\\$$/,"");getline nextLine;$$0=$$0 nextLine}if(/^[[:alnum:]_-]+:.*##.*$$/){n++;split($$0,cols[n],":.*##");l=length(cols[n][1]);if(w<l)w=l}}END{for(i=1;i<=n;i++)printf"\033[1m\033[93m%-*s\033[0m%s\n",w+1,cols[i][1]":",cols[i][2]}' $(MAKEFILE_LIST)
-
 print-%:
 	$(info $* = $($*))
