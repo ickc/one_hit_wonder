@@ -22,7 +22,6 @@ bin/%_c_$(notdir $(CLANG)): src/%.c
 	@mkdir -p $(@D)
 	$(CLANG) -o $@ -O3 -march=native -mtune=native -std=c23 $<
 ifdef CLANG_SYSTEM
-COMPILER_c += $(CLANG_SYSTEM)
 BIN_c += $(patsubst src/%,bin/%_clang_system,$(subst .,_,$(SRC_c)))
 bin/%_c_clang_system: src/%.c
 	@mkdir -p $(@D)
@@ -48,9 +47,8 @@ bin/%_cpp_$(notdir $(CLANGXX)): src/%.cpp
 	@mkdir -p $(@D)
 	$(CLANGXX) -o $@ -O3 -march=native -mtune=native -std=c++23 $<
 ifdef CLANGXX_SYSTEM
-COMPILER_cpp += $(CLANGXX_SYSTEM)
-BIN_cpp += $(patsubst src/%,bin/%_clangxx_system,$(subst .,_,$(SRC_cpp)))
-bin/%_cpp_clangxx_system: src/%.cpp
+BIN_cpp += $(patsubst src/%,bin/%_clang++_system,$(subst .,_,$(SRC_cpp)))
+bin/%_cpp_clang++_system: src/%.cpp
 	@mkdir -p $(@D)
 	$(CLANGXX_SYSTEM) -o $@ -O3 -march=native -mtune=native -std=c++20 $<
 endif
@@ -120,17 +118,21 @@ format_lua:  ## format Lua files
 # Python
 EXT += py
 SRC_py = $(wildcard src/*.py)
-COMPILER_py = $(PYTHON)
-BIN_py = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_py)))
-bin/%_py: src/%.py
+COMPILER_py = $(PYTHON) $(PYPY)
+BIN_py = $(foreach compiler,$(COMPILER_py),$(patsubst src/%,bin/%_$(notdir $(compiler)),$(subst .,_,$(SRC_py))))
+bin/%_py_$(notdir $(PYTHON)): src/%.py
 	@mkdir -p $(@D)
 	@echo "#!$(PYTHON)" > $@
 	@cat $< >> $@
 	@chmod +x $@
+bin/%_py_$(notdir $(PYPY)): src/%.py
+	@mkdir -p $(@D)
+	@echo "#!$(PYPY)" > $@
+	@cat $< >> $@
+	@chmod +x $@
 ifdef PYTHON_SYSTEM
-COMPILER_py += $(PYTHON_SYSTEM)
-BIN_py += $(patsubst src/%,bin/%_system,$(subst .,_,$(SRC_py)))
-bin/%_py_system: src/%.py
+BIN_py += $(patsubst src/%,bin/%_python_system,$(subst .,_,$(SRC_py)))
+bin/%_py_python_system: src/%.py
 	@mkdir -p $(@D)
 	@echo "#!$(PYTHON_SYSTEM)" > $@
 	@cat $< >> $@
