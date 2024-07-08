@@ -78,7 +78,13 @@ esac
 case "$(uname -s)" in
     Darwin)
         echo 'CLANG_SYSTEM=/usr/bin/clang' >> "${outfile}"
-        echo 'CLANGXX_SYSTEM=/usr/bin/clang++' >> "${outfile}"
+
+        # Get the macOS version number
+        macos_version=$(sw_vers -productVersion | awk -F '.' '{print $1}')
+
+        if [[ ${macos_version} -ge 14 ]]; then
+            echo 'CLANGXX_SYSTEM=/usr/bin/clang++' >> "${outfile}"
+        fi
 
         case "$(uname -m)" in
             arm64)
@@ -100,17 +106,6 @@ case "$(uname -s)" in
                 GCC_MARCH=native
                 ;;
         esac
-
-        case "$(sw_vers -productVersion)" in
-            13.*)
-                CLANGXX_SYSTEM_STD=c++17
-                ;;
-            *)
-                CLANGXX_SYSTEM_STD=c++20
-                ;;
-        esac
-
-        echo "CLANGXX_SYSTEM_STD=${CLANGXX_SYSTEM_STD}" >> "${outfile}"
         ;;
     *)
         GCC_MARCH=native

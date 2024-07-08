@@ -52,7 +52,7 @@ COMPILER_cpp += $(CLANGXX_SYSTEM)
 BIN_cpp += $(patsubst src/%,bin/%_clangxx_system,$(subst .,_,$(SRC_cpp)))
 bin/%_cpp_clangxx_system: src/%.cpp
 	@mkdir -p $(@D)
-	$(CLANGXX_SYSTEM) -o $@ -O3 -march=native -mtune=native -std=$(CLANGXX_SYSTEM_STD) $<
+	$(CLANGXX_SYSTEM) -o $@ -O3 -march=native -mtune=native -std=c++20 $<
 endif
 
 .PHONY: clean_cpp format_cpp
