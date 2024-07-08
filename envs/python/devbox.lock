@@ -153,15 +153,15 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/2n534w3ig28vh2in3v6y7icglnpscpc8-python3.12-isort-5.13.2",
+              "path": "/nix/store/p065gsxdyb1wshx07jbs49459x4936f3-python3.12-isort-5.13.2",
               "default": true
             },
             {
               "name": "dist",
-              "path": "/nix/store/rszlz9mhwd6grlfvfwfrbwc9p68zlx2p-python3.12-isort-5.13.2-dist"
+              "path": "/nix/store/bxrj68k3prq4wl00zs80ss5fc80fri5y-python3.12-isort-5.13.2-dist"
             }
           ],
-          "store_path": "/nix/store/2n534w3ig28vh2in3v6y7icglnpscpc8-python3.12-isort-5.13.2"
+          "store_path": "/nix/store/p065gsxdyb1wshx07jbs49459x4936f3-python3.12-isort-5.13.2"
         },
         "x86_64-darwin": {
           "outputs": [
@@ -181,15 +181,15 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/l0pdi2asg8xwga1sjs4gmp4b6xfyla53-python3.12-isort-5.13.2",
+              "path": "/nix/store/ynwxxcdfgj92vc7541r8bhn6mihfvv9z-python3.12-isort-5.13.2",
               "default": true
             },
             {
               "name": "dist",
-              "path": "/nix/store/a69351cb7g9a4p9ihm7xbixv9qqaxf3q-python3.12-isort-5.13.2-dist"
+              "path": "/nix/store/zak15w9dx7dilb6q5fqa7y9cj557nygf-python3.12-isort-5.13.2-dist"
             }
           ],
-          "store_path": "/nix/store/l0pdi2asg8xwga1sjs4gmp4b6xfyla53-python3.12-isort-5.13.2"
+          "store_path": "/nix/store/ynwxxcdfgj92vc7541r8bhn6mihfvv9z-python3.12-isort-5.13.2"
         }
       }
     },
