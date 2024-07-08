@@ -212,6 +212,7 @@ format: $(foreach ext,$(EXT),format_$(ext))  ## format all
 compiler_version:  ## show compilers versions
 	@for compiler in $(COMPILER); do \
 		 eval printf %.0s= '{1..'"$${COLUMNS:-72}"\}; \
+		 echo; \
 		which $$compiler; \
 		case $$compiler in \
 			*/go) $$compiler version ;; \
