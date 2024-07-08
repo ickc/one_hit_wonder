@@ -25,7 +25,7 @@ jobs:
         run: devbox run --config envs/system 'cd ../..; make compiler_version'
 
       - name: compile, run, and test
-        run: devbox run --config envs/system 'cd ../..; make all PATH2="$PATH"'
+        run: devbox run --config envs/system 'cd ../..; make all PATH2="$PATH" -j1'
 
       - name: list dynamically linked libraries
         run: devbox run --config envs/system 'cd ../..; make list_link'
