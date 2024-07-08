@@ -12,7 +12,6 @@ fi
 outfile="$1"
 
 if command -v devbox &> /dev/null; then
-    echo 'devbox found. Using devbox to get commands.'
     METHOD=devbox
 else
     echo "devbox command not found. Please install Nix and devbox to proceed."
@@ -80,6 +79,41 @@ case "$(uname -s)" in
     Darwin)
         echo 'CLANG_SYSTEM=/usr/bin/clang' >> "${outfile}"
         echo 'CLANGXX_SYSTEM=/usr/bin/clang++' >> "${outfile}"
+
+        case "$(uname -m)" in
+            arm64)
+                cpu_info=$(sysctl -n machdep.cpu.brand_string)
+                case "${cpu_info}" in
+                    "Apple M1"*)
+                        GCC_MARCH="armv8.5-a"
+                        ;;
+                    "Apple M2"* | "Apple M3"*)
+                        GCC_MARCH="armv8.6-a"
+                        ;;
+                    # Apple M4 or above
+                    *)
+                        GCC_MARCH="armv9-a"
+                        ;;
+                esac
+                ;;
+            *)
+                GCC_MARCH=native
+                ;;
+        esac
+
+        case "$(sw_vers -productVersion)" in
+            13.*)
+                CLANGXX_SYSTEM_STD=c++17
+                ;;
+            *)
+                CLANGXX_SYSTEM_STD=c++20
+                ;;
+        esac
+
+        echo "CLANGXX_SYSTEM_STD=${CLANGXX_SYSTEM_STD}" >> "${outfile}"
         ;;
-    *) ;;
+    *)
+        GCC_MARCH=native
+        ;;
 esac
+echo "GCC_MARCH=${GCC_MARCH}" >> "${outfile}"

@@ -10,14 +10,6 @@ all: compile run test  ## compile, run, and test
 
 EXT =
 
-GCC_MARCH = native
-# fix gcc not recognizing M1 mac
-ifeq ($(shell uname), Darwin)
-    ifeq ($(shell uname -m), arm64)
-        GCC_MARCH = armv8.5-a
-    endif
-endif
-
 # C
 EXT += c
 SRC_c = $(wildcard src/*.c)
@@ -60,7 +52,7 @@ COMPILER_cpp += $(CLANGXX_SYSTEM)
 BIN_cpp += $(patsubst src/%,bin/%_clangxx_system,$(subst .,_,$(SRC_cpp)))
 bin/%_cpp_clangxx_system: src/%.cpp
 	@mkdir -p $(@D)
-	$(CLANGXX_SYSTEM) -o $@ -O3 -march=native -mtune=native -std=c++20 $<
+	$(CLANGXX_SYSTEM) -o $@ -O3 -march=native -mtune=native -std=$(CLANGXX_SYSTEM_STD) $<
 endif
 
 .PHONY: clean_cpp format_cpp
