@@ -127,6 +127,15 @@ bin/%_py: src/%.py
 	@echo "#!$(PYTHON)" > $@
 	@cat $< >> $@
 	@chmod +x $@
+ifdef PYTHON_SYSTEM
+COMPILER_py += $(PYTHON_SYSTEM)
+BIN_py += $(patsubst src/%,bin/%_system,$(subst .,_,$(SRC_py)))
+bin/%_py_system: src/%.py
+	@mkdir -p $(@D)
+	@echo "#!$(PYTHON_SYSTEM)" > $@
+	@cat $< >> $@
+	@chmod +x $@
+endif
 .PHONY: clean_py format_py
 clean_py:  ## clean Python binaries
 	rm -f $(BIN_py)

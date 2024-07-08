@@ -78,6 +78,7 @@ esac
 case "$(uname -s)" in
     Darwin)
         echo 'CLANG_SYSTEM=/usr/bin/clang' >> "${outfile}"
+        echo 'PYTHON_SYSTEM=/usr/bin/python3' >> "${outfile}"
 
         # Get the macOS version number
         macos_version=$(sw_vers -productVersion | awk -F '.' '{print $1}')
