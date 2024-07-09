@@ -58,8 +58,6 @@ case "${METHOD}" in
         get_command_path ISORT envs/python isort
         get_command_path PYTHON envs/python python
         get_command_path PYPY envs/pypy pypy3
-        get_command_path NUITKA_PYTHON envs/nuitka python
-        get_env_var NUITKA_PYTHONPATH envs/nuitka PYTHONPATH
         get_command_path RUSTFMT envs/rust rustfmt
         get_command_path RUSTC envs/rust rustc
         get_command_path SHFMT envs/bash shfmt
@@ -72,6 +70,11 @@ case "${METHOD}" in
         get_command_path HYPERFINE envs/system hyperfine
         get_command_path DIFFT envs/system difft
         get_command_path GNUTIME envs/system time
+
+        if [[ "$(uname -s)" != Darwin || $(sw_vers -productVersion | awk -F '.' '{print $1}') -ge 14 ]]; then
+            get_command_path NUITKA_PYTHON envs/nuitka python
+            get_env_var NUITKA_PYTHONPATH envs/nuitka PYTHONPATH
+        fi
         ;;
     *) ;;
 esac
