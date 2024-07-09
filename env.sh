@@ -58,6 +58,8 @@ case "${METHOD}" in
         get_command_path ISORT envs/python isort
         get_command_path PYTHON envs/python python
         get_command_path PYPY envs/pypy pypy3
+        get_command_path NUITKA_PYTHON envs/nuitka python
+        get_env_var NUITKA_PYTHONPATH envs/nuitka PYTHONPATH
         get_command_path RUSTFMT envs/rust rustfmt
         get_command_path RUSTC envs/rust rustc
         get_command_path SHFMT envs/bash shfmt
