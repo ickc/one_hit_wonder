@@ -196,7 +196,7 @@ BIN_pyx += $(patsubst src/%.pyx,bin/%_pyx_cython_gxx,$(SRC_pyx))
 bin/%_pyx_cython_gxx: src/%.pyx
 	@mkdir -p $(@D)
 	@ln -sf ../$< $@.pyx
-	CC=$(GCC) CXX=$(GXX) CXXFLAGS='-Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -std=c++23' $(CYTHONIZE) -i $@.pyx --3str --no-docstrings
+	CC=$(GXX) CXX=$(GXX) CXXFLAGS='-Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -std=c++23' $(CYTHONIZE) -i $@.pyx --3str --no-docstrings
 	@rm -f $@.pyx $@.cpp
 	@printf "#!$(CYTHON_PYTHON)\nfrom $(@F) import main\nmain()" > $@
 	@chmod +x $@
