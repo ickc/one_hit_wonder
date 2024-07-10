@@ -10,6 +10,23 @@ all: compile run test  ## compile, run, and test
 
 # compile ######################################################################
 
+C_COMMON_FLAGS = \
+	-DNDEBUG \
+	-fwrapv \
+	-mtune=native \
+	-O3 \
+	-Wall \
+	-Wsign-compare \
+	-Wunreachable-code
+GCC_FLAGS = $(C_COMMON_FLAGS) -march=$(GCC_MARCH) -std=c23
+CLANG_FLAGS = $(C_COMMON_FLAGS) -march=native -std=c23
+CLANG_FLAGS_SYSTEM = $(C_COMMON_FLAGS) -march=native -std=c17
+GXX_FLAGS = $(C_COMMON_FLAGS) -march=$(GCC_MARCH) -std=c++23
+CLANGXX_FLAGS = $(C_COMMON_FLAGS) -march=native -std=c++23
+CLANGXX_FLAGS_SYSTEM = $(C_COMMON_FLAGS) -march=native -std=c++20
+CYTHON_FLAGS = --3str --no-docstrings
+CYTHONXX_FLAGS = $(CYTHON_FLAGS) --cplus
+
 EXT =
 
 # C
@@ -19,15 +36,15 @@ COMPILER_c = $(GCC) $(CLANG)
 BIN_c = $(foreach compiler,$(COMPILER_c),$(patsubst src/%,bin/%_$(notdir $(compiler)),$(subst .,_,$(SRC_c))))
 bin/%_c_$(notdir $(GCC)): src/%.c
 	@mkdir -p $(@D)
-	$(GCC) -o $@ -O3 -march=$(GCC_MARCH) -mtune=native -std=c23 $<
+	$(GCC) $< -o $@ $(GCC_FLAGS)
 bin/%_c_$(notdir $(CLANG)): src/%.c
 	@mkdir -p $(@D)
-	$(CLANG) -o $@ -O3 -march=native -mtune=native -std=c23 $<
+	$(CLANG) $< -o $@ $(CLANG_FLAGS)
 ifdef CLANG_SYSTEM
 BIN_c += $(patsubst src/%,bin/%_clang_system,$(subst .,_,$(SRC_c)))
 bin/%_c_clang_system: src/%.c
 	@mkdir -p $(@D)
-	$(CLANG_SYSTEM) -o $@ -O3 -march=native -mtune=native -std=c17 $<
+	$(CLANG_SYSTEM) $< -o $@ $(CLANG_FLAGS_SYSTEM)
 endif
 
 .PHONY: clean_c format_c
@@ -44,15 +61,15 @@ COMPILER_cpp = $(GXX) $(CLANGXX)
 BIN_cpp = $(foreach compiler,$(COMPILER_cpp),$(patsubst src/%,bin/%_$(notdir $(compiler)),$(subst .,_,$(SRC_cpp))))
 bin/%_cpp_$(notdir $(GXX)): src/%.cpp
 	@mkdir -p $(@D)
-	$(GXX) -o $@ -O3 -march=$(GCC_MARCH) -mtune=native -std=c++23 $<
+	$(GXX) $< -o $@ $(GXX_FLAGS)
 bin/%_cpp_$(notdir $(CLANGXX)): src/%.cpp
 	@mkdir -p $(@D)
-	$(CLANGXX) -o $@ -O3 -march=native -mtune=native -std=c++23 $<
+	$(CLANGXX) $< -o $@ $(CLANGXX_FLAGS)
 ifdef CLANGXX_SYSTEM
 BIN_cpp += $(patsubst src/%,bin/%_clang++_system,$(subst .,_,$(SRC_cpp)))
 bin/%_cpp_clang++_system: src/%.cpp
 	@mkdir -p $(@D)
-	$(CLANGXX_SYSTEM) -o $@ -O3 -march=native -mtune=native -std=c++20 $<
+	$(CLANGXX_SYSTEM) $< -o $@ $(CLANGXX_FLAGS_SYSTEM)
 endif
 
 .PHONY: clean_cpp format_cpp
@@ -136,14 +153,16 @@ BIN_py += $(foreach compiler,$(COMPILER_c),$(patsubst src/%,bin/%_cython_$(notdi
 bin/%_py_cython_$(notdir $(GCC)): src/%.py
 	@mkdir -p $(@D)
 	@ln -sf ../$< $@.py
-	CC=$(GCC) $(CYTHONIZE) -i $@.py --3str --no-docstrings
+	CC=$(GCC) CFLAGS='$(GCC_FLAGS)'  \
+		$(CYTHONIZE) -i $@.py $(CYTHON_FLAGS)
 	@rm -f $@.py $@.c
 	@printf "#!$(CYTHON_PYTHON)\nfrom $(@F) import main\nmain()" > $@
 	@chmod +x $@
 bin/%_py_cython_$(notdir $(CLANG)): src/%.py
 	@mkdir -p $(@D)
 	@ln -sf ../$< $@.py
-	CC=$(CLANG) $(CYTHONIZE) -i $@.py --3str --no-docstrings
+	CC=$(CLANG) CFLAGS='$(CLANG_FLAGS)' \
+		$(CYTHONIZE) -i $@.py $(CYTHON_FLAGS)
 	@rm -f $@.py $@.c
 	@printf "#!$(CYTHON_PYTHON)\nfrom $(@F) import main\nmain()" > $@
 	@chmod +x $@
@@ -151,7 +170,9 @@ BIN_py += $(patsubst src/%.py,bin/%_py_cython_gxx,$(SRC_py))
 bin/%_py_cython_gxx: src/%.py
 	@mkdir -p $(@D)
 	@ln -sf ../$< $@.py
-	CXX=$(GXX) $(CYTHONIZE) -i $@.py --3str --no-docstrings --cplus
+	CC=$(GXX) CFLAGS='$(GXX_FLAGS)' \
+	CXX=$(GXX) CXXFLAGS='$(GXX_FLAGS)' \
+		$(CYTHONIZE) -i $@.py $(CYTHONXX_FLAGS)
 	@rm -f $@.py $@.cpp
 	@printf "#!$(CYTHON_PYTHON)\nfrom $(@F) import main\nmain()" > $@
 	@chmod +x $@
@@ -159,7 +180,9 @@ BIN_py += $(patsubst src/%.py,bin/%_py_cython_clangxx,$(SRC_py))
 bin/%_py_cython_clangxx: src/%.py
 	@mkdir -p $(@D)
 	@ln -sf ../$< $@.py
-	CXX=$(CLANGXX) $(CYTHONIZE) -i $@.py --3str --no-docstrings --cplus
+	CC=$(CLANGXX) CFLAGS='$(CLANGXX_FLAGS)' \
+	CXX=$(CLANGXX) CXXFLAGS='$(CLANGXX_FLAGS)' \
+		$(CYTHONIZE) -i $@.py $(CYTHONXX_FLAGS)
 	@rm -f $@.py $@.cpp
 	@printf "#!$(CYTHON_PYTHON)\nfrom $(@F) import main\nmain()" > $@
 	@chmod +x $@
@@ -196,9 +219,9 @@ BIN_pyx += $(patsubst src/%.pyx,bin/%_pyx_cython_gxx,$(SRC_pyx))
 bin/%_pyx_cython_gxx: src/%.pyx
 	@mkdir -p $(@D)
 	@ln -sf ../$< $@.pyx
-	CC=$(GXX) CFLAGS='-Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -std=c++23' \
-	CXX=$(GXX) CXXFLAGS='-Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -std=c++23' \
-		$(CYTHONIZE) -i $@.pyx --3str --no-docstrings
+	CC=$(GXX) CFLAGS='$(GXX_FLAGS)' \
+	CXX=$(GXX) CXXFLAGS='$(GXX_FLAGS)' \
+		$(CYTHONIZE) -i $@.pyx $(CYTHONXX_FLAGS)
 	@rm -f $@.pyx $@.cpp
 	@printf "#!$(CYTHON_PYTHON)\nfrom $(@F) import main\nmain()" > $@
 	@chmod +x $@
@@ -207,9 +230,9 @@ BIN_pyx += $(patsubst src/%.pyx,bin/%_pyx_cython_clangxx,$(SRC_pyx))
 bin/%_pyx_cython_clangxx: src/%.pyx
 	@mkdir -p $(@D)
 	@ln -sf ../$< $@.pyx
-	CC=$(CLANGXX) CFLAGS='-Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -std=c++23' \
-	CXX=$(CLANGXX) CXXFLAGS='-Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -std=c++23' \
-		$(CYTHONIZE) -i $@.pyx --3str --no-docstrings
+	CC=$(CLANGXX) CFLAGS='$(CLANGXX_FLAGS)' \
+	CXX=$(CLANGXX) CXXFLAGS='$(CLANGXX_FLAGS)' \
+		$(CYTHONIZE) -i $@.pyx $(CYTHONXX_FLAGS)
 	@rm -f $@.pyx $@.cpp
 	@printf "#!$(CYTHON_PYTHON)\nfrom $(@F) import main\nmain()" > $@
 	@chmod +x $@
@@ -218,9 +241,9 @@ BIN_pyx += $(patsubst src/%.pyx,bin/%_pyx_cython_clangxx_system,$(SRC_pyx))
 bin/%_pyx_cython_clangxx_system: src/%.pyx
 	@mkdir -p $(@D)
 	@ln -sf ../$< $@.pyx
-	CC=$(CLANGXX_SYSTEM) CFLAGS='-Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -std=c++20' \
-	CXX=$(CLANGXX_SYSTEM) CXXFLAGS='-Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -std=c++20' \
-		$(CYTHONIZE) -i $@.pyx --3str --no-docstrings
+	CC=$(CLANGXX_SYSTEM) CFLAGS='$(CLANGXX_FLAGS_SYSTEM)' \
+	CXX=$(CLANGXX_SYSTEM) CXXFLAGS='$(CLANGXX_FLAGS_SYSTEM)' \
+		$(CYTHONIZE) -i $@.pyx $(CYTHONXX_FLAGS)
 	@rm -f $@.pyx $@.cpp
 	@printf '#!$(CYTHON_PYTHON)\nimport sys\nfrom $(@F) import main\nmain()\n' > $@
 	@chmod +x $@
