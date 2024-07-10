@@ -2,6 +2,8 @@ INCLUDEFILE = .env
 include $(INCLUDEFILE)
 DEVBOXS = $(wildcard envs/*/devbox.*)
 
+UNAME = $(shell uname -s)
+
 .DEFAULT_GOAL = help
 .PHONY: all
 all: compile run test  ## compile, run, and test
@@ -327,11 +329,11 @@ size:  ## show binary sizes
 	@ls -lh bin | sort -hk5
 	@du -sh bin/diffpath.dist || true
 list_link:  ## list dynamically linked libraries
-	if [[ $$(uname) == Darwin ]]; then \
-		find bin -type f -executable -exec otool -L {} +; \
-	else \
-		find bin -type f -executable -exec ldd {} + || true; \
-	fi
+ifeq ($(UNAME),Darwin)
+	find bin -type f -executable -exec otool -L {} +;
+else
+	find bin -type f -executable -exec ldd {} + || true;
+endif
 clean: \
 	clean_compile \
 	clean_run \
