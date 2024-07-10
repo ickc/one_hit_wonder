@@ -1,5 +1,5 @@
 {
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.11.0/.schema/devbox.schema.json",
-  // nix's python 3.12 has packaging problem that can't find distutils
+  // python 3.12 compat: https://github.com/cython/cython/issues/5751
   "packages": ["python311Packages.cython@latest"]
 }
