@@ -28,8 +28,12 @@ def diffpath(
             print(f"\t{command}")
 
 
-if __name__ == "__main__":
+def cli() -> None:
     if len(sys.argv) != 3:
         print(f"Usage: {sys.argv[0]} PATH1 PATH2")
         sys.exit(1)
     diffpath(sys.argv[1], sys.argv[2])
+
+
+if __name__ == "__main__":
+    cli()

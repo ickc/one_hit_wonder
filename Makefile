@@ -130,6 +130,37 @@ bin/%_py_$(notdir $(PYPY)): src/%.py
 	@echo "#!$(PYPY)" > $@
 	@cat $< >> $@
 	@chmod +x $@
+BIN_py += $(foreach compiler,$(COMPILER_c),$(patsubst src/%,bin/%_cython_$(notdir $(compiler)),$(subst .,_,$(SRC_py))))
+bin/%_py_cython_$(notdir $(GCC)): src/%.py
+	@mkdir -p $(@D)
+	@ln -sf ../$< $@.py
+	CC=$(GCC) $(CYTHONIZE) -i $@.py --3str --no-docstrings
+	@rm -f $@.py $@.c
+	@printf "#!$(CYTHON_PYTHON)\nfrom $(@F) import cli\ncli()" > $@
+	@chmod +x $@
+bin/%_py_cython_$(notdir $(CLANG)): src/%.py
+	@mkdir -p $(@D)
+	@ln -sf ../$< $@.py
+	CC=$(CLANG) $(CYTHONIZE) -i $@.py --3str --no-docstrings
+	@rm -f $@.py $@.c
+	@printf "#!$(CYTHON_PYTHON)\nfrom $(@F) import cli\ncli()" > $@
+	@chmod +x $@
+BIN_py += $(patsubst src/%.py,bin/%_py_cython_gxx,$(SRC_py))
+bin/%_py_cython_gxx: src/%.py
+	@mkdir -p $(@D)
+	@ln -sf ../$< $@.py
+	CXX=$(GXX) $(CYTHONIZE) -i $@.py --3str --no-docstrings --cplus
+	@rm -f $@.py $@.cpp
+	@printf "#!$(CYTHON_PYTHON)\nfrom $(@F) import cli\ncli()" > $@
+	@chmod +x $@
+BIN_py += $(patsubst src/%.py,bin/%_py_cython_clangxx,$(SRC_py))
+bin/%_py_cython_clangxx: src/%.py
+	@mkdir -p $(@D)
+	@ln -sf ../$< $@.py
+	CXX=$(CLANGXX) $(CYTHONIZE) -i $@.py --3str --no-docstrings --cplus
+	@rm -f $@.py $@.cpp
+	@printf "#!$(CYTHON_PYTHON)\nfrom $(@F) import cli\ncli()" > $@
+	@chmod +x $@
 ifdef NUITKA_PYTHON
 BIN_py += $(patsubst src/%,bin/%_nuitka,$(subst .,_,$(SRC_py)))
 bin/%_py_nuitka: src/%.py
