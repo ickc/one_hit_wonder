@@ -186,6 +186,43 @@ format_py:  ## format Python files
 	$(BLACK) src
 	$(ISORT) src
 
+# Cython
+EXT += pyx
+SRC_pyx = $(wildcard src/*.pyx)
+BIN_pyx =
+# Cython on Darwin hardcoded to use clang++ for linking
+ifneq ($(UNAME),Darwin)
+BIN_pyx += $(patsubst src/%.pyx,bin/%_pyx_cython_gxx,$(SRC_pyx))
+bin/%_pyx_cython_gxx: src/%.pyx
+	@mkdir -p $(@D)
+	@ln -sf ../$< $@.pyx
+	CXX=$(GXX) CXXFLAGS='-Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -std=c++23' $(CYTHONIZE) -i $@.pyx --3str --no-docstrings
+	@rm -f $@.pyx $@.cpp
+	@printf "#!$(CYTHON_PYTHON)\nfrom $(@F) import main\nmain()" > $@
+	@chmod +x $@
+endif
+BIN_pyx += $(patsubst src/%.pyx,bin/%_pyx_cython_clangxx,$(SRC_pyx))
+bin/%_pyx_cython_clangxx: src/%.pyx
+	@mkdir -p $(@D)
+	@ln -sf ../$< $@.pyx
+	CXX=$(CLANGXX) CXXFLAGS='-Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -std=c++23' $(CYTHONIZE) -i $@.pyx --3str --no-docstrings
+	@rm -f $@.pyx $@.cpp
+	@printf "#!$(CYTHON_PYTHON)\nfrom $(@F) import main\nmain()" > $@
+	@chmod +x $@
+ifdef CLANGXX_SYSTEM
+BIN_pyx += $(patsubst src/%.pyx,bin/%_pyx_cython_clangxx_system,$(SRC_pyx))
+bin/%_pyx_cython_clangxx_system: src/%.pyx
+	@mkdir -p $(@D)
+	@ln -sf ../$< $@.pyx
+	CXX=$(CLANGXX_SYSTEM) CXXFLAGS='-Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -std=c++20' $(CYTHONIZE) -i $@.pyx --3str --no-docstrings
+	@rm -f $@.pyx $@.cpp
+	@printf '#!$(CYTHON_PYTHON)\nimport sys\nfrom $(@F) import main\nmain()\n' > $@
+	@chmod +x $@
+endif
+.PHONY: clean_pyx format_pyx
+clean_pyx:  ## clean Cython binaries
+	rm -f $(BIN_pyx)
+
 # Rust
 EXT += rs
 SRC_rs = $(wildcard src/*.rs)
