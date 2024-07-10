@@ -1,0 +1,69 @@
+{
+  "lockfile_version": "1",
+  "packages": {
+    "python311Packages.cython@latest": {
+      "last_modified": "2024-07-07T16:08:25Z",
+      "resolved": "github:NixOS/nixpkgs/ab82a9612aa45284d4adf69ee81871a389669a9e#python311Packages.cython",
+      "source": "devbox-search",
+      "version": "3.0.10",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/a0qlrmff929a8q46m4yk4ssw18ig8m2n-python3.11-cython-3.0.10",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/s2c9rmhjwizn6nby2g9c6c62r9z280mv-python3.11-cython-3.0.10-dist"
+            }
+          ],
+          "store_path": "/nix/store/a0qlrmff929a8q46m4yk4ssw18ig8m2n-python3.11-cython-3.0.10"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/kb8v7xkwyg8lvp4cxcfg8a996gsbq844-python3.11-cython-3.0.10",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/04y7jgaw6j3qpd133c25wlk6hzn2lp2i-python3.11-cython-3.0.10-dist"
+            }
+          ],
+          "store_path": "/nix/store/kb8v7xkwyg8lvp4cxcfg8a996gsbq844-python3.11-cython-3.0.10"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/9gymmc4087arm8pcn4gim1as9b0r9k52-python3.11-cython-3.0.10",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/2pq02izkc2s81agzk3ank8r6il4s5drg-python3.11-cython-3.0.10-dist"
+            }
+          ],
+          "store_path": "/nix/store/9gymmc4087arm8pcn4gim1as9b0r9k52-python3.11-cython-3.0.10"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/mqzvkj2j5srrcvq0j3gkijhwv5lk95x6-python3.11-cython-3.0.10",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/i9zxa4s766in7fbgj85hmg6vi768znng-python3.11-cython-3.0.10-dist"
+            }
+          ],
+          "store_path": "/nix/store/mqzvkj2j5srrcvq0j3gkijhwv5lk95x6-python3.11-cython-3.0.10"
+        }
+      }
+    }
+  }
+}
