@@ -196,7 +196,9 @@ BIN_pyx += $(patsubst src/%.pyx,bin/%_pyx_cython_gxx,$(SRC_pyx))
 bin/%_pyx_cython_gxx: src/%.pyx
 	@mkdir -p $(@D)
 	@ln -sf ../$< $@.pyx
-	CC=$(GXX) CFLAGS='-Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -std=c++23' CXX=$(GXX) CXXFLAGS='-Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -std=c++23' $(CYTHONIZE) -i $@.pyx --3str --no-docstrings
+	CC=$(GXX) CFLAGS='-Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -std=c++23' \
+	CXX=$(GXX) CXXFLAGS='-Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -std=c++23' \
+		$(CYTHONIZE) -i $@.pyx --3str --no-docstrings
 	@rm -f $@.pyx $@.cpp
 	@printf "#!$(CYTHON_PYTHON)\nfrom $(@F) import main\nmain()" > $@
 	@chmod +x $@
@@ -205,7 +207,9 @@ BIN_pyx += $(patsubst src/%.pyx,bin/%_pyx_cython_clangxx,$(SRC_pyx))
 bin/%_pyx_cython_clangxx: src/%.pyx
 	@mkdir -p $(@D)
 	@ln -sf ../$< $@.pyx
-	CXX=$(CLANGXX) CXXFLAGS='-Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -std=c++23' $(CYTHONIZE) -i $@.pyx --3str --no-docstrings
+	CC=$(CLANGXX) CFLAGS='-Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -std=c++23' \
+	CXX=$(CLANGXX) CXXFLAGS='-Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -std=c++23' \
+		$(CYTHONIZE) -i $@.pyx --3str --no-docstrings
 	@rm -f $@.pyx $@.cpp
 	@printf "#!$(CYTHON_PYTHON)\nfrom $(@F) import main\nmain()" > $@
 	@chmod +x $@
@@ -214,7 +218,9 @@ BIN_pyx += $(patsubst src/%.pyx,bin/%_pyx_cython_clangxx_system,$(SRC_pyx))
 bin/%_pyx_cython_clangxx_system: src/%.pyx
 	@mkdir -p $(@D)
 	@ln -sf ../$< $@.pyx
-	CXX=$(CLANGXX_SYSTEM) CXXFLAGS='-Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -std=c++20' $(CYTHONIZE) -i $@.pyx --3str --no-docstrings
+	CC=$(CLANGXX_SYSTEM) CFLAGS='-Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -std=c++20' \
+	CXX=$(CLANGXX_SYSTEM) CXXFLAGS='-Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -std=c++20' \
+		$(CYTHONIZE) -i $@.pyx --3str --no-docstrings
 	@rm -f $@.pyx $@.cpp
 	@printf '#!$(CYTHON_PYTHON)\nimport sys\nfrom $(@F) import main\nmain()\n' > $@
 	@chmod +x $@
