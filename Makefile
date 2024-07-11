@@ -99,9 +99,11 @@ EXT += hs
 SRC_hs = $(wildcard src/*.hs)
 COMPILER_hs = $(GHC)
 BIN_hs = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_hs)))
+.INTERMEDIATE: bin/%.o bin/%.hi
 bin/%_hs: src/%.hs
 	@mkdir -p $(@D)
 	$(GHC) -o $@ -O2 $<
+	@rm -f src/$*.o src/$*.hi
 .PHONY: clean_hs format_hs
 clean_hs:  ## clean Haskell files
 	rm -f $(BIN_hs) src/*.o src/*.hi
