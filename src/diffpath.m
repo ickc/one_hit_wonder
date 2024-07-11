@@ -1,6 +1,5 @@
 #import <Foundation/Foundation.h>
 #import <dirent.h>
-#import <fcntl.h>
 #import <sys/stat.h>
 #import <unistd.h>
 
@@ -12,7 +11,6 @@ BOOL isExecutableAtPath(int dirfd, const char* fileName)
         perror("fstatat");
         return NO;
     }
-
     // Check if the file is either regular or symlink and executable by user, group, or others
     return ((S_ISREG(st.st_mode) || S_ISLNK(st.st_mode)) && (st.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH)));
 }
@@ -21,7 +19,7 @@ BOOL isExecutableAtPath(int dirfd, const char* fileName)
 NSSet<NSString*>* getExecutablesInDirectory(NSString* directory)
 {
     NSMutableSet<NSString*>* executables = [NSMutableSet set];
-    int dirfd = open([directory UTF8String], O_RDONLY | O_DIRECTORY);
+    int dirfd = open([directory fileSystemRepresentation], O_RDONLY | O_DIRECTORY);
     if (dirfd == -1) {
         perror("open");
         return executables;
@@ -43,16 +41,16 @@ NSSet<NSString*>* getExecutablesInDirectory(NSString* directory)
         perror("fdopendir");
         close(dirfd);
     }
-
     close(dirfd);
     return executables;
 }
 
 // Function to collect executables from PATH
-NSSet<NSString*>* collectExecutables(NSArray<NSString*>* pathDirectories)
+NSSet<NSString*>* collectExecutables(NSString* path)
 {
     NSMutableSet<NSString*>* executables = [NSMutableSet set];
-    for (NSString* directory in pathDirectories) {
+    NSArray<NSString*>* directories = [path componentsSeparatedByString:@":"];
+    for (NSString* directory in directories) {
         [executables unionSet:getExecutablesInDirectory(directory)];
     }
     return executables;
@@ -70,11 +68,8 @@ int main(int argc, const char* argv[])
         NSString* path1 = [NSString stringWithUTF8String:argv[1]];
         NSString* path2 = [NSString stringWithUTF8String:argv[2]];
 
-        NSArray<NSString*>* path1Directories = [path1 componentsSeparatedByString:@":"];
-        NSArray<NSString*>* path2Directories = [path2 componentsSeparatedByString:@":"];
-
-        NSSet<NSString*>* executables1 = collectExecutables(path1Directories);
-        NSSet<NSString*>* executables2 = collectExecutables(path2Directories);
+        NSSet<NSString*>* executables1 = collectExecutables(path1);
+        NSSet<NSString*>* executables2 = collectExecutables(path2);
 
         NSMutableSet<NSString*>* uniqueToPath1 = [executables1 mutableCopy];
         [uniqueToPath1 minusSet:executables2];
@@ -85,14 +80,13 @@ int main(int argc, const char* argv[])
         NSMutableSet<NSString*>* symmetricDifference = [uniqueToPath1 mutableCopy];
         [symmetricDifference unionSet:uniqueToPath2];
 
-        NSMutableArray<NSString*>* diff = [NSMutableArray arrayWithArray:[symmetricDifference allObjects]];
-        [diff sortUsingSelector:@selector(compare:)];
+        NSArray<NSString*>* diff = [[symmetricDifference allObjects] sortedArrayUsingSelector:@selector(compare:)];
 
         for (NSString* entry in diff) {
-            if (![executables1 containsObject:entry]) {
-                printf("\t%s\n", [entry UTF8String]);
-            } else {
+            if ([executables1 containsObject:entry]) {
                 printf("%s\n", [entry UTF8String]);
+            } else {
+                printf("\t%s\n", [entry UTF8String]);
             }
         }
     }
