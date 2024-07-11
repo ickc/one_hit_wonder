@@ -4,5 +4,6 @@ bin/
 out/
 src/*.hi
 src/*.o
+src/*.pl.bak
 src/bin
 src/obj

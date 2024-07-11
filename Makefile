@@ -351,6 +351,7 @@ clean_pl:  ## clean generated PERL scripts
 format_pl:  ## format PERL files
 	find src -type f -name '*.pl' -exec \
 		$(PERLTIDY) -b {} +
+	find src -type f -name '*.pl.bak' -delete
 
 # C#
 EXT += cs
