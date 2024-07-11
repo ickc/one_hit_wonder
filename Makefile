@@ -193,7 +193,7 @@ BIN_py += $(patsubst src/%,bin/%_nuitka,$(subst .,_,$(SRC_py)))
 bin/%_py_nuitka: src/%.py
 	@mkdir -p $(@D)
 	PYTHONPATH=$(NUITKA_PYTHONPATH) $(NUITKA_PYTHON) -m nuitka --standalone --assume-yes-for-downloads --static-libpython=yes --output-dir=$(@D) --output-filename=$*_py_nuitka $<
-	ln -sf diffpath.dist/$*_py_nuitka $@
+	ln -sf $*.dist/$*_py_nuitka $@
 endif
 ifdef PYTHON_SYSTEM
 BIN_py += $(patsubst src/%,bin/%_python_system,$(subst .,_,$(SRC_py)))
@@ -428,7 +428,7 @@ test: $(TXT)  ## test all
 	done
 size:  ## show binary sizes
 	@ls -lh bin | sort -hk5
-	@du -sh bin/diffpath.dist || true
+	@du -sh bin/*.dist || true
 list_link:  ## list dynamically linked libraries
 ifeq ($(UNAME),Darwin)
 	find bin -type f -executable -exec otool -L {} +;
@@ -441,7 +441,7 @@ clean: \
 	clean_bench \
 	## clean all
 	rm -f $(INCLUDEFILE) bin/.DS_Store out/.DS_Store
-	rm -rf bin/diffpath.dist
+	rm -rf bin/*.dist
 	ls bin out 2>/dev/null || true
 	rm -rf bin out
 Clean: clean Clean_ts  ## Clean the environments too (this triggers redownload & rebuild next time!)
