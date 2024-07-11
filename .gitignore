@@ -1,6 +1,8 @@
+.env
 /node_modules
 bin/
 out/
 src/*.hi
 src/*.o
-.env
+src/bin
+src/obj

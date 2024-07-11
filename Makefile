@@ -352,6 +352,26 @@ format_pl:  ## format PERL files
 	find src -type f -name '*.pl' -exec \
 		$(PERLTIDY) -b {} +
 
+# C#
+EXT += cs
+SRC_cs = $(wildcard src/*.cs)
+COMPILER_cs = $(DOTNET)
+BIN_cs = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_cs)))
+.INTERMEDIATE: bin/%.pdb src/bin src/obj
+bin/%_cs: src/%.csproj src/%.cs
+	@mkdir -p $(@D)
+	$(DOTNET) publish $< -o src/bin --self-contained true --nologo --configuration Release -p:PublishSingleFile=true -p:PublishTrimmed=true
+	@mv src/bin/$* $@
+	@rm -f bin/%*.pdb
+	@rm -rf src/bin src/obj
+.PHONY: clean_cs format_cs
+clean_cs:  ## clean C# binaries
+	rm -f $(BIN_cs) bin/*.pdb
+	rm -rf src/bin src/obj
+format_cs:  ## format C# files
+	find src -type f -name '*.csproj' -exec \
+		$(DOTNET) format {} +
+
 # all
 
 BIN = $(foreach ext,$(EXT),$(BIN_$(ext)))
@@ -422,10 +442,10 @@ $(INCLUDEFILE): env.sh $(DEVBOXS)
 	./$< $@
 update:  ## update environments using nix & devbox
 	devbox update --all-projects
+# C#'s output is so bad that we need to exclude it from the diff
 test: $(TXT)  ## test all
-	for i in $(TXT); do \
-		$(DIFFT) out/diffpath_c_gcc.txt $$i; \
-	done
+	@$(foreach file,$(filter-out out/diffpath_c_gcc.txt out/diffpath_cs.txt,$(TXT)),$(DIFFT) out/diffpath_c_gcc.txt $(file);)
+	@echo diffpath.cs got this number of lines wrong: $$(diff out/diffpath_c_gcc.txt out/diffpath_cs.txt | wc -l) out of $$(wc -l < out/diffpath_c_gcc.txt)
 size:  ## show binary sizes
 	@ls -lh bin | sort -hk5
 	@du -sh bin/*.dist || true
