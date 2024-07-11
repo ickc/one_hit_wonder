@@ -1,0 +1,153 @@
+{
+  "lockfile_version": "1",
+  "packages": {
+    "perl538Packages.PerlTidy@latest": {
+      "last_modified": "2024-07-07T16:08:25Z",
+      "resolved": "github:NixOS/nixpkgs/ab82a9612aa45284d4adf69ee81871a389669a9e#perl538Packages.PerlTidy",
+      "source": "devbox-search",
+      "version": "20230912",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/xv6ihzjnpyy83fqvm8syc6zb3myfqh3i-perl5.38.2-Perl-Tidy-20230912",
+              "default": true
+            },
+            {
+              "name": "devdoc",
+              "path": "/nix/store/0yq6y9mf0zxqrdyz3z39m4apfmm7mf19-perl5.38.2-Perl-Tidy-20230912-devdoc"
+            }
+          ],
+          "store_path": "/nix/store/xv6ihzjnpyy83fqvm8syc6zb3myfqh3i-perl5.38.2-Perl-Tidy-20230912"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/8ipfh0k4cdi5bbnyqpafycxc35v1i0w8-perl5.38.2-Perl-Tidy-20230912",
+              "default": true
+            },
+            {
+              "name": "devdoc",
+              "path": "/nix/store/in6y1m0c2yvsmjdhd0lhsjazn9v3hcl0-perl5.38.2-Perl-Tidy-20230912-devdoc"
+            }
+          ],
+          "store_path": "/nix/store/8ipfh0k4cdi5bbnyqpafycxc35v1i0w8-perl5.38.2-Perl-Tidy-20230912"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/ijyzyfbsh3sm4h2habf5hfvibpc5208r-perl5.38.2-Perl-Tidy-20230912",
+              "default": true
+            },
+            {
+              "name": "devdoc",
+              "path": "/nix/store/2nq35010pm4jdaysxxdg9a7yivhi44yl-perl5.38.2-Perl-Tidy-20230912-devdoc"
+            }
+          ],
+          "store_path": "/nix/store/ijyzyfbsh3sm4h2habf5hfvibpc5208r-perl5.38.2-Perl-Tidy-20230912"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/g72zaybw56yk8ysq2wl0k9k8n2rxhzy8-perl5.38.2-Perl-Tidy-20230912",
+              "default": true
+            },
+            {
+              "name": "devdoc",
+              "path": "/nix/store/sbfg1agm7zz74wi8gj39r0pm5spfsphr-perl5.38.2-Perl-Tidy-20230912-devdoc"
+            }
+          ],
+          "store_path": "/nix/store/g72zaybw56yk8ysq2wl0k9k8n2rxhzy8-perl5.38.2-Perl-Tidy-20230912"
+        }
+      }
+    },
+    "perl@latest": {
+      "last_modified": "2024-07-07T16:08:25Z",
+      "resolved": "github:NixOS/nixpkgs/ab82a9612aa45284d4adf69ee81871a389669a9e#perl",
+      "source": "devbox-search",
+      "version": "5.38.2",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/xzkdz5400yyx4s4fx63xi6693258mcpc-perl-5.38.2",
+              "default": true
+            },
+            {
+              "name": "man",
+              "path": "/nix/store/mcdz24dwj8gj2gj5al25pnqil1hwz6i1-perl-5.38.2-man",
+              "default": true
+            },
+            {
+              "name": "devdoc",
+              "path": "/nix/store/ayy1xp63sfr6cdq03jiib3jzch456zwd-perl-5.38.2-devdoc"
+            }
+          ],
+          "store_path": "/nix/store/xzkdz5400yyx4s4fx63xi6693258mcpc-perl-5.38.2"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/fwg5syci5svhk99mxpxl5jyb78d3wkl2-perl-5.38.2",
+              "default": true
+            },
+            {
+              "name": "man",
+              "path": "/nix/store/m0x8xjh3k9hpy6wxjidbil12yf5bslcy-perl-5.38.2-man",
+              "default": true
+            },
+            {
+              "name": "devdoc",
+              "path": "/nix/store/8w0lb49d840ddk2zzxkp8076vjb825cz-perl-5.38.2-devdoc"
+            }
+          ],
+          "store_path": "/nix/store/fwg5syci5svhk99mxpxl5jyb78d3wkl2-perl-5.38.2"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/k0k828r1p3qarhfrd475cvfsag2mir43-perl-5.38.2",
+              "default": true
+            },
+            {
+              "name": "man",
+              "path": "/nix/store/ybzxhw2i657fjrwha3rv24lk8k6sjwjb-perl-5.38.2-man",
+              "default": true
+            },
+            {
+              "name": "devdoc",
+              "path": "/nix/store/sy5bv2c9f79ip87i4acid2blbjf2k9wq-perl-5.38.2-devdoc"
+            }
+          ],
+          "store_path": "/nix/store/k0k828r1p3qarhfrd475cvfsag2mir43-perl-5.38.2"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/jdyb7l90301ri8zcipdapc0dhsfq0qli-perl-5.38.2",
+              "default": true
+            },
+            {
+              "name": "man",
+              "path": "/nix/store/dbln36q3fd9474qa1wa9qk4i03j5c53v-perl-5.38.2-man",
+              "default": true
+            },
+            {
+              "name": "devdoc",
+              "path": "/nix/store/fsd6c0cigw4idc6y58c7ky5ci26w2is7-perl-5.38.2-devdoc"
+            }
+          ],
+          "store_path": "/nix/store/jdyb7l90301ri8zcipdapc0dhsfq0qli-perl-5.38.2"
+        }
+      }
+    }
+  }
+}
