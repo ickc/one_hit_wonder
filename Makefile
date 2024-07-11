@@ -372,6 +372,25 @@ format_cs:  ## format C# files
 	find src -type f -name '*.csproj' -exec \
 		$(DOTNET) format {} +
 
+# Objective C
+ifeq ($(UNAME),Darwin)
+ifdef CLANG_SYSTEM
+EXT += m
+SRC_m = $(wildcard src/*.m)
+COMPILER_m = $(CLANG_SYSTEM)
+BIN_m = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_m)))
+bin/%_m: src/%.m
+	@mkdir -p $(@D)
+	$(CLANG_SYSTEM) $< -o $@ $(CLANG_FLAGS_SYSTEM) -framework Foundation
+.PHONY: clean_m format_m
+clean_m:  ## clean Objective C binaries
+	rm -f $(BIN_m)
+format_m:  ## format Objective C files
+	find src -type f -name '*.m' -exec \
+		$(CLANG_FORMAT) -i -style=WebKit {} +
+endif
+endif
+
 # all
 
 BIN = $(foreach ext,$(EXT),$(BIN_$(ext)))
