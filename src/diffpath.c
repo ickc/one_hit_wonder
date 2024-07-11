@@ -11,10 +11,10 @@
 #define INITIAL_CAPACITY 2048
 
 // Function to check if a path is a regular file and executable
-static inline int is_executable(const int dir_fd, const struct dirent* entry)
+static inline int is_executable(const int dir_fd, const char* d_name)
 {
     struct stat st;
-    return (fstatat(dir_fd, entry->d_name, &st, AT_SYMLINK_NOFOLLOW) == 0) && (S_ISREG(st.st_mode) || S_ISLNK(st.st_mode)) && (st.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH));
+    return (fstatat(dir_fd, d_name, &st, AT_SYMLINK_NOFOLLOW) == 0) && (S_ISREG(st.st_mode) || S_ISLNK(st.st_mode)) && (st.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH));
 }
 
 // Function to compare strings for qsort
@@ -59,7 +59,7 @@ void get_executables(const char* path, char*** executables, size_t* count)
         }
 
         while ((entry = readdir(d)) != NULL) {
-            if (is_executable(dir_fd, entry)) {
+            if (is_executable(dir_fd, entry->d_name)) {
                 // check if we need to resize the array
                 if (*count >= capacity) {
                     capacity *= 2;
@@ -137,15 +137,16 @@ void print_diff(char** executables1, const size_t count1, char** executables2, c
 }
 
 // Function to clean up allocated memory
-void cleanup(char** executables, size_t count)
+void cleanup(char** executables, const size_t count)
 {
     for (size_t i = 0; i < count; i++) {
         free(executables[i]);
     }
     free(executables);
+
 }
 
-int main(int argc, char* argv[])
+int main(const int argc, const char* argv[])
 {
     if (argc != 3) {
         fprintf(stderr, "Usage: %s PATH1 PATH2\n", argv[0]);
