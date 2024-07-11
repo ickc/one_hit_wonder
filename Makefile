@@ -316,7 +316,7 @@ bin/%_ts: src/%.ts node_modules/
 	@chmod +x $@
 node_modules/:
 	$(NPM) install @types/node --no-save
-.PHONY: clean_ts format_ts
+.PHONY: clean_ts Clean_ts format_ts
 clean_ts:  ## clean auxiliary TypeScript files
 	rm -f $(BIN_ts)
 Clean_ts:  ## clean node modules
@@ -324,6 +324,31 @@ Clean_ts:  ## clean node modules
 format_ts:  ## format TypeScript files
 	find src -type f -name '*.ts' -exec \
 		$(PRETTIER) --write {} +
+
+# Perl
+EXT += pl
+SRC_pl = $(wildcard src/*.pl)
+COMPILER_pl = $(PERL)
+BIN_pl = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_pl)))
+bin/%_pl: src/%.pl
+	@mkdir -p $(@D)
+	@echo "#!$(PERL)" > $@
+	@cat $< >> $@
+	@chmod +x $@
+ifdef PERL_SYSTEM
+BIN_pl += $(patsubst src/%,bin/%_system,$(subst .,_,$(SRC_pl)))
+bin/%_pl_system: src/%.pl
+	@mkdir -p $(@D)
+	@echo "#!$(PERL_SYSTEM)" > $@
+	@cat $< >> $@
+	@chmod +x $@
+endif
+.PHONY: clean_pl format_pl
+clean_pl:  ## clean generated PERL scripts
+	rm -f $(BIN_pl)
+format_pl:  ## format PERL files
+	find src -type f -name '*.pl' -exec \
+		$(PERLTIDY) -b {} +
 
 # all
 

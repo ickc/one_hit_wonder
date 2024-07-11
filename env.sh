@@ -66,6 +66,8 @@ case "${METHOD}" in
         get_command_path NPM envs/typescript npm
         get_command_path PRETTIER envs/typescript prettier
         get_command_path TSC envs/typescript tsc
+        get_command_path PERL envs/perl perl
+        get_command_path PERLTIDY envs/perl perltidy
 
         get_command_path HYPERFINE envs/system hyperfine
         get_command_path DIFFT envs/system difft
@@ -89,6 +91,7 @@ case "$(uname -s)" in
         echo 'CLANG_SYSTEM=/usr/bin/clang' >> "${outfile}"
         echo 'PYTHON_SYSTEM=/usr/bin/python3' >> "${outfile}"
         echo 'BASH_SYSTEM=/bin/bash' >> "${outfile}"
+        echo 'PERL_SYSTEM=/usr/bin/perl' >> "${outfile}"
 
         # Get the macOS version number
         macos_version=$(sw_vers -productVersion | awk -F '.' '{print $1}')
@@ -122,6 +125,7 @@ case "$(uname -s)" in
         [[ -e /usr/bin/clang ]] && echo 'CLANG_SYSTEM=/usr/bin/clang' >> "${outfile}"
         [[ -e /usr/bin/python3 ]] && echo 'PYTHON_SYSTEM=/usr/bin/python3' >> "${outfile}"
         [[ -e /bin/bash ]] && echo 'BASH_SYSTEM=/bin/bash' >> "${outfile}"
+        [[ -e /usr/bin/perl ]] && echo 'PERL_SYSTEM=/usr/bin/perl' >> "${outfile}"
         [[ -e /usr/bin/clang++ ]] && echo 'CLANGXX_SYSTEM=/usr/bin/clang++' >> "${outfile}"
         GCC_MARCH=native
         ;;
