@@ -464,8 +464,17 @@ update:  ## update environments using nix & devbox
 	devbox update --all-projects
 # C#'s output is so bad that we need to exclude it from the diff
 test: $(TXT)  ## test all
-	@$(foreach file,$(filter-out out/diffpath_c_gcc.txt out/diffpath_cs.txt,$(TXT)),$(DIFFT) out/diffpath_c_gcc.txt $(file);)
-	@echo diffpath.cs got this number of lines wrong: $$(diff out/diffpath_c_gcc.txt out/diffpath_cs.txt | wc -l) out of $$(wc -l < out/diffpath_c_gcc.txt)
+	@file_ref=out/diffpath_c_gcc.txt; \
+	total_lines=$$(wc -l < "$$file_ref"); \
+	for file in $(TXT); do \
+		N=$$(diff -U 0 "$$file_ref" "$$file" | grep -E '^\+|^-' | grep -vE '^\+\+\+|^---' | wc -l); \
+		if [[ "$$N" != 0 ]]; then \
+			echo -e "\033[1m\033[93m$$file\033[0m: $$N / $$total_lines mistakes"; \
+			if [[ "$$N" -le 10 ]]; then \
+				$(DIFFT) "$$file_ref" "$$file"; \
+			fi; \
+		fi; \
+	done
 size:  ## show binary sizes
 	@ls -lh bin | sort -hk5
 	@du -sh bin/*.dist || true
