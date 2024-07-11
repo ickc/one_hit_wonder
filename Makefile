@@ -277,6 +277,14 @@ bin/%_sh: src/%.sh
 	@echo "#!$(BASH)" > $@
 	@cat $< >> $@
 	@chmod +x $@
+ifdef BASH_SYSTEM
+BIN_sh += $(patsubst src/%,bin/%_system,$(subst .,_,$(SRC_sh)))
+bin/%_sh_system: src/%.sh
+	@mkdir -p $(@D)
+	@echo "#!$(BASH_SYSTEM)" > $@
+	@cat $< >> $@
+	@chmod +x $@
+endif
 .PHONY: clean_sh format_sh
 clean_sh:  ## clean Shell binaries
 	rm -f $(BIN_sh)

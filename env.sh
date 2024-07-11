@@ -88,6 +88,7 @@ case "$(uname -s)" in
     Darwin)
         echo 'CLANG_SYSTEM=/usr/bin/clang' >> "${outfile}"
         echo 'PYTHON_SYSTEM=/usr/bin/python3' >> "${outfile}"
+        echo 'BASH_SYSTEM=/bin/bash' >> "${outfile}"
 
         # Get the macOS version number
         macos_version=$(sw_vers -productVersion | awk -F '.' '{print $1}')
@@ -118,6 +119,10 @@ case "$(uname -s)" in
         esac
         ;;
     *)
+        [[ -e /usr/bin/clang ]] && echo 'CLANG_SYSTEM=/usr/bin/clang' >> "${outfile}"
+        [[ -e /usr/bin/python3 ]] && echo 'PYTHON_SYSTEM=/usr/bin/python3' >> "${outfile}"
+        [[ -e /bin/bash ]] && echo 'BASH_SYSTEM=/bin/bash' >> "${outfile}"
+        [[ -e /usr/bin/clang++ ]] && echo 'CLANGXX_SYSTEM=/usr/bin/clang++' >> "${outfile}"
         GCC_MARCH=native
         ;;
 esac
