@@ -2,8 +2,8 @@
   "lockfile_version": "1",
   "packages": {
     "lua54Packages.lua@latest": {
-      "last_modified": "2024-06-12T20:55:33Z",
-      "resolved": "github:NixOS/nixpkgs/a9858885e197f984d92d7fe64e9fff6b2e488d40#lua54Packages.lua",
+      "last_modified": "2024-07-07T16:08:25Z",
+      "resolved": "github:NixOS/nixpkgs/ab82a9612aa45284d4adf69ee81871a389669a9e#lua54Packages.lua",
       "source": "devbox-search",
       "version": "5.4.6",
       "systems": {
@@ -11,57 +11,57 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/3lk51qq27bsa3gq626as87q79silq5wi-lua-5.4.6",
+              "path": "/nix/store/w50bwinnns722zgxq3hvl950hz780cgc-lua-5.4.6",
               "default": true
             },
             {
               "name": "doc",
-              "path": "/nix/store/201kp4m1c3v5g5cpdv6p61vm20yp2c8b-lua-5.4.6-doc"
+              "path": "/nix/store/rznbarxglz62nrl2svc3jjr5kik230ma-lua-5.4.6-doc"
             }
           ],
-          "store_path": "/nix/store/3lk51qq27bsa3gq626as87q79silq5wi-lua-5.4.6"
+          "store_path": "/nix/store/w50bwinnns722zgxq3hvl950hz780cgc-lua-5.4.6"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/pqhmpjwm0bcm5c58blwp7ddibm8025zq-lua-5.4.6",
+              "path": "/nix/store/8pkzaaf0m46bsh8x8cl4lfk9dy2wb9ir-lua-5.4.6",
               "default": true
             },
             {
               "name": "doc",
-              "path": "/nix/store/3hhvqvj3px1mv322fh9gnz1rwag5bzal-lua-5.4.6-doc"
+              "path": "/nix/store/nqgp7v272jwkqwdpi52ip800ivcilmih-lua-5.4.6-doc"
             }
           ],
-          "store_path": "/nix/store/pqhmpjwm0bcm5c58blwp7ddibm8025zq-lua-5.4.6"
+          "store_path": "/nix/store/8pkzaaf0m46bsh8x8cl4lfk9dy2wb9ir-lua-5.4.6"
         },
         "x86_64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/xdxicjzw7qzvbhzi7pillklrh7nlzpzn-lua-5.4.6",
+              "path": "/nix/store/1qx7p1hb5sknw0wzzjlvpxvf8fkvyc7n-lua-5.4.6",
               "default": true
             },
             {
               "name": "doc",
-              "path": "/nix/store/snprkz365q6h46ih8my5k8dqx4316nxl-lua-5.4.6-doc"
+              "path": "/nix/store/cmmmzn258x8ddrd6ns0px1bwn2f01d64-lua-5.4.6-doc"
             }
           ],
-          "store_path": "/nix/store/xdxicjzw7qzvbhzi7pillklrh7nlzpzn-lua-5.4.6"
+          "store_path": "/nix/store/1qx7p1hb5sknw0wzzjlvpxvf8fkvyc7n-lua-5.4.6"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/0mxg29p8bqwy90q2gda99xsgrgspqbpf-lua-5.4.6",
+              "path": "/nix/store/08zyyd4wzvsxpcfr70g8cwfa81mfqrsy-lua-5.4.6",
               "default": true
             },
             {
               "name": "doc",
-              "path": "/nix/store/nsqkcb2vaz0mcwdwxr4yl5vkz15jvnv5-lua-5.4.6-doc"
+              "path": "/nix/store/0m00ac4c218zindy2d9hpgvs5r4j5wyg-lua-5.4.6-doc"
             }
           ],
-          "store_path": "/nix/store/0mxg29p8bqwy90q2gda99xsgrgspqbpf-lua-5.4.6"
+          "store_path": "/nix/store/08zyyd4wzvsxpcfr70g8cwfa81mfqrsy-lua-5.4.6"
         }
       }
     },
@@ -70,8 +70,8 @@
       "source": "nixpkg"
     },
     "stylua@latest": {
-      "last_modified": "2024-06-12T20:55:33Z",
-      "resolved": "github:NixOS/nixpkgs/a9858885e197f984d92d7fe64e9fff6b2e488d40#stylua",
+      "last_modified": "2024-07-07T16:08:25Z",
+      "resolved": "github:NixOS/nixpkgs/ab82a9612aa45284d4adf69ee81871a389669a9e#stylua",
       "source": "devbox-search",
       "version": "0.20.0",
       "systems": {
@@ -79,41 +79,41 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/1vnjxadghyrqp2ds9hfvg29z15132r9q-stylua-0.20.0",
+              "path": "/nix/store/lx0hrdkg8dy5dl4d3a3pysajqkcxg21n-stylua-0.20.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/1vnjxadghyrqp2ds9hfvg29z15132r9q-stylua-0.20.0"
+          "store_path": "/nix/store/lx0hrdkg8dy5dl4d3a3pysajqkcxg21n-stylua-0.20.0"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/qk6wc6f94w1bl3l0f7qgh8xpwvxnsb9v-stylua-0.20.0",
+              "path": "/nix/store/mvymww0d8gh6pd7qzvv5manb6hdivb2z-stylua-0.20.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/qk6wc6f94w1bl3l0f7qgh8xpwvxnsb9v-stylua-0.20.0"
+          "store_path": "/nix/store/mvymww0d8gh6pd7qzvv5manb6hdivb2z-stylua-0.20.0"
         },
         "x86_64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/4ccfi5kb36i3q34i925wzq4x6k2dicps-stylua-0.20.0",
+              "path": "/nix/store/83qk9arqhj8r3bb757lrjzbhyrp91v06-stylua-0.20.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/4ccfi5kb36i3q34i925wzq4x6k2dicps-stylua-0.20.0"
+          "store_path": "/nix/store/83qk9arqhj8r3bb757lrjzbhyrp91v06-stylua-0.20.0"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/v6sm4w711wr3cz834akkbnldb13almdd-stylua-0.20.0",
+              "path": "/nix/store/6dlp9lbjhwc4m06ccdq0vs20f37jh1rf-stylua-0.20.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/v6sm4w711wr3cz834akkbnldb13almdd-stylua-0.20.0"
+          "store_path": "/nix/store/6dlp9lbjhwc4m06ccdq0vs20f37jh1rf-stylua-0.20.0"
         }
       }
     }

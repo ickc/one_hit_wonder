@@ -2,8 +2,8 @@
   "lockfile_version": "1",
   "packages": {
     "luajit@latest": {
-      "last_modified": "2024-06-12T20:55:33Z",
-      "resolved": "github:NixOS/nixpkgs/a9858885e197f984d92d7fe64e9fff6b2e488d40#luajit",
+      "last_modified": "2024-07-07T16:08:25Z",
+      "resolved": "github:NixOS/nixpkgs/ab82a9612aa45284d4adf69ee81871a389669a9e#luajit",
       "source": "devbox-search",
       "version": "2.1.1713773202",
       "systems": {
@@ -11,47 +11,47 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/2aq0i9v6cwi1xz41yi6hfcrv1ma8411x-luajit-2.1.1713773202",
+              "path": "/nix/store/6gi7l8vrcy9cxpf46milyiv1sszrmxv0-luajit-2.1.1713773202",
               "default": true
             }
           ],
-          "store_path": "/nix/store/2aq0i9v6cwi1xz41yi6hfcrv1ma8411x-luajit-2.1.1713773202"
+          "store_path": "/nix/store/6gi7l8vrcy9cxpf46milyiv1sszrmxv0-luajit-2.1.1713773202"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/af93483aig25df888ks563bhkdgi8py2-luajit-2.1.1713773202",
+              "path": "/nix/store/lx3rxr7by5qq6h1c6ybjawgqqdfrsyp4-luajit-2.1.1713773202",
               "default": true
             }
           ],
-          "store_path": "/nix/store/af93483aig25df888ks563bhkdgi8py2-luajit-2.1.1713773202"
+          "store_path": "/nix/store/lx3rxr7by5qq6h1c6ybjawgqqdfrsyp4-luajit-2.1.1713773202"
         },
         "x86_64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/cjqla2cya6h94jff8la5rwyfwgsacshp-luajit-2.1.1713773202",
+              "path": "/nix/store/k78f2dpppqb4r102q2sbh1mdxgwj8a4b-luajit-2.1.1713773202",
               "default": true
             }
           ],
-          "store_path": "/nix/store/cjqla2cya6h94jff8la5rwyfwgsacshp-luajit-2.1.1713773202"
+          "store_path": "/nix/store/k78f2dpppqb4r102q2sbh1mdxgwj8a4b-luajit-2.1.1713773202"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/kvc6zy9pavv5k2vd419zzb992kwjjqqr-luajit-2.1.1713773202",
+              "path": "/nix/store/hiz202dhwn4y7hbgzyzwl6sbi9glhsrn-luajit-2.1.1713773202",
               "default": true
             }
           ],
-          "store_path": "/nix/store/kvc6zy9pavv5k2vd419zzb992kwjjqqr-luajit-2.1.1713773202"
+          "store_path": "/nix/store/hiz202dhwn4y7hbgzyzwl6sbi9glhsrn-luajit-2.1.1713773202"
         }
       }
     },
     "luajitPackages.luafilesystem@latest": {
-      "last_modified": "2024-06-12T20:55:33Z",
-      "resolved": "github:NixOS/nixpkgs/a9858885e197f984d92d7fe64e9fff6b2e488d40#luajitPackages.luafilesystem",
+      "last_modified": "2024-07-07T16:08:25Z",
+      "resolved": "github:NixOS/nixpkgs/ab82a9612aa45284d4adf69ee81871a389669a9e#luajitPackages.luafilesystem",
       "source": "devbox-search",
       "version": "1.8.0-1",
       "systems": {
@@ -59,41 +59,41 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/s1vsjfd7hnrjggi83xslswv1jf2vijfg-luajit2.1-luafilesystem-1.8.0-1",
+              "path": "/nix/store/his71b3805b99nmycsjd0sv758cfw821-luajit2.1-luafilesystem-1.8.0-1",
               "default": true
             }
           ],
-          "store_path": "/nix/store/s1vsjfd7hnrjggi83xslswv1jf2vijfg-luajit2.1-luafilesystem-1.8.0-1"
+          "store_path": "/nix/store/his71b3805b99nmycsjd0sv758cfw821-luajit2.1-luafilesystem-1.8.0-1"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/4bbay291kqmdaj4nzkpjl4djwrgvjd99-luajit2.1-luafilesystem-1.8.0-1",
+              "path": "/nix/store/g8ihxl1qlxcarlgx8wkxhwjrm9cx7d93-luajit2.1-luafilesystem-1.8.0-1",
               "default": true
             }
           ],
-          "store_path": "/nix/store/4bbay291kqmdaj4nzkpjl4djwrgvjd99-luajit2.1-luafilesystem-1.8.0-1"
+          "store_path": "/nix/store/g8ihxl1qlxcarlgx8wkxhwjrm9cx7d93-luajit2.1-luafilesystem-1.8.0-1"
         },
         "x86_64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/w912v7zn8i03qr2r4m34cxflip98xj93-luajit2.1-luafilesystem-1.8.0-1",
+              "path": "/nix/store/n5qiwpc0k3v9x5g2lpv5inhz5h65qr0h-luajit2.1-luafilesystem-1.8.0-1",
               "default": true
             }
           ],
-          "store_path": "/nix/store/w912v7zn8i03qr2r4m34cxflip98xj93-luajit2.1-luafilesystem-1.8.0-1"
+          "store_path": "/nix/store/n5qiwpc0k3v9x5g2lpv5inhz5h65qr0h-luajit2.1-luafilesystem-1.8.0-1"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/5s9gddy6q5s0rr88zvfa34b2rncv9ngk-luajit2.1-luafilesystem-1.8.0-1",
+              "path": "/nix/store/ql4lc2hpbs7vc0s7iwrhpwrq4360hwl1-luajit2.1-luafilesystem-1.8.0-1",
               "default": true
             }
           ],
-          "store_path": "/nix/store/5s9gddy6q5s0rr88zvfa34b2rncv9ngk-luajit2.1-luafilesystem-1.8.0-1"
+          "store_path": "/nix/store/ql4lc2hpbs7vc0s7iwrhpwrq4360hwl1-luajit2.1-luafilesystem-1.8.0-1"
         }
       }
     }

@@ -50,50 +50,50 @@
       }
     },
     "clang_18@latest": {
-      "last_modified": "2024-06-12T20:55:33Z",
-      "resolved": "github:NixOS/nixpkgs/a9858885e197f984d92d7fe64e9fff6b2e488d40#clang_18",
+      "last_modified": "2024-07-07T16:08:25Z",
+      "resolved": "github:NixOS/nixpkgs/ab82a9612aa45284d4adf69ee81871a389669a9e#clang_18",
       "source": "devbox-search",
-      "version": "18.1.7",
+      "version": "18.1.8",
       "systems": {
         "aarch64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/26yb17zrwdycd7gksipxyn2difw9wmjv-clang-wrapper-18.1.7",
+              "path": "/nix/store/cnx67yv4d9ns0642kd3kwa7h4nanyv11-clang-wrapper-18.1.8",
               "default": true
             }
           ],
-          "store_path": "/nix/store/26yb17zrwdycd7gksipxyn2difw9wmjv-clang-wrapper-18.1.7"
+          "store_path": "/nix/store/cnx67yv4d9ns0642kd3kwa7h4nanyv11-clang-wrapper-18.1.8"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/3hlmkclvxxbmr8172rbg4q72nc6hfjah-clang-wrapper-18.1.7",
+              "path": "/nix/store/lppjq24jy56bggq9gxjh0xi6651dq99r-clang-wrapper-18.1.8",
               "default": true
             }
           ],
-          "store_path": "/nix/store/3hlmkclvxxbmr8172rbg4q72nc6hfjah-clang-wrapper-18.1.7"
+          "store_path": "/nix/store/lppjq24jy56bggq9gxjh0xi6651dq99r-clang-wrapper-18.1.8"
         },
         "x86_64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/iqzr1isfnv45yxgrkvhswzksl2vhvxnf-clang-wrapper-18.1.7",
+              "path": "/nix/store/v9izskh90y793dgnfd3s29akclfibzvm-clang-wrapper-18.1.8",
               "default": true
             }
           ],
-          "store_path": "/nix/store/iqzr1isfnv45yxgrkvhswzksl2vhvxnf-clang-wrapper-18.1.7"
+          "store_path": "/nix/store/v9izskh90y793dgnfd3s29akclfibzvm-clang-wrapper-18.1.8"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/4a7g4s02vr57jccasyawfwmwnw9v0bpv-clang-wrapper-18.1.7",
+              "path": "/nix/store/1rxqqb3m7k2c36kvsm0alqljbb01x138-clang-wrapper-18.1.8",
               "default": true
             }
           ],
-          "store_path": "/nix/store/4a7g4s02vr57jccasyawfwmwnw9v0bpv-clang-wrapper-18.1.7"
+          "store_path": "/nix/store/1rxqqb3m7k2c36kvsm0alqljbb01x138-clang-wrapper-18.1.8"
         }
       }
     }

@@ -2,8 +2,8 @@
   "lockfile_version": "1",
   "packages": {
     "bash@latest": {
-      "last_modified": "2024-07-03T17:18:23Z",
-      "resolved": "github:NixOS/nixpkgs/61684d356e41c97f80087e89659283d00fe032ab#bash",
+      "last_modified": "2024-07-07T16:08:25Z",
+      "resolved": "github:NixOS/nixpkgs/ab82a9612aa45284d4adf69ee81871a389669a9e#bash",
       "source": "devbox-search",
       "version": "5.2p26",
       "systems": {
@@ -11,123 +11,123 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/s30jrpgav677fpc9yvkqsib70xfmx7xi-bash-5.2p26",
+              "path": "/nix/store/spyn2n8l9ca1pkqn20l40l424xmqwda4-bash-5.2p26",
               "default": true
             },
             {
               "name": "man",
-              "path": "/nix/store/qvna8wl8rzaixihk34f3y1l5mam2fj54-bash-5.2p26-man",
+              "path": "/nix/store/q5fi46zsk79vnyr2hyancdfnlxpg5ff4-bash-5.2p26-man",
               "default": true
             },
             {
               "name": "dev",
-              "path": "/nix/store/8dh6brx9v8839kdl86fm286fxp5nx8dx-bash-5.2p26-dev"
+              "path": "/nix/store/gml2k9ggb35szfbsyzglh4xf9x619mz1-bash-5.2p26-dev"
             },
             {
               "name": "doc",
-              "path": "/nix/store/21swypw7zi0v0b0f8xmd981f3902slzx-bash-5.2p26-doc"
+              "path": "/nix/store/f2i81dshbj71436sa8rq4pbd31k4iy2m-bash-5.2p26-doc"
             },
             {
               "name": "info",
-              "path": "/nix/store/pd2b88lh70jjysc3vfgdlgl6la2jgyp3-bash-5.2p26-info"
+              "path": "/nix/store/ay5j8cw3aw1x3piikijl6knrln4l15dk-bash-5.2p26-info"
             }
           ],
-          "store_path": "/nix/store/s30jrpgav677fpc9yvkqsib70xfmx7xi-bash-5.2p26"
+          "store_path": "/nix/store/spyn2n8l9ca1pkqn20l40l424xmqwda4-bash-5.2p26"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/gwqh47kdw6y1gv7mfwy0y00s692bs90f-bash-5.2p26",
+              "path": "/nix/store/zpvgzm6x3dhw0ai7ciw06w1ibhh2ap5r-bash-5.2p26",
               "default": true
             },
             {
               "name": "man",
-              "path": "/nix/store/ivcxkkf8skvpbxxf1dafv9jsrq2xq28p-bash-5.2p26-man",
+              "path": "/nix/store/9yjmsdiqk404h4rvvy7r69r1pvazia4d-bash-5.2p26-man",
               "default": true
             },
             {
               "name": "debug",
-              "path": "/nix/store/jk6bj9q070j8bmhagcs46blkndf28n2a-bash-5.2p26-debug"
+              "path": "/nix/store/may4vny0p78qz8k3nri1ij2ln0s7kpsn-bash-5.2p26-debug"
             },
             {
               "name": "dev",
-              "path": "/nix/store/9bslr66b9aalclhcnyfwyijyv4knvhyn-bash-5.2p26-dev"
+              "path": "/nix/store/2s74cnbs0x6gi1a20bf7avbmrgbrxv5d-bash-5.2p26-dev"
             },
             {
               "name": "doc",
-              "path": "/nix/store/rlsgiffpzvmq0hz6h0vlkfr2v2r4x6r3-bash-5.2p26-doc"
+              "path": "/nix/store/xx7qdaw8sxqv3spnrz2i5sggm92svkyv-bash-5.2p26-doc"
             },
             {
               "name": "info",
-              "path": "/nix/store/pc0x1c6kgy0m1ix9nwzcjnrcdi860bcq-bash-5.2p26-info"
+              "path": "/nix/store/ygf71whh419pr1pmw1hxl9icjazsfw3h-bash-5.2p26-info"
             }
           ],
-          "store_path": "/nix/store/gwqh47kdw6y1gv7mfwy0y00s692bs90f-bash-5.2p26"
+          "store_path": "/nix/store/zpvgzm6x3dhw0ai7ciw06w1ibhh2ap5r-bash-5.2p26"
         },
         "x86_64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/kqlsx3l70kpzza8d6rjiqj82n1ibgqiy-bash-5.2p26",
+              "path": "/nix/store/g5kh6zhsch3vx9sv3s0mrjsy84fis83g-bash-5.2p26",
               "default": true
             },
             {
               "name": "man",
-              "path": "/nix/store/45ap5spks47c7p8n2v256050gj5wmlx9-bash-5.2p26-man",
+              "path": "/nix/store/lgv82h5awq7hc9lpj1l3qfkj3fblw2nk-bash-5.2p26-man",
               "default": true
             },
             {
-              "name": "info",
-              "path": "/nix/store/2iryf728kwik3a26gcnx3jgdix34cgk9-bash-5.2p26-info"
-            },
-            {
               "name": "dev",
-              "path": "/nix/store/wkiwxwpd7sggsb35masshy4b1xvgs2jn-bash-5.2p26-dev"
+              "path": "/nix/store/pc16894d5nr9kxmrg3gavirbkkcm1aks-bash-5.2p26-dev"
             },
             {
               "name": "doc",
-              "path": "/nix/store/fqbb9pg55zb6qarghrb5n4caaz5ams4k-bash-5.2p26-doc"
+              "path": "/nix/store/cpq6i8pq1j9klayq0il02pq5n83v9xm0-bash-5.2p26-doc"
+            },
+            {
+              "name": "info",
+              "path": "/nix/store/ykgsfvp4nr2nh1pnpfna4s9myvj7yd5q-bash-5.2p26-info"
             }
           ],
-          "store_path": "/nix/store/kqlsx3l70kpzza8d6rjiqj82n1ibgqiy-bash-5.2p26"
+          "store_path": "/nix/store/g5kh6zhsch3vx9sv3s0mrjsy84fis83g-bash-5.2p26"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/agkxax48k35wdmkhmmija2i2sxg8i7ny-bash-5.2p26",
+              "path": "/nix/store/m101dg80ngyjdb02g6jwy80sr7kzj26g-bash-5.2p26",
               "default": true
             },
             {
               "name": "man",
-              "path": "/nix/store/afmjxmnwxmyv82p4r3w89s8250ls6jcr-bash-5.2p26-man",
+              "path": "/nix/store/1lyl50z4kdzrj72l4sl82444vxgsfnib-bash-5.2p26-man",
               "default": true
             },
             {
               "name": "debug",
-              "path": "/nix/store/mnch7v1wby7l15h62zpy1azvhzr2b3zc-bash-5.2p26-debug"
+              "path": "/nix/store/96rngln426scdf0x0nwpgcrscl8maxfk-bash-5.2p26-debug"
             },
             {
               "name": "dev",
-              "path": "/nix/store/qndlznrxfijq0wd7if6w43x2ldbia5ks-bash-5.2p26-dev"
+              "path": "/nix/store/gbjqm1h1i23yb89n86rf47870b0a8na2-bash-5.2p26-dev"
             },
             {
               "name": "doc",
-              "path": "/nix/store/3n80h1vl5lkbakh90xfnliicr5yzf3gr-bash-5.2p26-doc"
+              "path": "/nix/store/nkmmfv6jv9rg21vqy1il1029089rrgm9-bash-5.2p26-doc"
             },
             {
               "name": "info",
-              "path": "/nix/store/m21c0b7md4wyj3qwrdqhv1gx3ryrkjvb-bash-5.2p26-info"
+              "path": "/nix/store/wya6flc37dp9h6lbhi0jqfgd7m4gzn0c-bash-5.2p26-info"
             }
           ],
-          "store_path": "/nix/store/agkxax48k35wdmkhmmija2i2sxg8i7ny-bash-5.2p26"
+          "store_path": "/nix/store/m101dg80ngyjdb02g6jwy80sr7kzj26g-bash-5.2p26"
         }
       }
     },
     "shfmt@latest": {
-      "last_modified": "2024-06-12T20:55:33Z",
-      "resolved": "github:NixOS/nixpkgs/a9858885e197f984d92d7fe64e9fff6b2e488d40#shfmt",
+      "last_modified": "2024-07-07T16:08:25Z",
+      "resolved": "github:NixOS/nixpkgs/ab82a9612aa45284d4adf69ee81871a389669a9e#shfmt",
       "source": "devbox-search",
       "version": "3.8.0",
       "systems": {
@@ -135,41 +135,41 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/n4iliqz5ddwz7nkyjcmlc81blzzz124b-shfmt-3.8.0",
+              "path": "/nix/store/whzcdk13r9l10nbs24dbld7395vhma2v-shfmt-3.8.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/n4iliqz5ddwz7nkyjcmlc81blzzz124b-shfmt-3.8.0"
+          "store_path": "/nix/store/whzcdk13r9l10nbs24dbld7395vhma2v-shfmt-3.8.0"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/5f5wgl3dmzf8mk3jazks2k2vzlqgbc3q-shfmt-3.8.0",
+              "path": "/nix/store/qwv8h5rq8cbxqxlg0cczrxf3zng5a5nj-shfmt-3.8.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/5f5wgl3dmzf8mk3jazks2k2vzlqgbc3q-shfmt-3.8.0"
+          "store_path": "/nix/store/qwv8h5rq8cbxqxlg0cczrxf3zng5a5nj-shfmt-3.8.0"
         },
         "x86_64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/0fb1n36skws2grg7phlwpl5w59281wwn-shfmt-3.8.0",
+              "path": "/nix/store/skqcakgl85750qhvajxzi8lk4bcssr9h-shfmt-3.8.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/0fb1n36skws2grg7phlwpl5w59281wwn-shfmt-3.8.0"
+          "store_path": "/nix/store/skqcakgl85750qhvajxzi8lk4bcssr9h-shfmt-3.8.0"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/w82zx94c2060dk6x1n9xnwy1r7a51wzq-shfmt-3.8.0",
+              "path": "/nix/store/yyjiv1fzzv7syjbyikzjpsbflkip2lnc-shfmt-3.8.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/w82zx94c2060dk6x1n9xnwy1r7a51wzq-shfmt-3.8.0"
+          "store_path": "/nix/store/yyjiv1fzzv7syjbyikzjpsbflkip2lnc-shfmt-3.8.0"
         }
       }
     }
