@@ -1,6 +1,8 @@
 INCLUDEFILE = .env
 include $(INCLUDEFILE)
-DEVBOXS = $(wildcard envs/*/devbox.*)
+DEVBOXS_JSON = $(wildcard envs/*/devbox.json)
+DEVBOXS_LOCK = $(wildcard envs/*/devbox.lock)
+DEVBOXS = $(DEVBOXS_JSON) $(DEVBOXS_LOCK)
 
 UNAME = $(shell uname -s)
 
@@ -207,9 +209,9 @@ endif
 clean_py:  ## clean Python binaries
 	rm -f $(BIN_py)
 format_py:  ## format Python files
-	$(AUTOFLAKE) --in-place --recursive --expand-star-imports --remove-all-unused-imports --ignore-init-module-imports --remove-duplicate-keys --remove-unused-variables src
-	$(BLACK) src
-	$(ISORT) src
+	$(AUTOFLAKE) --in-place --recursive --expand-star-imports --remove-all-unused-imports --ignore-init-module-imports --remove-duplicate-keys --remove-unused-variables src util
+	$(BLACK) src util
+	$(ISORT) src util
 
 # Cython
 EXT += pyx
@@ -291,7 +293,7 @@ endif
 clean_sh:  ## clean Shell binaries
 	rm -f $(BIN_sh)
 format_sh:  ## format Shell files
-	find . src -maxdepth 1 -type f -name '*.sh' \
+	find src util -type f -name '*.sh' \
 	-exec sed -i -E \
 		-e 's/\$$([a-zA-Z_][a-zA-Z0-9_]*)/$${\1}/g' \
 		-e 's/([^[])\[ ([^]]+) \]/\1[[ \2 ]]/g' \
@@ -458,7 +460,12 @@ clean_bench:  ## clean benchmark files
 
 .PHONY: build update test size list_link clean Clean help
 build: $(INCLUDEFILE)  ## prepare environments using nix & devbox (should be triggered automatically)
-$(INCLUDEFILE): util/env.sh $(DEVBOXS)
+# this file is solely here for CI cache
+# it is possible the lock files between this and those under envs are out of sync
+# make update should be run to ensure they are in sync
+devbox.json: $(DEVBOXS_JSON)
+	util/devbox_concat.py $^ > $@
+$(INCLUDEFILE): util/env.sh devbox.json $(DEVBOXS)
 	./$< $@
 update:  ## update environments using nix & devbox
 	devbox update --all-projects
