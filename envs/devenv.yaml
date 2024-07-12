@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://devenv.sh/devenv.schema.json
+inputs:
+  nixpkgs:
+    url: github:cachix/devenv-nixpkgs/rolling
+imports:
+  - ./bash
+  - ./clang
+  - ./cython
+  - ./dotnet
+  - ./gcc
+  - ./ghc
+  - ./go
+  - ./luajit # must be before lua as they both provide lua command and the later overrides the former
+  - ./lua
+  - ./nuitka
+  - ./perl
+  - ./pypy
+  - ./python
+  - ./rust
+  - ./system
+  - ./typescript
