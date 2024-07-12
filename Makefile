@@ -500,9 +500,10 @@ clean: \
 	rm -rf bin/*.dist
 	ls bin out 2>/dev/null || true
 	rm -rf bin out
-Clean: clean Clean_ts  ## Clean the environments too (this triggers redownload & rebuild next time!)
+gc:  ## garbage collect devbox
+	find . -type f -name devbox.json -exec bash -c 'cd $${1%/*} && devbox run -- nix store gc --extra-experimental-features nix-command' _ {} \;
+Clean: clean Clean_ts gc  ## Clean the environments too (this triggers redownload & rebuild next time!)
 	find envs -type d -name '.devbox' -exec rm -rf {} +
-	devbox run -- nix store gc --extra-experimental-features nix-command
 # modified from https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 help:  ## print this help message
 	@awk 'BEGIN{w=0;n=0}{while(match($$0,/\\$$/)){sub(/\\$$/,"");getline nextLine;$$0=$$0 nextLine}if(/^[[:alnum:]_-]+:.*##.*$$/){n++;split($$0,cols[n],":.*##");l=length(cols[n][1]);if(w<l)w=l}}END{for(i=1;i<=n;i++)printf"\033[1m\033[93m%-*s\033[0m%s\n",w+1,cols[i][1]":",cols[i][2]}' $(MAKEFILE_LIST)
