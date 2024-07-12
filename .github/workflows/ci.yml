@@ -19,7 +19,6 @@ jobs:
         uses: jetify-com/devbox-install-action@v0.11.0
         with:
           enable-cache: true
-          project-path: envs/system
 
       - name: Compilers version
         run: devbox run --config envs/system 'cd ../..; make compiler_version'
