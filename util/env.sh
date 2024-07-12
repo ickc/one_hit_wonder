@@ -2,8 +2,6 @@
 
 set -e
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null 2>&1 && pwd)"
-
 # Check number of arguments
 if [[ $# != 1 ]]; then
     echo "Usage: $0 <outfile>"

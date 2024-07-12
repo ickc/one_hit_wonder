@@ -458,7 +458,7 @@ clean_bench:  ## clean benchmark files
 
 .PHONY: build update test size list_link clean Clean help
 build: $(INCLUDEFILE)  ## prepare environments using nix & devbox (should be triggered automatically)
-$(INCLUDEFILE): env.sh $(DEVBOXS)
+$(INCLUDEFILE): util/env.sh $(DEVBOXS)
 	./$< $@
 update:  ## update environments using nix & devbox
 	devbox update --all-projects
