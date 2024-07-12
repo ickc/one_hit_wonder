@@ -468,7 +468,7 @@ devbox.json: $(DEVBOXS_JSON)
 $(INCLUDEFILE): util/env.sh devbox.json $(DEVBOXS)
 	./$< $@
 update:  ## update environments using nix & devbox
-	devbox update --all-projects
+	devbox update --all-projects --sync-lock
 # C#'s output is so bad that we need to exclude it from the diff
 test: $(TXT)  ## test all
 	@file_ref=out/diffpath_c_gcc.txt; \
