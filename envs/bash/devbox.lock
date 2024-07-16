@@ -2,8 +2,8 @@
   "lockfile_version": "1",
   "packages": {
     "bash@latest": {
-      "last_modified": "2024-07-07T16:08:25Z",
-      "resolved": "github:NixOS/nixpkgs/ab82a9612aa45284d4adf69ee81871a389669a9e#bash",
+      "last_modified": "2024-07-14T11:03:58Z",
+      "resolved": "github:NixOS/nixpkgs/aa247c0c90ecf4ae7a032c54fdc21b91ca274062#bash",
       "source": "devbox-search",
       "version": "5.2p26",
       "systems": {
@@ -20,16 +20,16 @@
               "default": true
             },
             {
+              "name": "info",
+              "path": "/nix/store/ay5j8cw3aw1x3piikijl6knrln4l15dk-bash-5.2p26-info"
+            },
+            {
               "name": "dev",
               "path": "/nix/store/gml2k9ggb35szfbsyzglh4xf9x619mz1-bash-5.2p26-dev"
             },
             {
               "name": "doc",
               "path": "/nix/store/f2i81dshbj71436sa8rq4pbd31k4iy2m-bash-5.2p26-doc"
-            },
-            {
-              "name": "info",
-              "path": "/nix/store/ay5j8cw3aw1x3piikijl6knrln4l15dk-bash-5.2p26-info"
             }
           ],
           "store_path": "/nix/store/spyn2n8l9ca1pkqn20l40l424xmqwda4-bash-5.2p26"
@@ -47,20 +47,20 @@
               "default": true
             },
             {
-              "name": "debug",
-              "path": "/nix/store/may4vny0p78qz8k3nri1ij2ln0s7kpsn-bash-5.2p26-debug"
-            },
-            {
-              "name": "dev",
-              "path": "/nix/store/2s74cnbs0x6gi1a20bf7avbmrgbrxv5d-bash-5.2p26-dev"
-            },
-            {
               "name": "doc",
               "path": "/nix/store/xx7qdaw8sxqv3spnrz2i5sggm92svkyv-bash-5.2p26-doc"
             },
             {
               "name": "info",
               "path": "/nix/store/ygf71whh419pr1pmw1hxl9icjazsfw3h-bash-5.2p26-info"
+            },
+            {
+              "name": "debug",
+              "path": "/nix/store/may4vny0p78qz8k3nri1ij2ln0s7kpsn-bash-5.2p26-debug"
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/2s74cnbs0x6gi1a20bf7avbmrgbrxv5d-bash-5.2p26-dev"
             }
           ],
           "store_path": "/nix/store/zpvgzm6x3dhw0ai7ciw06w1ibhh2ap5r-bash-5.2p26"
