@@ -2,6 +2,8 @@
 
 set -e
 
+DIR="$(cd "$(dirname $(dirname "${BASH_SOURCE[0]}"))" && pwd)"
+
 # Check number of arguments
 if [[ $# != 1 ]]; then
     echo "Usage: $0 <outfile>"
@@ -68,6 +70,7 @@ case "${METHOD}" in
         get_command_path PERLTIDY envs/perl perltidy
         get_command_path DOTNET envs/dotnet dotnet
         get_command_path JULIA envs/julia julia
+        echo "export JULIA_DEPOT_PATH=${DIR}/envs/julia/.julia" >> "${outfile}"
 
         get_command_path HYPERFINE envs/system hyperfine
         get_command_path DIFFT envs/system difft

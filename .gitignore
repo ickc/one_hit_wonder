@@ -2,6 +2,7 @@
 .env
 /node_modules
 bin/
+envs/julia/.julia/
 out/
 src/*.hi
 src/*.o

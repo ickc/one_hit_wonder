@@ -419,6 +419,15 @@ bin/%_jl: src/%.jl
 	@echo '#!$(JULIA)' > $@
 	@cat $< >> $@
 	@chmod +x $@
+$(JULIA_DEPOT_PATH):
+	$(JULIA) -e 'using Pkg; Pkg.add("JuliaFormatter")'
+.PHONY: clean_jl Clean_jl format_jl
+clean_jl:  ## clean Julia binaries
+	rm -f $(BIN_jl)
+Clean_jl:  ## clean Julia packages
+	rm -rf $(JULIA_DEPOT_PATH)
+format_jl: $(JULIA_DEPOT_PATH)  ## format Julia files
+	$(JULIA) -e 'using JuliaFormatter; format("src", style=SciMLStyle(), margin=120)'
 
 # all
 
@@ -528,7 +537,7 @@ clean: \
 	rm -rf bin out
 gc:  ## garbage collect devbox
 	find . -type f -name devbox.json -exec bash -c 'cd $${1%/*} && devbox run -- nix store gc --extra-experimental-features nix-command' _ {} \;
-Clean: clean Clean_ts gc  ## Clean the environments too (this triggers redownload & rebuild next time!)
+Clean: clean Clean_ts Clean_jl gc  ## Clean the environments too (this triggers redownload & rebuild next time!)
 	find envs -type d -name '.devbox' -exec rm -rf {} +
 # modified from https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 help:  ## print this help message
