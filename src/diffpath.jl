@@ -1,10 +1,9 @@
 function get_executables(path::String)::Set{String}
-    return Set(
-        basename(file)::String
-        for dir::String in split(path, ':') if isdir(dir)
-        for file::String in readdir(dir; join=true)
-        if (islink(file) || isfile(file)) && (lstat(file).mode & 0o111 != 0)
-    )
+    return Set(basename(file)::String for dir::String in split(path, ':') if isdir(dir)
+    for
+    file::String in readdir(dir; join = true)
+    if
+    (islink(file) || isfile(file)) && (lstat(file).mode & 0o111 != 0))
 end
 
 function diffpath(path1::String, path2::String)::Nothing
@@ -17,6 +16,7 @@ function diffpath(path1::String, path2::String)::Nothing
             println('\t' * command)
         end
     end
+    return nothing
 end
 
 function main()::Nothing
@@ -25,6 +25,7 @@ function main()::Nothing
         exit(1)
     end
     diffpath(ARGS[1], ARGS[2])
+    return nothing
 end
 
 main()
