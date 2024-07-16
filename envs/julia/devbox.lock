@@ -1,0 +1,53 @@
+{
+  "lockfile_version": "1",
+  "packages": {
+    "julia-bin@latest": {
+      "last_modified": "2024-07-07T07:43:47Z",
+      "resolved": "github:NixOS/nixpkgs/b60793b86201040d9dee019a05089a9150d08b5b#julia-bin",
+      "source": "devbox-search",
+      "version": "1.10.4",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/fbw3bvbgys1vkfba9fx7d5wpdw81b8hp-julia-bin-1.10.4",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/fbw3bvbgys1vkfba9fx7d5wpdw81b8hp-julia-bin-1.10.4"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/c5g9lbgcxjv9bbz1p0d4zxhlfhc4iyx0-julia-bin-1.10.4",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/c5g9lbgcxjv9bbz1p0d4zxhlfhc4iyx0-julia-bin-1.10.4"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/vif3n0ryzxp564pymzwmj4jr3h4sz1i3-julia-bin-1.10.4",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/vif3n0ryzxp564pymzwmj4jr3h4sz1i3-julia-bin-1.10.4"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/zqinblzm67k2xcdvwxbn1f7k5adijilq-julia-bin-1.10.4",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/zqinblzm67k2xcdvwxbn1f7k5adijilq-julia-bin-1.10.4"
+        }
+      }
+    }
+  }
+}
