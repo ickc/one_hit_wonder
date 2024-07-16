@@ -192,6 +192,14 @@ bin/%_py_cython_clangxx: src/%.py
 	@chmod +x $@
 ifdef NUITKA_PYTHON
 NUITKA_FLAGS = --assume-yes-for-downloads --standalone --static-libpython=yes
+ifdef GITHUB_ACTIONS
+ifeq ($(UNAME), Darwin)
+BIN_py += $(patsubst src/%,bin/%_nuitka,$(subst .,_,$(SRC_py)))
+bin/%_py_nuitka: src/%.py
+	@mkdir -p $(@D)
+	PYTHONPATH=$(NUITKA_PYTHONPATH) $(NUITKA_PYTHON) -m nuitka $< --output-dir=$(@D) --output-filename=$*_py_nuitka $(NUITKA_FLAGS)
+	ln -sf $*.dist/$*_py_nuitka $@
+else
 BIN_py += $(patsubst src/%,bin/%_nuitka_onefile,$(subst .,_,$(SRC_py)))
 bin/%_py_nuitka_onefile: src/%.py
 	@mkdir -p $(@D)
@@ -202,6 +210,19 @@ bin/%_py_nuitka: src/%.py bin/%_py_nuitka_onefile
 	@mkdir -p $(@D)
 	PYTHONPATH=$(NUITKA_PYTHONPATH) $(NUITKA_PYTHON) -m nuitka $< --output-dir=$(@D) --output-filename=$*_py_nuitka $(NUITKA_FLAGS)
 	ln -sf $*.dist/$*_py_nuitka $@
+endif
+else
+BIN_py += $(patsubst src/%,bin/%_nuitka_onefile,$(subst .,_,$(SRC_py)))
+bin/%_py_nuitka_onefile: src/%.py
+	@mkdir -p $(@D)
+	PYTHONPATH=$(NUITKA_PYTHONPATH) $(NUITKA_PYTHON) -m nuitka $< --output-dir=$(@D) --output-filename=$*_py_nuitka_onefile $(NUITKA_FLAGS) --onefile
+	@rm -rf bin/diffpath.build bin/diffpath.dist bin/diffpath.onefile-build
+BIN_py += $(patsubst src/%,bin/%_nuitka,$(subst .,_,$(SRC_py)))
+bin/%_py_nuitka: src/%.py bin/%_py_nuitka_onefile
+	@mkdir -p $(@D)
+	PYTHONPATH=$(NUITKA_PYTHONPATH) $(NUITKA_PYTHON) -m nuitka $< --output-dir=$(@D) --output-filename=$*_py_nuitka $(NUITKA_FLAGS)
+	ln -sf $*.dist/$*_py_nuitka $@
+endif
 endif
 ifdef PYTHON_SYSTEM
 BIN_py += $(patsubst src/%,bin/%_python_system,$(subst .,_,$(SRC_py)))
