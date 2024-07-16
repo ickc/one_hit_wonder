@@ -67,6 +67,7 @@ case "${METHOD}" in
         get_command_path PERL envs/perl perl
         get_command_path PERLTIDY envs/perl perltidy
         get_command_path DOTNET envs/dotnet dotnet
+        get_command_path JULIA envs/julia julia
 
         get_command_path HYPERFINE envs/system hyperfine
         get_command_path DIFFT envs/system difft

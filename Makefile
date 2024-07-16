@@ -400,6 +400,17 @@ format_m:  ## format Objective C files
 endif
 endif
 
+# Julia
+EXT += jl
+SRC_jl = $(wildcard src/*.jl)
+COMPILER_jl = $(JULIA)
+BIN_jl = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_jl)))
+bin/%_jl: src/%.jl
+	@mkdir -p $(@D)
+	@echo '#!$(JULIA)' > $@
+	@cat $< >> $@
+	@chmod +x $@
+
 # all
 
 BIN = $(foreach ext,$(EXT),$(BIN_$(ext)))
