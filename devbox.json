@@ -11,6 +11,7 @@
     "gnumake@latest",
     "go@latest",
     "hyperfine@latest",
+    "julia-bin@latest",
     "lua54Packages.lua@latest",
     "lua54Packages.luafilesystem",
     "luajit@latest",
