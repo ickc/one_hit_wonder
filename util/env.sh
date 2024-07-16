@@ -76,8 +76,10 @@ case "${METHOD}" in
         get_command_path CYTHONIZE envs/cython cythonize
         get_command_path CYTHON_PYTHON envs/cython python
 
-        get_command_path NUITKA_PYTHON envs/nuitka python
-        get_env_var NUITKA_PYTHONPATH envs/nuitka PYTHONPATH
+        if [[ "$(uname -s)" != Darwin || $(sw_vers -productVersion | awk -F '.' '{print $1}') -ge 14 ]]; then
+            get_command_path NUITKA_PYTHON envs/nuitka python
+            get_env_var NUITKA_PYTHONPATH envs/nuitka PYTHONPATH
+        fi
         ;;
     *) ;;
 esac
