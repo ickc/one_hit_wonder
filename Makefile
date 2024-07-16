@@ -191,10 +191,16 @@ bin/%_py_cython_clangxx: src/%.py
 	@printf "#!$(CYTHON_PYTHON)\nfrom $(@F) import main\nmain()" > $@
 	@chmod +x $@
 ifdef NUITKA_PYTHON
-BIN_py += $(patsubst src/%,bin/%_nuitka,$(subst .,_,$(SRC_py)))
-bin/%_py_nuitka: src/%.py
+NUITKA_FLAGS = --assume-yes-for-downloads --standalone --static-libpython=yes
+BIN_py += $(patsubst src/%,bin/%_nuitka_onefile,$(subst .,_,$(SRC_py)))
+bin/%_py_nuitka_onefile: src/%.py
 	@mkdir -p $(@D)
-	PYTHONPATH=$(NUITKA_PYTHONPATH) $(NUITKA_PYTHON) -m nuitka --standalone --assume-yes-for-downloads --static-libpython=yes --output-dir=$(@D) --output-filename=$*_py_nuitka $<
+	PYTHONPATH=$(NUITKA_PYTHONPATH) $(NUITKA_PYTHON) -m nuitka $< --output-dir=$(@D) --output-filename=$*_py_nuitka_onefile $(NUITKA_FLAGS) --onefile
+	@rm -rf bin/diffpath.build bin/diffpath.dist bin/diffpath.onefile-build
+BIN_py += $(patsubst src/%,bin/%_nuitka,$(subst .,_,$(SRC_py)))
+bin/%_py_nuitka: src/%.py bin/%_py_nuitka_onefile
+	@mkdir -p $(@D)
+	PYTHONPATH=$(NUITKA_PYTHONPATH) $(NUITKA_PYTHON) -m nuitka $< --output-dir=$(@D) --output-filename=$*_py_nuitka $(NUITKA_FLAGS)
 	ln -sf $*.dist/$*_py_nuitka $@
 endif
 ifdef PYTHON_SYSTEM
