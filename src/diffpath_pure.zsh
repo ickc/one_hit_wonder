@@ -9,7 +9,7 @@ get_files() {
     for dir in ${(s.:.)1}; do
         {
             cd "${dir}" 2> /dev/null &&
-                FUNC_RETVAL+=(*(-*N.x) .*(-*N.x))
+                FUNC_RETVAL+=(*(ND-*x))
         }
     done
     FUNC_RETVAL=("${(ou)FUNC_RETVAL[@]}")
