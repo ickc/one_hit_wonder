@@ -32,6 +32,7 @@
     "stylish-haskell@latest",
     "stylua@latest",
     "time@latest",
-    "typescript@latest"
+    "typescript@latest",
+    "zsh@latest"
   ]
 }
