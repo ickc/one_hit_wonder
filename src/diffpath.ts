@@ -5,7 +5,7 @@ import path from "path";
 function isExecutable(filePath: string): boolean {
   const stats = fs.lstatSync(filePath);
   return (
-    (stats.isFile() || stats.isSymbolicLink()) && (stats.mode & 0o111) !== 0
+    stats.isSymbolicLink() || (stats.isFile() && (stats.mode & 0o111) !== 0)
   );
 }
 

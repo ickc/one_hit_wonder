@@ -14,7 +14,7 @@ func isExecutable(entry os.DirEntry) bool {
 		return false
 	}
 	mode := info.Mode()
-	return (mode.IsRegular() || mode&os.ModeSymlink != 0) && mode&0111 != 0
+	return (mode&os.ModeSymlink != 0) || (mode.IsRegular() && (mode&0111 != 0))
 }
 
 // Function to get executables from a PATH

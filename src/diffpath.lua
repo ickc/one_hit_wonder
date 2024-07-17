@@ -13,11 +13,16 @@ end
 -- Function to check if a file is executable and is either a regular file or a symlink
 local function is_executable(file)
     local attrs = lfs.symlinkattributes(file)
-    if attrs and (attrs.mode == "file" or attrs.mode == "link") then
-        local perm = attrs.permissions
-        if perm:sub(3, 3) == "x" or perm:sub(6, 6) == "x" or perm:sub(9, 9) == "x" then
-            return true
-        end
+    if not attrs or attrs.mode == "directory" then
+        return false
+    end
+    if attrs.mode == "link" then
+        return true
+    end
+    if attrs.mode == "file" then
+        return attrs.permissions:sub(3, 3) == "x"
+            or attrs.permissions:sub(6, 6) == "x"
+            or attrs.permissions:sub(9, 9) == "x"
     end
     return false
 end

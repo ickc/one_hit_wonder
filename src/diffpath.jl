@@ -3,7 +3,7 @@ function get_executables(path::String)::Set{String}
     for
     file::String in readdir(dir; join = true)
     if
-    (islink(file) || isfile(file)) && (lstat(file).mode & 0o111 != 0))
+    islink(file) || (isfile(file) && (lstat(file).mode & 0o111 != 0)))
 end
 
 function diffpath(path1::String, path2::String)::Nothing

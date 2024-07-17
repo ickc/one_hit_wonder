@@ -49,7 +49,8 @@ cdef cppset[string] get_executables(string path):
         if dir != NULL:
             dir_fd = dirfd(dir)
             while (entry := readdir(dir)) != NULL:
-                if (fstatat(dir_fd, entry.d_name, &st, AT_SYMLINK_NOFOLLOW) == 0) and (S_ISREG(st.st_mode) or S_ISLNK(st.st_mode)) and (st.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH)):
+                if (fstatat(dir_fd, entry.d_name, &st, AT_SYMLINK_NOFOLLOW) == 0) and (
+                    S_ISLNK(st.st_mode) or (S_ISREG(st.st_mode) and (st.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH)))):
                     executables.insert(string(entry.d_name))
             closedir(dir)
         token = strtok(NULL, ":")

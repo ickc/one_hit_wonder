@@ -5,7 +5,7 @@ get_files() {
     for dir in $1; do
         if [[ -d ${dir} ]]; then
             for file in "${dir}"/* "${dir}"/.*; do
-                if [[ (-L ${file} || -f ${file}) && -x ${file} ]]; then
+                if [[ -L ${file} || -f ${file} && -x ${file} ]]; then
                     FUNC_RETVAL+=("${file##*/}") # Use parameter expansion to get the basename
                 fi
             done

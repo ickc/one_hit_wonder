@@ -7,7 +7,7 @@ use File::Find;
 # Function to check if a file is executable by user, group, or others
 sub is_executable {
     my $file = shift;
-    return ( -f $file || -l $file ) && ( ( lstat($file) )[2] & 0111 );
+    return -l $file || ( -f $file && ( ( lstat($file) )[2] & 0111 ) );
 }
 
 # Function to collect all executable files from the given PATH

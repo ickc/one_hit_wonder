@@ -10,8 +10,11 @@ def get_executables(path: str) -> set[str]:
         for directory in path.split(":")
         if os.path.isdir(directory)
         for entry in os.scandir(directory)
-        if (entry.is_symlink() or entry.is_file())
-        and (os.stat(entry.path, follow_symlinks=False).st_mode & 0o111)
+        if entry.is_symlink()
+        or (
+            entry.is_file()
+            and (os.stat(entry.path, follow_symlinks=False).st_mode & 0o111)
+        )
     }
 
 

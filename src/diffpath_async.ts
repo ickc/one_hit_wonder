@@ -5,7 +5,7 @@ import path from "path";
 async function isExecutable(filePath: string): Promise<boolean> {
   const stats = await fs.lstat(filePath);
   return (
-    (stats.isFile() || stats.isSymbolicLink()) && (stats.mode & 0o111) !== 0
+    stats.isSymbolicLink() || (stats.isFile() && (stats.mode & 0o111) !== 0)
   );
 }
 

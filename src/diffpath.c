@@ -14,7 +14,7 @@
 static inline int is_executable(const int dir_fd, const char* d_name)
 {
     struct stat st;
-    return (fstatat(dir_fd, d_name, &st, AT_SYMLINK_NOFOLLOW) == 0) && (S_ISREG(st.st_mode) || S_ISLNK(st.st_mode)) && (st.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH));
+    return (fstatat(dir_fd, d_name, &st, AT_SYMLINK_NOFOLLOW) == 0) && (S_ISLNK(st.st_mode) || (S_ISREG(st.st_mode) && (st.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH))));
 }
 
 // Function to compare strings for qsort

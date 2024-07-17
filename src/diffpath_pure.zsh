@@ -1,6 +1,5 @@
-#!/usr/bin/env zsh
-
-setopt extended_glob
+setopt NULL_GLOB
+setopt GLOB_DOTS
 
 # Function to get files in a given PATH
 get_files() {
@@ -9,7 +8,7 @@ get_files() {
     for dir in ${(s.:.)1}; do
         {
             cd "${dir}" 2> /dev/null &&
-                FUNC_RETVAL+=(*(ND-*x))
+                FUNC_RETVAL+=(*(.*,@))
         }
     done
     FUNC_RETVAL=("${(ou)FUNC_RETVAL[@]}")

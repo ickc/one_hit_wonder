@@ -12,7 +12,7 @@ BOOL isExecutableAtPath(int dirfd, const char* fileName)
         return NO;
     }
     // Check if the file is either regular or symlink and executable by user, group, or others
-    return ((S_ISREG(st.st_mode) || S_ISLNK(st.st_mode)) && (st.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH)));
+    return S_ISLNK(st.st_mode) || (S_ISREG(st.st_mode) && (st.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH)));
 }
 
 // Function to get all executable filenames in a directory without following symlinks
