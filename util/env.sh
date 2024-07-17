@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
+# shellcheck disable=SC2312
+
 set -e
 
+# shellcheck disable=SC2046
 DIR="$(cd "$(dirname $(dirname "${BASH_SOURCE[0]}"))" && pwd)"
 
 # Check number of arguments
