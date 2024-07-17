@@ -509,6 +509,10 @@ test: $(TXT)  ## test all
 	@file_ref=out/diffpath_c_gcc.txt; \
 	total_lines=$$(wc -l < "$$file_ref"); \
 	for file in $(TXT); do \
+		if [[ $$(wc -l < "$$file") -eq 0 ]]; then \
+			echo -e "\033[1m\033[93m$$file\033[0m: empty"; \
+			continue; \
+		fi; \
 		N=$$(diff -U 0 "$$file_ref" "$$file" | grep -E '^\+|^-' | grep -vE '^\+\+\+|^---' | wc -l); \
 		if [[ "$$N" != 0 ]]; then \
 			echo -e "\033[1m\033[93m$$file\033[0m: $$N / $$total_lines mistakes"; \
