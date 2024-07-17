@@ -61,7 +61,7 @@ int main(int argc, const char* argv[])
 {
     @autoreleasepool {
         if (argc != 3) {
-            fprintf(stderr, "Usage: diffpath PATH1 PATH2\n");
+            fprintf(stderr, "Usage: %s PATH1 PATH2\n", argv[0]);
             return 1;
         }
 
