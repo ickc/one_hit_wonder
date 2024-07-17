@@ -1,17 +1,17 @@
 #!/usr/bin/env zsh
 
 setopt extended_glob
-setopt null_glob
 
 # Function to get files in a given PATH
 get_files() {
-    local -a files exec_files
-    local IFS=: dir real_dir
+    local -a files
+    local IFS=: dir
     for dir in ${(s.:.)1}; do
-        if [[ -d ${dir} || -L ${dir} ]]; then
-            real_dir=${dir:A}  # Resolve symlink if it's a symlink
-            exec_files=(${real_dir}/*(-*N.x:t) ${real_dir}/.*(-*N.x:t))
-            files+=(${exec_files})
+        if [[ -L ${dir} ]]; then
+            dir=${dir:A}  # Resolve symlink if it's a symlink
+        fi
+        if [[ -d ${dir} ]]; then
+            files+=(${dir}/*(-*N.x:t) ${dir}/.*(-*N.x:t))
         fi
     done
     print -l ${(u)files}
