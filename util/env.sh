@@ -62,6 +62,7 @@ case "${METHOD}" in
         get_command_path RUSTC envs/rust rustc
         get_command_path SHFMT envs/bash shfmt
         get_command_path BASH envs/bash bash
+        get_command_path ZSH envs/zsh zsh
         get_command_path NODE envs/typescript node
         get_command_path NPM envs/typescript npm
         get_command_path PRETTIER envs/typescript prettier
@@ -91,10 +92,11 @@ esac
 
 case "$(uname -s)" in
     Darwin)
-        echo 'CLANG_SYSTEM=/usr/bin/clang' >> "${outfile}"
-        echo 'PYTHON_SYSTEM=/usr/bin/python3' >> "${outfile}"
         echo 'BASH_SYSTEM=/bin/bash' >> "${outfile}"
+        echo 'CLANG_SYSTEM=/usr/bin/clang' >> "${outfile}"
         echo 'PERL_SYSTEM=/usr/bin/perl' >> "${outfile}"
+        echo 'PYTHON_SYSTEM=/usr/bin/python3' >> "${outfile}"
+        echo 'ZSH_SYSTEM=/bin/zsh' >> "${outfile}"
 
         # Get the macOS version number
         macos_version=$(sw_vers -productVersion | awk -F '.' '{print $1}')
@@ -125,10 +127,11 @@ case "$(uname -s)" in
         esac
         ;;
     *)
-        [[ -e /usr/bin/clang ]] && echo 'CLANG_SYSTEM=/usr/bin/clang' >> "${outfile}"
-        [[ -e /usr/bin/python3 ]] && echo 'PYTHON_SYSTEM=/usr/bin/python3' >> "${outfile}"
         [[ -e /bin/bash ]] && echo 'BASH_SYSTEM=/bin/bash' >> "${outfile}"
+        [[ -e /bin/zsh ]] && echo 'ZSH_SYSTEM=/bin/zsh' >> "${outfile}"
+        [[ -e /usr/bin/clang ]] && echo 'CLANG_SYSTEM=/usr/bin/clang' >> "${outfile}"
         [[ -e /usr/bin/perl ]] && echo 'PERL_SYSTEM=/usr/bin/perl' >> "${outfile}"
+        [[ -e /usr/bin/python3 ]] && echo 'PYTHON_SYSTEM=/usr/bin/python3' >> "${outfile}"
 
         GCC_MARCH=native
         ;;

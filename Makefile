@@ -320,6 +320,33 @@ format_sh:  ## format Shell files
 		--case-indent \
 		--space-redirects \
 		{} +
+# zsh
+EXT += zsh
+SRC_zsh = $(wildcard src/*.zsh)
+COMPILER_zsh = $(ZSH)
+BIN_zsh = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_zsh)))
+bin/%_zsh: src/%.zsh
+	@mkdir -p $(@D)
+	@echo "#!$(ZSH)" > $@
+	@cat $< >> $@
+	@chmod +x $@
+ifdef ZSH_SYSTEM
+BIN_zsh += $(patsubst src/%,bin/%_system,$(subst .,_,$(SRC_zsh)))
+bin/%_zsh_system: src/%.zsh
+	@mkdir -p $(@D)
+	@echo "#!$(ZSH_SYSTEM)" > $@
+	@cat $< >> $@
+	@chmod +x $@
+endif
+.PHONY: clean_zsh format_zsh
+clean_zsh:  ## clean Zsh binaries
+	rm -f $(BIN_zsh)
+format_zsh:  ## format Zsh files
+	find src util -type f -name '*.zsh' \
+	-exec sed -i -E \
+		-e 's/\$$([a-zA-Z_][a-zA-Z0-9_]*)/$${\1}/g' \
+		-e 's/([^[])\[ ([^]]+) \]/\1[[ \2 ]]/g' \
+		{} +
 
 # TypeScript
 EXT += ts
