@@ -10,7 +10,8 @@ class DiffPath
     {
         if (args.Length != 2)
         {
-            Console.WriteLine("Usage: diffpath PATH1 PATH2");
+            string executableName = AppDomain.CurrentDomain.FriendlyName;
+            Console.WriteLine($"Usage: {executableName} PATH1 PATH2");
             return;
         }
 
@@ -20,7 +21,7 @@ class DiffPath
         var executables1 = GetExecutables(path1);
         var executables2 = GetExecutables(path2);
 
-        var uniqueExecutables = executables1.Except(executables2).Union(executables2.Except(executables1)).OrderBy(e => e);
+        var uniqueExecutables = new SortedSet<string>(executables1.Except(executables2).Union(executables2.Except(executables1)), StringComparer.Ordinal);
 
         foreach (var exec in uniqueExecutables)
         {
@@ -35,9 +36,9 @@ class DiffPath
         }
     }
 
-    static HashSet<string> GetExecutables(string pathVariable)
+    static SortedSet<string> GetExecutables(string pathVariable)
     {
-        var executables = new HashSet<string>();
+        var executables = new SortedSet<string>(StringComparer.Ordinal);
 
         foreach (var path in pathVariable.Split(':'))
         {
@@ -62,29 +63,16 @@ class DiffPath
         return executables;
     }
 
-    // dotnet is not good at handling posix specific stuff
-    // using Mono.Posix.NETStandard still doesn't work and makes it hard to build a single binary
-    // using lstat is another nightmare
-    // I'm sure given enough effort, any of these methods can be made to work
-    // but I'm not going to spend more time on this
-    [DllImport("libc", SetLastError = true)]
-    private static extern int access(string pathname, int mode);
-
-    private const int X_OK = 0x01; // Execute permission
-
     public static bool IsExecutable(string filePath)
     {
-        if (!File.Exists(filePath))
+        var fileInfo = new FileInfo(filePath);
+        if (fileInfo.Attributes.HasFlag(FileAttributes.Directory))
         {
             return false;
         }
+        var unixFilePermissions = fileInfo.UnixFileMode;
+        const UnixFileMode AnyExecute = (UnixFileMode)0x49; // 0x40 (UserExecute) | 0x08 (GroupExecute) | 0x01 (OthersExecute)
 
-        // Check execute permission using access system call
-        if (access(filePath, X_OK) == 0)
-        {
-            return true;
-        }
-
-        return false;
+        return (unixFilePermissions & AnyExecute) != 0;
     }
 }
