@@ -69,16 +69,12 @@ print_diff() {
         if [[ "${elem1}" < "${elem2}" ]]; then
             print ${elem1}
             ((i++))
-            while (( i <= n1 )) && [[ "${arr1[i]}" == "${elem1}" ]]; do ((i++)); done
         elif [[ "${elem1}" > "${elem2}" ]]; then
             print "\t${elem2}"
             ((j++))
-            while (( j <= n2 )) && [[ "${arr2[j]}" == "${elem2}" ]]; do ((j++)); done
         else
             ((i++))
-            while (( i <= n1 )) && [[ "${arr1[i]}" == "${elem1}" ]]; do ((i++)); done
             ((j++))
-            while (( j <= n2 )) && [[ "${arr2[j]}" == "${elem2}" ]]; do ((j++)); done
         fi
     done
 
@@ -87,14 +83,12 @@ print_diff() {
         elem1="${arr1[i]}"
         print ${elem1}
         ((i++))
-        while (( i <= n1 )) && [[ "${arr1[i]}" == "${elem1}" ]]; do ((i++)); done
     done
 
     while (( j <= n2 )); do
         elem2="${arr2[j]}"
         print "\t${elem2}"
         ((j++))
-        while (( j <= n2 )) && [[ "${arr2[j]}" == "${elem2}" ]]; do ((j++)); done
     done
 }
 
