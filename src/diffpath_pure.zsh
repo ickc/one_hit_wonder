@@ -7,9 +7,10 @@ get_files() {
     local IFS=: dir
     FUNC_RETVAL=() # Initialize global variable directly
     for dir in ${(s.:.)1}; do
-        if [[ -d ${dir} ]]; then
-            FUNC_RETVAL+=(${dir}/*(-*N.x:t) ${dir}/.*(-*N.x:t))
-        fi
+        {
+            cd "${dir}" 2> /dev/null &&
+                FUNC_RETVAL+=(*(-*N.x) .*(-*N.x))
+        }
     done
     FUNC_RETVAL=("${(ou)FUNC_RETVAL[@]}")
 }
