@@ -1,11 +1,11 @@
 # Function to get files in a given PATH
 get_files() {
-    local IFS=':'
+    local IFS=':' dir file
     FUNC_RETVAL=() # Initialize global variable directly
     for dir in $1; do
         if [[ -d ${dir} ]]; then
             for file in "${dir}"/* "${dir}"/.*; do
-                if [[ (-f ${file} || -L ${file}) && -x ${file} ]]; then
+                if [[ (-L ${file} || -f ${file}) && -x ${file} ]]; then
                     FUNC_RETVAL+=("${file##*/}") # Use parameter expansion to get the basename
                 fi
             done
@@ -15,21 +15,24 @@ get_files() {
 
 # Function to sort an array using merge sort (iteratively)
 sort_array() {
-    local array=("$@")
-    local n=${#array[@]}
+    local array n size left_start mid right_end left right i j k
+    array=("$@")
+    n=${#array[@]}
 
     for ((size = 1; size < n; size *= 2)); do
         for ((left_start = 0; left_start < n - 1; left_start += 2 * size)); do
-            local mid=$((left_start + size - 1))
-            local right_end=$((left_start + 2 * size - 1))
+            mid=$((left_start + size - 1))
+            right_end=$((left_start + 2 * size - 1))
             if ((right_end >= n)); then
                 right_end=$((n - 1))
             fi
 
-            local left=("${array[@]:left_start:size}")
-            local right=("${array[@]:mid+1:right_end-mid}")
+            left=("${array[@]:left_start:size}")
+            right=("${array[@]:mid+1:right_end-mid}")
 
-            local i=0 j=0 k=${left_start}
+            i=0
+            j=0
+            k=${left_start}
             while ((i < ${#left[@]} && j < ${#right[@]})); do
                 if [[ ${left[i]} < ${right[j]} ]]; then
                     array[k++]="${left[i++]}"
@@ -53,15 +56,17 @@ sort_array() {
 
 # Function to print differences like comm -3, skipping duplicates
 print_diff() {
-    local arr1=("${!1}")
-    local arr2=("${!2}")
-    local n1=${#arr1[@]}
-    local n2=${#arr2[@]}
-    local i=0 j=0
+    local arr1 arr2 n1 n2 i j elem1 elem2
+    arr1=("${!1}")
+    arr2=("${!2}")
+    n1=${#arr1[@]}
+    n2=${#arr2[@]}
+    i=0
+    j=0
 
     while [[ ${i} -lt ${n1} && ${j} -lt ${n2} ]]; do
-        local elem1="${arr1[${i}]}"
-        local elem2="${arr2[${j}]}"
+        elem1="${arr1[${i}]}"
+        elem2="${arr2[${j}]}"
 
         if [[ ${elem1} < ${elem2} ]]; then
             echo "${elem1}"
@@ -89,7 +94,7 @@ print_diff() {
 
     # Print remaining elements
     while [[ ${i} -lt ${n1} ]]; do
-        local elem1="${arr1[${i}]}"
+        elem1="${arr1[${i}]}"
         echo "${elem1}"
         ((i++))
         while [[ ${i} -lt ${n1} && ${arr1[${i}]} == "${elem1}" ]]; do
@@ -98,7 +103,7 @@ print_diff() {
     done
 
     while [[ ${j} -lt ${n2} ]]; do
-        local elem2="${arr2[${j}]}"
+        elem2="${arr2[${j}]}"
         echo -e "\t${elem2}"
         ((j++))
         while [[ ${j} -lt ${n2} && ${arr2[${j}]} == "${elem2}" ]]; do
@@ -108,6 +113,8 @@ print_diff() {
 }
 
 main() {
+    local files1 files2 sorted_files1 sorted_files2
+
     if [[ $# -ne 2 ]]; then
         echo "Usage: $0 PATH1 PATH2"
         exit 1
