@@ -56,11 +56,6 @@ print_diff() {
 
 main() {
     local -a files1 files2
-    if (( $# != 2 )); then
-        print "Usage: $0 PATH1 PATH2"
-        return 1
-    fi
-
     get_files "$1"
     files1=("${FUNC_RETVAL[@]}")
     get_files "$2"
@@ -68,4 +63,8 @@ main() {
     print_diff files1 files2
 }
 
+if (( $# != 2 )); then
+    print "Usage: $0 PATH1 PATH2" >&2
+    return 1
+fi
 main "$@"

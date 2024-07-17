@@ -1,9 +1,12 @@
 import           Control.Monad      (filterM)
 import           Data.Set           (Set)
 import qualified Data.Set           as Set
-import           System.Directory   (doesDirectoryExist, listDirectory)
-import           System.Environment (getArgs, getProgName)
+import           System.Directory   (doesDirectoryExist, getCurrentDirectory,
+                                     listDirectory,
+                                     makeRelativeToCurrentDirectory)
+import           System.Environment (getArgs, getExecutablePath)
 import           System.FilePath    ((</>))
+import           System.IO          (hPutStrLn, stderr)
 import qualified System.Posix.Files as Files
 
 -- Function to split a string by a delimiter
@@ -59,5 +62,7 @@ main = do
             let diff = symmetricDifference execs1 execs2
             Set.foldr (\x acc -> putStrLn (formatItem execs1 x) >> acc) (return ()) diff
         _ -> do
-            progName <- getProgName
-            putStrLn $ "Usage: " ++ progName ++ " PATH1 PATH2"
+            execPath <- getExecutablePath
+            currentDir <- getCurrentDirectory
+            relExecPath <- makeRelativeToCurrentDirectory execPath
+            hPutStrLn stderr $ "Usage: " ++ relExecPath ++ " PATH1 PATH2"

@@ -67,7 +67,7 @@ end
 -- Main function
 local function main()
     if #arg < 2 then
-        print("Usage: " .. arg[0] .. " PATH1 PATH2")
+        io.stderr:write("Usage: " .. arg[0] .. " PATH1 PATH2\n")
         os.exit(1)
     end
 

@@ -100,7 +100,7 @@ def main():
     Exits with status code 1 if incorrect number of arguments are provided.
     """
     if len(sys.argv) != 3:
-        print(f"Usage: {sys.argv[0]} PATH1 PATH2")
+        print(f"Usage: {sys.argv[0]} PATH1 PATH2", file=sys.stderr)
         sys.exit(1)
     
     cdef string path1 = PyUnicode_AsUTF8(sys.argv[1])

@@ -21,7 +21,7 @@ end
 
 function main()::Nothing
     if length(ARGS) != 2
-        println("Usage: $(PROGRAM_FILE) PATH1 PATH2")
+        println(stderr, "Usage: $(PROGRAM_FILE) PATH1 PATH2")
         exit(1)
     end
     diffpath(ARGS[1], ARGS[2])

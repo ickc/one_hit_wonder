@@ -93,7 +93,7 @@ func printDiff(execs1, execs2 []string) {
 
 func main() {
 	if len(os.Args) != 3 {
-		fmt.Printf("Usage: %s PATH1 PATH2\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Usage: %s PATH1 PATH2\n", os.Args[0])
 		os.Exit(1)
 	}
 	// Get collections of executable filenames

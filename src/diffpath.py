@@ -33,7 +33,7 @@ def diffpath(
 
 def main() -> None:
     if len(sys.argv) != 3:
-        print(f"Usage: {sys.argv[0]} PATH1 PATH2")
+        print(f"Usage: {sys.argv[0]} PATH1 PATH2", file=sys.stderr)
         sys.exit(1)
     diffpath(sys.argv[1], sys.argv[2])
 

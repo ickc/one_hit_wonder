@@ -59,8 +59,9 @@ function symmetricDifferenceList(
 // Main function to execute the diffpath logic
 async function main(): Promise<void> {
   if (process.argv.length !== 4) {
-    const programName = path.basename(process.argv[1]);
-    console.error(`Usage: ${programName} PATH1 PATH2`);
+    console.error(
+      `Usage: ${path.relative(process.cwd(), process.argv[1])} PATH1 PATH2`,
+    );
     process.exit(1);
   }
   const [, , path1, path2] = process.argv;

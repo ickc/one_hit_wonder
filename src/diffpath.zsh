@@ -10,7 +10,7 @@ get_executables() {
 }
 
 if [[ $# -ne 2 ]]; then
-    echo "Usage: $0 PATH1 PATH2"
+    echo "Usage: $0 PATH1 PATH2" >&2
     exit 1
 fi
 comm -3 <(get_executables "$1") <(get_executables "$2")

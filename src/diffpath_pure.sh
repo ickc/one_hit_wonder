@@ -116,7 +116,7 @@ main() {
     local files1 files2 sorted_files1 sorted_files2
 
     if [[ $# -ne 2 ]]; then
-        echo "Usage: $0 PATH1 PATH2"
+        echo "Usage: $0 PATH1 PATH2" >&2
         exit 1
     fi
 

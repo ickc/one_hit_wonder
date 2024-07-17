@@ -10,8 +10,11 @@ class DiffPath
     {
         if (args.Length != 2)
         {
-            string executableName = AppDomain.CurrentDomain.FriendlyName;
-            Console.WriteLine($"Usage: {executableName} PATH1 PATH2");
+            string executableName = Environment.GetCommandLineArgs()[0];
+            string cwd = Directory.GetCurrentDirectory();
+            string relativePath = Path.GetRelativePath(cwd, executableName);
+
+            Console.Error.WriteLine($"Usage: {relativePath} PATH1 PATH2");
             return;
         }
 
