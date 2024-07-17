@@ -4,14 +4,14 @@ setopt extended_glob
 
 # Function to get files in a given PATH
 get_files() {
-    local -a files
     local IFS=: dir
+    FUNC_RETVAL=() # Initialize global variable directly
     for dir in ${(s.:.)1}; do
         if [[ -d ${dir} ]]; then
-            files+=(${dir}/*(-*N.x:t) ${dir}/.*(-*N.x:t))
+            FUNC_RETVAL+=(${dir}/*(-*N.x:t) ${dir}/.*(-*N.x:t))
         fi
     done
-    print -l ${(ou)files}
+    FUNC_RETVAL=("${(ou)FUNC_RETVAL[@]}")
 }
 
 # Function to print differences like comm -3, skipping duplicates
@@ -61,8 +61,10 @@ main() {
         return 1
     fi
 
-    files1=($(get_files $1))
-    files2=($(get_files $2))
+    get_files "$1"
+    files1=("${FUNC_RETVAL[@]}")
+    get_files "$2"
+    files2=("${FUNC_RETVAL[@]}")
     print_diff files1 files2
 }
 
