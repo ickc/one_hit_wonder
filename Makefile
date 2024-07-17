@@ -520,7 +520,7 @@ clean_bench:  ## clean benchmark files
 
 # misc #########################################################################
 
-.PHONY: build update test size list_link clean Clean help
+.PHONY: build update test test-usage size list_link clean Clean help
 build: $(INCLUDEFILE)  ## prepare environments using nix & devbox (should be triggered automatically)
 # this file is solely here for CI cache
 # it is possible the lock files between this and those under envs are out of sync
@@ -547,6 +547,15 @@ test: $(TXT)  ## test all
 				$(DIFFT) "$$file_ref" "$$file"; \
 			fi; \
 		fi; \
+	done
+test-usage: $(BIN)  ## test the usage help of all programs
+	@for bin in $^; do \
+		actual_output=$$($$bin --help 2>&1 >/dev/null); \
+		expected_output="Usage: $$bin PATH1 PATH2"; \
+		if [ "$$actual_output" != "$$expected_output" ]; then \
+			echo "Unexpected usage string from $$bin:"; \
+			echo "$$actual_output"; \
+		fi \
 	done
 size:  ## show binary sizes
 	@ls -lh bin | sort -hk5
