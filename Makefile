@@ -192,8 +192,8 @@ bin/%_py_cython_clangxx: src/%.py
 	@chmod +x $@
 ifdef NUITKA_PYTHON
 NUITKA_FLAGS = --assume-yes-for-downloads --standalone --static-libpython=yes
-# skip onefile build if Darwin and on GitHub Actions
-ifeq ($(UNAME)-$(GITHUB_ACTIONS), Darwin-true)
+# skip onefile build if Darwin
+ifeq ($(UNAME), Darwin)
 BIN_py += $(patsubst src/%,bin/%_nuitka,$(subst .,_,$(SRC_py)))
 bin/%_py_nuitka: src/%.py
 	@mkdir -p $(@D)
