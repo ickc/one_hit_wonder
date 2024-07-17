@@ -1,9 +1,8 @@
 # Function to get files in a given PATH
 get_files() {
-    local path="$1"
-    IFS=':' read -r -a dirs <<< "${path}"
+    local IFS=':'
     FUNC_RETVAL=() # Initialize global variable directly
-    for dir in "${dirs[@]}"; do
+    for dir in $1; do
         if [[ -d ${dir} ]]; then
             for file in "${dir}"/* "${dir}"/.*; do
                 if [[ (-f ${file} || -L ${file}) && -x ${file} ]]; then
