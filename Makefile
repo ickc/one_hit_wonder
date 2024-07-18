@@ -456,6 +456,27 @@ Clean_jl:  ## clean Julia packages
 format_jl: $(JULIA_DEPOT_PATH)  ## format Julia files
 	$(JULIA) -e 'using JuliaFormatter; format("src", style=SciMLStyle(), margin=120)'
 
+# Java
+EXT += java
+SRC_java = $(wildcard src/*.java)
+COMPILER_java = $(JAVA)
+BIN_java = $(patsubst src/%,bin/%,$(subst .,_,$(SRC_java)))
+bin/%_java: src/%.java
+	@mkdir -p $(@D)
+	$(JAVAC) -d $(@D) $<
+	$(JAR) cfm $@.jar <(echo 'Main-Class: $*') -C $(@D) $*.class
+	@rm -f $(@D)/$*.class
+	@echo '#!$(JAVA) -jar' > $@
+	@cat $@.jar >> $@
+	@rm -f $@.jar
+	@chmod +x $@
+.PHONY: clean_java format_java
+clean_java:  ## clean Java binaries
+	rm -f $(BIN_java)
+format_java:  ## format Java files
+	find src -type f -name '*.java' -exec \
+		$(GOOGLE_JAVA_FORMAT) --aosp -i {} +
+
 # all
 
 BIN = $(foreach ext,$(EXT),$(BIN_$(ext)))

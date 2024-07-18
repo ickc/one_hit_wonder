@@ -75,6 +75,10 @@ case "${METHOD}" in
         get_command_path DOTNET envs/dotnet dotnet
         get_command_path JULIA envs/julia julia
         echo "export JULIA_DEPOT_PATH=${DIR}/envs/julia/.julia" >> "${outfile}"
+        get_command_path JAVA envs/java java
+        get_command_path JAVAC envs/java javac
+        get_command_path JAR envs/java jar
+        get_command_path GOOGLE_JAVA_FORMAT envs/java google-java-format
 
         get_command_path HYPERFINE envs/system hyperfine
         get_command_path DIFFT envs/system difft
