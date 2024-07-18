@@ -1,0 +1,81 @@
+{
+  "lockfile_version": "1",
+  "packages": {
+    "google-java-format@latest": {
+      "last_modified": "2024-07-07T07:43:47Z",
+      "resolved": "github:NixOS/nixpkgs/b60793b86201040d9dee019a05089a9150d08b5b#google-java-format",
+      "source": "devbox-search",
+      "version": "1.22.0",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/904pp9dmv2ldm3vklr9a0h5hzy735mjk-google-java-format-1.22.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/904pp9dmv2ldm3vklr9a0h5hzy735mjk-google-java-format-1.22.0"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/gyc2rrm94r1bm84wl7m2s73cp5b7sgqs-google-java-format-1.22.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/gyc2rrm94r1bm84wl7m2s73cp5b7sgqs-google-java-format-1.22.0"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/j3cdwsa8s79xjazw77ihz8hj4ybmsmzi-google-java-format-1.22.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/j3cdwsa8s79xjazw77ihz8hj4ybmsmzi-google-java-format-1.22.0"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/0jx5v5r4gvdsrw334hbfsk2kzk0c0b3m-google-java-format-1.22.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/0jx5v5r4gvdsrw334hbfsk2kzk0c0b3m-google-java-format-1.22.0"
+        }
+      }
+    },
+    "jdk@22": {
+      "last_modified": "2024-07-07T07:43:47Z",
+      "resolved": "github:NixOS/nixpkgs/b60793b86201040d9dee019a05089a9150d08b5b#jdk22",
+      "source": "devbox-search",
+      "version": "22.0.0",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/6ny3pv46pf06pmxn61aq3k8wd6cyhjdb-zulu-ca-jdk-22.0.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/6ny3pv46pf06pmxn61aq3k8wd6cyhjdb-zulu-ca-jdk-22.0.0"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/1rh9xyjsdw3ri7ha5l8hv3x01p6z42r7-zulu-ca-jdk-22.0.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/1rh9xyjsdw3ri7ha5l8hv3x01p6z42r7-zulu-ca-jdk-22.0.0"
+        }
+      }
+    }
+  }
+}
