@@ -24,10 +24,10 @@ jobs:
         run: devbox run --config envs/system 'cd ../..; make compiler_version'
 
       - name: compile, run, and test
-        run: devbox run --config envs/system 'cd ../..; make all ARGS_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_gitignored="-d"'
+        run: devbox run --config envs/system 'cd ../..; make all ARGS_RUN_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_BENCH_gitignored='
 
       - name: show size and list dynamically linked libraries
         run: devbox run --config envs/system 'cd ../..; make size list_link -j1'
         
       - name: Benchmark
-        run: devbox run --config envs/system 'cd ../..; make bench_md ARGS_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_gitignored="-d"'
+        run: devbox run --config envs/system 'cd ../..; make bench_md ARGS_RUN_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_BENCH_gitignored='
