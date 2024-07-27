@@ -519,6 +519,7 @@ ARGS_RUN_gitignored = $(ARGS_BENCH_gitignored) -d
 define PROGRAM_DISPATCH
 BIN_$(1) = $(filter bin/$(1)_%,$(BIN))
 OUT_$(1) = $(filter out/$(1)_%,$(OUT))
+ERR_$(1) = $(filter out/$(1)_%,$(ERR))
 CSV_$(1) = $(filter out/$(1)_%,$(CSV))
 
 out/$(1)_%.out out/$(1)_%.err out/$(1)_%.time &: bin/$(1)_%
@@ -548,7 +549,7 @@ clean_bench:  ## clean benchmark files
 # test #########################################################################
 
 .PHONY: test test-usage test-diffpath test-diffpath-usage
-test: test-diffpath  ## test all
+test: test-diffpath test-gitignored  ## test all
 test-usage: test-diffpath-usage  ## test the usage help of all programs
 test-diffpath: $(OUT_diffpath)  ## test diffpath
 	@file_ref=out/diffpath_c_gcc.out; \
@@ -564,6 +565,29 @@ test-diffpath: $(OUT_diffpath)  ## test diffpath
 			if [[ "$$N" -le 10 ]]; then \
 				$(DIFFT) "$$file_ref" "$$file"; \
 			fi; \
+		fi; \
+	done
+test-gitignored: test-gitignored-stdout test-gitignored-stderr  ## test gitignored
+test-gitignored-stdout: $(OUT_gitignored)  ## test gitignored stdout
+	@file_ref=out/gitignored_py_python.out; \
+	total_lines=$$(wc -l < "$$file_ref"); \
+	for file in $^; do \
+		if [[ $$(wc -l < "$$file") -eq 0 ]]; then \
+			echo -e "\033[1m\033[93m$$file\033[0m: empty"; \
+			continue; \
+		fi; \
+		N=$$(diff -U 0 "$$file_ref" "$$file" | grep -E '^\+|^-' | grep -vE '^\+\+\+|^---' | wc -l); \
+		if [[ "$$N" != 0 ]]; then \
+			echo -e "\033[1m\033[93m$$file\033[0m: $$N / $$total_lines mistakes"; \
+			if [[ "$$N" -le 10 ]]; then \
+				$(DIFFT) "$$file_ref" "$$file"; \
+			fi; \
+		fi; \
+	done
+test-gitignored-stderr: $(ERR_gitignored)  ## test gitignored stderr to be empty apart from logging
+	@for file in $^; do \
+		if [[ $$(grep -v -E '^(gitignored DEBUG: |gitignored INFO: |$$)' "$$file" | wc -l) -ne 0 ]]; then \
+			echo -e "\033[1m\033[93m$$file\033[0m: not empty"; \
 		fi; \
 	done
 test-diffpath-usage: $(BIN_diffpath)  ## test the usage help of all diffpath programs
