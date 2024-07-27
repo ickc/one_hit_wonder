@@ -501,62 +501,59 @@ compiler_version:  ## show compilers versions
 
 # run & benchmark #############################################################
 
-TXT = $(patsubst bin/%,out/%.txt , $(BIN))
-TIME = $(patsubst bin/%,out/%.time, $(BIN))
-CSV = $(patsubst bin/%,out/%.csv , $(BIN))
+# different kinds of programs, e.g. PROGRAMS = diffpath gitignored ...
+PROGRAMS = $(sort $(foreach prog,$(BIN),$(firstword $(subst _, ,$(notdir $(prog))))))
+CSV_SUMMARY = $(patsubst %,out/%.csv,$(PROGRAMS))
+MD_SUMMARY = $(patsubst %,out/%.md,$(PROGRAMS))
 
-CSV_SUMMARY = out/bench.csv
-MD_SUMMARY = out/bench.md
+OUT = $(patsubst bin/%,out/%.out,$(BIN))
+ERR = $(patsubst bin/%,out/%.err,$(BIN))
+TIME = $(patsubst bin/%,out/%.time,$(BIN))
+CSV = $(patsubst bin/%,out/%.csv,$(BIN))
 
-PATH1 = /usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin
-PATH2 = ~/.nix-profile/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin
+ARGS_RUN_diffpath = /usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $(HOME)/.nix-profile/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin
+ARGS_BENCH_diffpath = $(ARGS_RUN_diffpath)
+ARGS_BENCH_gitignored = $(HOME)/git
+ARGS_RUN_gitignored = $(ARGS_BENCH_gitignored) -d
 
-# run
-.PHONY: run
-run: $(TXT) $(TIME)  ## run all
-out/%.txt out/%.time &: bin/%
-	@mkdir -p $(@D)
-	$(GNUTIME) -o out/$*.time -v $< $(PATH1) $(PATH2) > out/$*.txt
+define PROGRAM_DISPATCH
+BIN_$(1) = $(filter bin/$(1)_%,$(BIN))
+OUT_$(1) = $(filter out/$(1)_%,$(OUT))
+CSV_$(1) = $(filter out/$(1)_%,$(CSV))
 
-.PHONY: clean_run
+out/$(1)_%.out out/$(1)_%.err out/$(1)_%.time &: bin/$(1)_%
+	@mkdir -p $$(@D)
+	$(GNUTIME) -o out/$(1)_$$*.time -v $$< $$(ARGS_RUN_$(1)) > out/$(1)_$$*.out 2> out/$(1)_$$*.err
+
+out/$(1)_%.csv: bin/$(1)_%
+	@mkdir -p $$(@D)
+	$(HYPERFINE) --warmup 1 '$$< $$(ARGS_BENCH_$(1))' --export-csv $$@ --command-name $(1)_$$*
+out/$(1).csv: $$(CSV_$(1))
+	cat $$^ | sort -un -t, -k2 > $$@
+out/$(1).md: $$(BIN_$(1))
+	$(HYPERFINE) --shell=none --warmup 1 --sort mean-time --export-markdown $$@ $$(foreach bin,$$^,--command-name $$(notdir $$(bin)) '$$(bin) $$(ARGS_BENCH_$(1))')
+endef
+$(foreach program,$(PROGRAMS),$(eval $(call PROGRAM_DISPATCH,$(program))))
+
+.PHONY: run clean_run bench bench_md clean_bench
+run: $(OUT) $(ERR) $(TIME)  ## run all
 clean_run:  ## clean run files
-	rm -f $(TXT) $(TIME)
-
-# bench
-.PHONY: bench bench_md
+	rm -f $(OUT) $(TIME)
 bench: $(CSV_SUMMARY)  ## benchmark all in csv format, this only runs benchmarks that have not updated
 bench_md: $(MD_SUMMARY)  ## benchmark all in markdown format, note that this forces all benchmarks to run
-out/%.csv: bin/%
-	@mkdir -p $(@D)
-	$(HYPERFINE) --warmup 1 '$< $(PATH1) $(PATH2)' --export-csv $@ --command-name $*
-.NOTPARALLEL: $(CSV_SUMMARY)
-$(CSV_SUMMARY): $(CSV)
-	cat $^ | sort -un -t, -k2 > $@
-$(MD_SUMMARY): $(BIN)
-	$(HYPERFINE) --shell=none --warmup 1 --sort mean-time --export-markdown $@ $(foreach bin,$^,--command-name $(notdir $(bin)) '$(bin) $(PATH1) $(PATH2)')
-
-.PHONY: clean_bench
+.NOTPARALLEL: $(CSV_SUMMARY) bench bench_md
 clean_bench:  ## clean benchmark files
 	rm -f $(CSV) $(CSV_SUMMARY) $(MD_SUMMARY)
 
-# misc #########################################################################
+# test #########################################################################
 
-.PHONY: build update test test-usage size list_link clean Clean help
-build: $(INCLUDEFILE)  ## prepare environments using nix & devbox (should be triggered automatically)
-# this file is solely here for CI cache
-# it is possible the lock files between this and those under envs are out of sync
-# make update should be run to ensure they are in sync
-devbox.json: $(DEVBOXS_JSON)
-	util/devbox_concat.py $^ > $@
-$(INCLUDEFILE): util/env.sh devbox.json $(DEVBOXS)
-	$< $@
-update:  ## update environments using nix & devbox
-	devbox update --all-projects --sync-lock
-# C#'s output is so bad that we need to exclude it from the diff
-test: $(TXT)  ## test all
-	@file_ref=out/diffpath_c_gcc.txt; \
+.PHONY: test test-usage test-diffpath test-diffpath-usage
+test: test-diffpath  ## test all
+test-usage: test-diffpath-usage  ## test the usage help of all programs
+test-diffpath: $(OUT_diffpath)  ## test diffpath
+	@file_ref=out/diffpath_c_gcc.out; \
 	total_lines=$$(wc -l < "$$file_ref"); \
-	for file in $(TXT); do \
+	for file in $^; do \
 		if [[ $$(wc -l < "$$file") -eq 0 ]]; then \
 			echo -e "\033[1m\033[93m$$file\033[0m: empty"; \
 			continue; \
@@ -569,7 +566,7 @@ test: $(TXT)  ## test all
 			fi; \
 		fi; \
 	done
-test-usage: $(BIN)  ## test the usage help of all programs
+test-diffpath-usage: $(BIN_diffpath)  ## test the usage help of all diffpath programs
 	@for bin in $^; do \
 		actual_output=$$($$bin --help 2>&1 >/dev/null); \
 		expected_output="Usage: $$bin PATH1 PATH2"; \
@@ -578,6 +575,20 @@ test-usage: $(BIN)  ## test the usage help of all programs
 			echo "$$actual_output"; \
 		fi \
 	done
+
+# misc #########################################################################
+
+.PHONY: build update size list_link clean Clean help
+build: $(INCLUDEFILE)  ## prepare environments using nix & devbox (should be triggered automatically)
+# this file is solely here for CI cache
+# it is possible the lock files between this and those under envs are out of sync
+# make update should be run to ensure they are in sync
+devbox.json: $(DEVBOXS_JSON)
+	util/devbox_concat.py $^ > $@
+$(INCLUDEFILE): util/env.sh devbox.json $(DEVBOXS)
+	$< $@
+update:  ## update environments using nix & devbox
+	devbox update --all-projects --sync-lock
 size:  ## show binary sizes
 	@ls -lh bin | sort -hk5
 	@du -sh bin/*.dist || true
