@@ -488,8 +488,7 @@ clean_compile: $(foreach ext,$(EXT),clean_$(ext))  ## clean compiled files
 format: $(foreach ext,$(EXT),format_$(ext))  ## format all
 compiler_version:  ## show compilers versions
 	@for compiler in $(COMPILER); do \
-		 eval printf %.0s= '{1..'"$${COLUMNS:-72}"\}; \
-		 echo; \
+		printf '%.0s—' {1..80}; echo; \
 		which $$compiler; \
 		case $$compiler in \
 			*/go) $$compiler version ;; \
@@ -614,8 +613,10 @@ $(INCLUDEFILE): util/env.sh devbox.json $(DEVBOXS)
 update:  ## update environments using nix & devbox
 	devbox update --all-projects --sync-lock
 size:  ## show binary sizes
-	@ls -lh bin | sort -hk5
-	@du -sh bin/*.dist || true
+	@for program in $(PROGRAMS); do \
+		printf '%.0s—' {1..80}; echo; \
+		find bin -mindepth 1 -maxdepth 1 -name "$${program}*" -exec du -sh --apparent-size {} + | sort -h; \
+	done
 list_link:  ## list dynamically linked libraries
 ifeq ($(UNAME),Darwin)
 	find bin -type f -executable -exec otool -L {} +;
