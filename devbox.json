@@ -12,7 +12,7 @@
     "go@latest",
     "google-java-format@latest",
     "hyperfine@latest",
-    "jdk@22",
+    "jdk-headless@22",
     "julia-bin@latest",
     "lua54Packages.lua@latest",
     "lua54Packages.luafilesystem",
