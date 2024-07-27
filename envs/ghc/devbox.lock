@@ -67,8 +67,8 @@
       }
     },
     "stylish-haskell@latest": {
-      "last_modified": "2024-07-07T16:08:25Z",
-      "resolved": "github:NixOS/nixpkgs/ab82a9612aa45284d4adf69ee81871a389669a9e#stylish-haskell",
+      "last_modified": "2024-07-15T04:07:31Z",
+      "resolved": "github:NixOS/nixpkgs/a14c5d651cee9ed70f9cd9e83f323f1e531002db#stylish-haskell",
       "source": "devbox-search",
       "version": "0.14.5.0",
       "systems": {
@@ -76,41 +76,41 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/x2dl47n73nc0w5axcd9k7d1p7rf4iipz-stylish-haskell-0.14.5.0",
+              "path": "/nix/store/nbdh2v7jmsnaj7p388v5nm69wsj6s8lx-stylish-haskell-0.14.5.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/x2dl47n73nc0w5axcd9k7d1p7rf4iipz-stylish-haskell-0.14.5.0"
+          "store_path": "/nix/store/nbdh2v7jmsnaj7p388v5nm69wsj6s8lx-stylish-haskell-0.14.5.0"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/z386ikxfy38n4f6dph1d3whvfvpskpbn-stylish-haskell-0.14.5.0",
+              "path": "/nix/store/c0wcqbig9m06zn8v9qcl8vawma9vqkz9-stylish-haskell-0.14.5.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/z386ikxfy38n4f6dph1d3whvfvpskpbn-stylish-haskell-0.14.5.0"
+          "store_path": "/nix/store/c0wcqbig9m06zn8v9qcl8vawma9vqkz9-stylish-haskell-0.14.5.0"
         },
         "x86_64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/kfiwwg42glb17b0d1i80d5la18bd16ki-stylish-haskell-0.14.5.0",
+              "path": "/nix/store/6yb530mrk5rrjpqgb0fpfrli3xglqrjy-stylish-haskell-0.14.5.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/kfiwwg42glb17b0d1i80d5la18bd16ki-stylish-haskell-0.14.5.0"
+          "store_path": "/nix/store/6yb530mrk5rrjpqgb0fpfrli3xglqrjy-stylish-haskell-0.14.5.0"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/im18l3mxmlrm71jm4s5ncg9hqg7gdlza-stylish-haskell-0.14.5.0",
+              "path": "/nix/store/7bgpg4hx7pv7v6dgg7xjczg4bsflmham-stylish-haskell-0.14.5.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/im18l3mxmlrm71jm4s5ncg9hqg7gdlza-stylish-haskell-0.14.5.0"
+          "store_path": "/nix/store/7bgpg4hx7pv7v6dgg7xjczg4bsflmham-stylish-haskell-0.14.5.0"
         }
       }
     }

@@ -2,8 +2,8 @@
   "lockfile_version": "1",
   "packages": {
     "python312Packages.nuitka@latest": {
-      "last_modified": "2024-07-07T16:08:25Z",
-      "resolved": "github:NixOS/nixpkgs/ab82a9612aa45284d4adf69ee81871a389669a9e#python312Packages.nuitka",
+      "last_modified": "2024-07-24T00:53:51Z",
+      "resolved": "github:NixOS/nixpkgs/4f02464258baaf54992debfd010a7a3662a25536#python312Packages.nuitka",
       "source": "devbox-search",
       "version": "2.2.3",
       "systems": {
@@ -11,57 +11,57 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/42kd0z0brgmhnqz9wxb0q8gglid6zw6y-python3.12-nuitka-2.2.3",
+              "path": "/nix/store/vhk6yig4xsvj0j920261l324132jxbfr-python3.12-nuitka-2.2.3",
               "default": true
             },
             {
               "name": "dist",
-              "path": "/nix/store/4qywlxavl4llqmn0c1lc6ncpp9dq7zs3-python3.12-nuitka-2.2.3-dist"
+              "path": "/nix/store/i9hx9x5lw0lgzgxkbqkpdjqli82nsfvx-python3.12-nuitka-2.2.3-dist"
             }
           ],
-          "store_path": "/nix/store/42kd0z0brgmhnqz9wxb0q8gglid6zw6y-python3.12-nuitka-2.2.3"
+          "store_path": "/nix/store/vhk6yig4xsvj0j920261l324132jxbfr-python3.12-nuitka-2.2.3"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/6m8ks76jmpx6mi595hpfxhm067f2fvrm-python3.12-nuitka-2.2.3",
+              "path": "/nix/store/kq7a3jg1n18z0kgnfmz4ss76rzbz5f4f-python3.12-nuitka-2.2.3",
               "default": true
             },
             {
               "name": "dist",
-              "path": "/nix/store/05q9w2fm0l3qcpby18piz2am7nyhw8f1-python3.12-nuitka-2.2.3-dist"
+              "path": "/nix/store/j60d7jn4rwq4sr48nfccj8d5bi0dcg9r-python3.12-nuitka-2.2.3-dist"
             }
           ],
-          "store_path": "/nix/store/6m8ks76jmpx6mi595hpfxhm067f2fvrm-python3.12-nuitka-2.2.3"
+          "store_path": "/nix/store/kq7a3jg1n18z0kgnfmz4ss76rzbz5f4f-python3.12-nuitka-2.2.3"
         },
         "x86_64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/f4yqv4ji7mns7bq01i9gjcy9a8hal96a-python3.12-nuitka-2.2.3",
+              "path": "/nix/store/ihnnb198q6sv6yncay2fds7fx1d36q0f-python3.12-nuitka-2.2.3",
               "default": true
             },
             {
               "name": "dist",
-              "path": "/nix/store/xppajm7zl9dkbb857fcifb18y25qxvvc-python3.12-nuitka-2.2.3-dist"
+              "path": "/nix/store/5cisba3az6kxwndyb4vak5myi9w3nv54-python3.12-nuitka-2.2.3-dist"
             }
           ],
-          "store_path": "/nix/store/f4yqv4ji7mns7bq01i9gjcy9a8hal96a-python3.12-nuitka-2.2.3"
+          "store_path": "/nix/store/ihnnb198q6sv6yncay2fds7fx1d36q0f-python3.12-nuitka-2.2.3"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/xhclav02dbxybjhp66xpgi6q9fr205si-python3.12-nuitka-2.2.3",
+              "path": "/nix/store/qc6k97cw0ag2235ww95qyghkd0k73dxr-python3.12-nuitka-2.2.3",
               "default": true
             },
             {
               "name": "dist",
-              "path": "/nix/store/9sqzdj0mnha8djczay5m41r220lq9h7i-python3.12-nuitka-2.2.3-dist"
+              "path": "/nix/store/1f0zrlf3msaky2j37139yc9i3fr0m3mr-python3.12-nuitka-2.2.3-dist"
             }
           ],
-          "store_path": "/nix/store/xhclav02dbxybjhp66xpgi6q9fr205si-python3.12-nuitka-2.2.3"
+          "store_path": "/nix/store/qc6k97cw0ag2235ww95qyghkd0k73dxr-python3.12-nuitka-2.2.3"
         }
       }
     },

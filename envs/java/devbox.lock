@@ -49,31 +49,39 @@
         }
       }
     },
-    "jdk@22": {
-      "last_modified": "2024-07-07T07:43:47Z",
-      "resolved": "github:NixOS/nixpkgs/b60793b86201040d9dee019a05089a9150d08b5b#jdk22",
+    "jdk-headless@22": {
+      "last_modified": "2024-06-12T20:55:33Z",
+      "resolved": "github:NixOS/nixpkgs/a9858885e197f984d92d7fe64e9fff6b2e488d40#jdk22_headless",
       "source": "devbox-search",
-      "version": "22.0.0",
+      "version": "22-ga",
       "systems": {
-        "aarch64-darwin": {
+        "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/6ny3pv46pf06pmxn61aq3k8wd6cyhjdb-zulu-ca-jdk-22.0.0",
+              "path": "/nix/store/9ip0bg7f185587wzm7946wh7fldsm0b8-openjdk-headless-22-ga",
               "default": true
+            },
+            {
+              "name": "debug",
+              "path": "/nix/store/vrc1cjxxhs2vgr4hq20r98r8132z6qg1-openjdk-headless-22-ga-debug"
             }
           ],
-          "store_path": "/nix/store/6ny3pv46pf06pmxn61aq3k8wd6cyhjdb-zulu-ca-jdk-22.0.0"
+          "store_path": "/nix/store/9ip0bg7f185587wzm7946wh7fldsm0b8-openjdk-headless-22-ga"
         },
-        "x86_64-darwin": {
+        "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/1rh9xyjsdw3ri7ha5l8hv3x01p6z42r7-zulu-ca-jdk-22.0.0",
+              "path": "/nix/store/8c1ky7n514vyfy3hy7skrwjckkpzcvah-openjdk-headless-22-ga",
               "default": true
+            },
+            {
+              "name": "debug",
+              "path": "/nix/store/hn895b9mix6iipbbx8i21w3bap95b48c-openjdk-headless-22-ga-debug"
             }
           ],
-          "store_path": "/nix/store/1rh9xyjsdw3ri7ha5l8hv3x01p6z42r7-zulu-ca-jdk-22.0.0"
+          "store_path": "/nix/store/8c1ky7n514vyfy3hy7skrwjckkpzcvah-openjdk-headless-22-ga"
         }
       }
     }
