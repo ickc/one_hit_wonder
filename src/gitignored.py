@@ -194,9 +194,12 @@ def get_ignored_files(
     return res
 
 
-def _print_path(path: Path, file=sys.stdout) -> None:
-    """Print a path, appending a slash if it's a directory."""
-    print(f"{path}{os.path.sep}" if path.is_dir() else path, file=file)
+def format_path(path: Path) -> str:
+    """Format a path, appending a slash if it's a directory."""
+    res = str(path)
+    if path.is_dir():
+        res += os.path.sep
+    return res
 
 
 def print_ignored_files(
@@ -215,22 +218,27 @@ def print_ignored_files(
         expand_directory (bool): Whether to list files in git-ignored directories.
         debug (bool): Whether to verify path existence and print to stderr if not found.
     """
-    paths = sorted(
-        get_ignored_files(
-            directory,
-            version=version,
-            expand_directory=expand_directory,
+    paths: list[str] = sorted(
+        map(
+            format_path,
+            get_ignored_files(
+                directory,
+                version=version,
+                expand_directory=expand_directory,
+            ),
         )
     )
     if debug:
-        for path in paths:
+        for path_str in paths:
+            # double conversion. We don't care about the performance when debugging.
+            path = Path(path_str)
             if path.is_symlink() or path.exists():
-                _print_path(path)
+                print(path_str)
             else:
-                _print_path(path, file=sys.stderr)
+                print(path_str, file=sys.stderr)
     else:
-        for path in paths:
-            _print_path(path)
+        for path_str in paths:
+            print(path_str)
 
 
 def main() -> None:
