@@ -181,27 +181,27 @@ def get_ignored_files(
     Returns:
         Iterable[Path]: A generator of paths to git-ignored files.
     """
-    res = chain.from_iterable(
-        (
-            git_dir_get_ignored_files(
-                git_dir.parent,
-                version=version,
-                expand_directory=expand_directory,
-            )
-            for git_dir in directory.glob("**/.git")
+    res = (
+        git_dir_get_ignored_files(
+            git_dir.parent,
+            version=version,
+            expand_directory=expand_directory,
         )
+        for git_dir in directory.glob("**/.git")
     )
     # If directory is not a git repo, it might be a subdirectory of a git repo.
-    if not (directory / ".git").exists():
-        res = chain(
-            res,
+    return (
+        chain(*res)
+        if (directory / ".git").exists()
+        else chain(
             git_subdir_get_ignored_files(
                 directory,
                 version=version,
                 expand_directory=expand_directory,
             ),
+            *res,
         )
-    return res
+    )
 
 
 def format_path(path: Path) -> str:
