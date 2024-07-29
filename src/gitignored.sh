@@ -1,6 +1,5 @@
-#!/bin/bash
-
-# getopts ######################################################################
+# This script does not implement the -d flag, which would verify that the paths exist.
+# This also does not handle the case that the directory is not the root of a git repository.
 
 usage="Usage: ${0} [-e] [-d] [directory]
 List all git-ignored files under the given directory.
@@ -18,6 +17,7 @@ while getopts "ed" opt; do
             expand_directory="--untracked-files=all"
             ;;
         d)
+            # Note: Path verification is not implemented.
             # shellcheck disable=SC2034
             debug=true
             ;;
