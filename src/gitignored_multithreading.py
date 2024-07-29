@@ -184,28 +184,25 @@ def get_ignored_files(
         Iterable[Path]: A generator of paths to git-ignored files.
     """
     with ThreadPoolExecutor() as executor:
+        res = executor.map(
+            partial(
+                git_dir_get_ignored_files,
+                version=version,
+                expand_directory=expand_directory,
+            ),
+            (git_dir.parent for git_dir in directory.glob("**/.git")),
+        )
+        if (directory / ".git").exists():
+            return chain(*res)
         # If directory is not a git repo, it might be a subdirectory of a git repo.
-        do_subdir = not (directory / ".git").exists()
-        if do_subdir:
+        else:
             subdir_ignored = executor.submit(
                 git_subdir_get_ignored_files,
                 directory,
                 version=version,
                 expand_directory=expand_directory,
             )
-        res = list(
-            executor.map(
-                partial(
-                    git_dir_get_ignored_files,
-                    version=version,
-                    expand_directory=expand_directory,
-                ),
-                (git_dir.parent for git_dir in directory.glob("**/.git")),
-            )
-        )
-        if do_subdir:
-            res.append(subdir_ignored.result())
-    return chain.from_iterable(res)
+            return chain(subdir_ignored.result(), *res)
 
 
 def format_path(path: Path) -> str:
