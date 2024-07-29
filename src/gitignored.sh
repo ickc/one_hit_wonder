@@ -35,10 +35,11 @@ fi
 
 # shellcheck disable=SC2312
 find "${directory}" -name .git -exec bash -c '
-	for git do
-		dir="${git::-4}"
-		{
+    for git_dir do
+        dir="${git_dir::-4}"
+        {
             cd "${dir}"
             git status . --ignored --ignore-submodules=all --no-renames --porcelain=1 -z '"${expand_directory}"' | awk -v dir="${dir}" -v RS="\0" -v ORS="\0" "/^!! / {print dir substr(\$0,4)}"
         }
-	done' _ {} + | sort -z | tr '\0' '\n'
+    done
+' _ {} + | sort -z | tr '\0' '\n'
