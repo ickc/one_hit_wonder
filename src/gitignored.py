@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Iterable
+    from typing import Iterable, Literal
 
 try:
     from coloredlogs import ColoredFormatter as Formatter
@@ -37,19 +37,19 @@ logger.propagate = False
 def git_status_ignored(
     directory: Path,
     *,
-    version: int = 1,
+    version: Literal[1, 2] = 1,
     expand_directory: bool = False,
 ) -> Iterable[str]:
     """
     Get all git-ignored files under the given directory.
 
     Args:
-        directory (Path): The directory to search for git-ignored files.
-        version (int): The version of git status porcelain format to use (1 or 2).
+        directory (Path): The directory to search for git-ignored files. This must be the root of a git repository.
+        version (Literal[1, 2]): The version of git status porcelain format to use (1 or 2).
         expand_directory (bool): Whether to list files in git-ignored directories.
 
     Returns:
-        list[str]: A list of relative paths to git-ignored files.
+        Iterable[str]: A generator of relative paths to git-ignored files.
     """
     ignored_prefix = "!! " if version == 1 else "! "
     n = 4 - version
@@ -83,7 +83,15 @@ def git_status_ignored(
 
 
 def _find_git_root(directory: Path) -> Path | None:
-    """Find the root directory of the git repository."""
+    """
+    Find the root directory of the git repository.
+
+    Args:
+        directory (Path): The directory to start searching from.
+
+    Returns:
+        Path | None: The root directory of the git repository, or None if not found.
+    """
     directory = directory.resolve()
     while not (directory / ".git").exists():
         logger.debug("Recursing from directory: %s", directory)
@@ -98,27 +106,28 @@ def _find_git_root(directory: Path) -> Path | None:
 def git_subdir_get_ignored_files(
     directory: Path,
     *,
-    version: int = 1,
+    version: Literal[1, 2] = 1,
     expand_directory: bool = False,
 ) -> Iterable[Path]:
-    """Get all git-ignored files under the given directory, which is a subdir of a git repo.
+    """
+    Get all git-ignored files under the given directory, which is a subdirectory of a git repository.
 
     Args:
         directory (Path): The directory to search for git-ignored files.
-        version (int): The version of git status porcelain format to use (1 or 2).
+        version (Literal[1, 2]): The version of git status porcelain format to use (1 or 2).
         expand_directory (bool): Whether to list files in git-ignored directories.
 
     Returns:
-        list[Path]: A list of paths to git-ignored files.
+        Iterable[Path]: A generator of paths to git-ignored files.
     """
+    git_root = _find_git_root(directory)
+    if git_root is None:
+        return []
     paths = git_status_ignored(
         directory,
         version=version,
         expand_directory=expand_directory,
     )
-    git_root = _find_git_root(directory)
-    if git_root is None:
-        return []
     cwd = Path.cwd()
     return (
         (git_root / path for path in paths)
@@ -130,18 +139,19 @@ def git_subdir_get_ignored_files(
 def git_dir_get_ignored_files(
     directory: Path,
     *,
-    version: int = 1,
+    version: Literal[1, 2] = 1,
     expand_directory: bool = False,
 ) -> Iterable[Path]:
-    """Get all git-ignored files under the given directory, which is a git repo.
+    """
+    Get all git-ignored files under the given directory, which is a git repository.
 
     Args:
         directory (Path): The directory to search for git-ignored files.
-        version (int): The version of git status porcelain format to use (1 or 2).
+        version (Literal[1, 2]): The version of git status porcelain format to use (1 or 2).
         expand_directory (bool): Whether to list files in git-ignored directories.
 
     Returns:
-        list[Path]: A list of paths to git-ignored files.
+        Iterable[Path]: A generator of paths to git-ignored files.
     """
     paths = git_status_ignored(
         directory,
@@ -154,22 +164,22 @@ def git_dir_get_ignored_files(
 def get_ignored_files(
     directory: Path,
     *,
-    version: int = 1,
+    version: Literal[1, 2] = 1,
     expand_directory: bool = False,
 ) -> Iterable[Path]:
     """
-    list all git-ignored files under the given directory.
+    List all git-ignored files under the given directory.
 
     This function handles both directories containing git repositories
     and subdirectories of git repositories.
 
     Args:
         directory (Path): The directory to search for git-ignored files.
-        version (int): The version of git status porcelain format to use.
+        version (Literal[1, 2]): The version of git status porcelain format to use.
         expand_directory (bool): Whether to list files in git-ignored directories.
 
     Returns:
-        list[Path]: A list of paths to git-ignored files.
+        Iterable[Path]: A generator of paths to git-ignored files.
     """
     res = chain.from_iterable(
         (
@@ -181,7 +191,7 @@ def get_ignored_files(
             for git_dir in directory.glob("**/.git")
         )
     )
-    # If cwd is not a git repo, it might be a subdir of a git repo.
+    # If directory is not a git repo, it might be a subdirectory of a git repo.
     if not (directory / ".git").exists():
         res = chain(
             res,
@@ -195,7 +205,15 @@ def get_ignored_files(
 
 
 def format_path(path: Path) -> str:
-    """Format a path, appending a slash if it's a directory."""
+    """
+    Format a path, appending a slash if it's a directory.
+
+    Args:
+        path (Path): The path to format.
+
+    Returns:
+        str: The formatted path.
+    """
     res = str(path)
     if path.is_dir():
         res += os.path.sep
@@ -205,7 +223,7 @@ def format_path(path: Path) -> str:
 def print_ignored_files(
     directory: Path,
     *,
-    version: int = 1,
+    version: Literal[1, 2] = 1,
     expand_directory: bool = False,
     debug: bool = False,
 ) -> None:
@@ -214,7 +232,7 @@ def print_ignored_files(
 
     Args:
         directory (Path): The directory to search for git-ignored files.
-        version (int): The version of git status porcelain format to use.
+        version (Literal[1, 2]): The version of git status porcelain format to use.
         expand_directory (bool): Whether to list files in git-ignored directories.
         debug (bool): Whether to verify path existence and print to stderr if not found.
     """
@@ -242,7 +260,9 @@ def print_ignored_files(
 
 
 def main() -> None:
-    """Parse command-line arguments and execute the main script functionality."""
+    """
+    Parse command-line arguments and execute the main script functionality.
+    """
     parser = argparse.ArgumentParser(
         description="List all git-ignored files under the given directory."
     )
