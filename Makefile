@@ -512,7 +512,7 @@ CSV = $(patsubst bin/%,out/%.csv,$(BIN))
 
 ARGS_RUN_diffpath = /usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $(HOME)/.nix-profile/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin
 ARGS_BENCH_diffpath = $(ARGS_RUN_diffpath)
-ARGS_BENCH_gitignored = $(HOME)/git
+ARGS_BENCH_gitignored = $(HOME)/git/fork
 ARGS_RUN_gitignored = $(ARGS_BENCH_gitignored) -d
 
 define PROGRAM_DISPATCH
