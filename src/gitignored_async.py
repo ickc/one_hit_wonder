@@ -131,6 +131,7 @@ async def git_subdir_get_ignored_files(
         expand_directory=expand_directory,
     )
     cwd = Path.cwd()
+    # TODO: py312+: walk_up
     return (
         (git_root / path for path in paths)
         if directory.is_absolute()
@@ -183,6 +184,7 @@ async def get_ignored_files(
     Returns:
         Iterable[Path]: A generator of paths to git-ignored files.
     """
+    # TODO: py312+: glob(..., case_sensitive=True)
     res = [
         git_dir_get_ignored_files(
             git_dir.parent,
@@ -249,6 +251,7 @@ async def print_ignored_files(
         for path_str in paths:
             # double conversion. We don't care about the performance when debugging.
             path = Path(path_str)
+            # TODO: py312+: if path.exists(follow_symlinks=False):
             if path.is_symlink() or path.exists():
                 print(path_str)
             else:
