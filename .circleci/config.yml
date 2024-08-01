@@ -33,7 +33,7 @@ jobs:
       - run:
           name: Remove default cargo from image
           command: |
-            ls $HOME/.cargo
+            which -a rustup
             rm -rf $HOME/.cargo
 
       - run:
