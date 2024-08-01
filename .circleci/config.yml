@@ -31,12 +31,12 @@ jobs:
             ./devbox -f
 
       - run:
-          name: Compilers version
-          command: devbox run --config envs/system 'cd ../..; make compiler_version'
-
-      - run:
           name: Bootstrap Rust. Somehow it's not working on Circle CI without this step.
           command: devbox run --config envs/rust 'rustup default stable'
+
+      - run:
+          name: Compilers version
+          command: devbox run --config envs/system 'cd ../..; make compiler_version'
 
       - run:
           name: Compile, run, and test
