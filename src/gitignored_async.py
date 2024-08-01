@@ -89,12 +89,11 @@ async def _find_git_root(directory: Path) -> Path | None:
     Find the root directory of the git repository.
 
     Args:
-        directory (Path): The directory to start searching from.
+        directory (Path): The absolute path to start searching from.
 
     Returns:
         Path | None: The root directory of the git repository, or None if not found.
     """
-    directory = directory.resolve()
     while not (directory / ".git").exists():
         logger.debug("Recursing from directory: %s", directory)
         parent = directory.parent
@@ -103,6 +102,29 @@ async def _find_git_root(directory: Path) -> Path | None:
             return None
         directory = parent
     return directory
+
+
+async def _find_relative_to_git_root(directory: Path) -> Path | None:
+    """
+    Express directory relative to the root git repository.
+
+    Args:
+        directory (Path): The directory to start searching from.
+
+    Returns:
+        Path | None: The directory relative to the root git repository, or None if not found.
+    """
+    directory = directory.resolve()
+    res = Path("")
+    while not (directory / ".git").exists():
+        logger.debug("Recursing from directory: %s", directory)
+        parent = directory.parent
+        # either / or .
+        if parent == directory:
+            return None
+        res = directory.name / res
+        directory = parent
+    return res
 
 
 async def git_subdir_get_ignored_files(
@@ -122,21 +144,28 @@ async def git_subdir_get_ignored_files(
     Returns:
         Iterable[Path]: A generator of paths to git-ignored files.
     """
-    git_root = await _find_git_root(directory)
-    if git_root is None:
-        return []
-    paths = await git_status_ignored(
-        directory,
-        version=version,
-        expand_directory=expand_directory,
-    )
-    cwd = Path.cwd()
-    # TODO: py312+: walk_up
-    return (
-        (git_root / path for path in paths)
-        if directory.is_absolute()
-        else ((git_root / path).relative_to(cwd, walk_up=True) for path in paths)
-    )
+    if directory.is_absolute():
+        git_root = await _find_git_root(directory)
+        if git_root is None:
+            return []
+        paths = await git_status_ignored(
+            directory,
+            version=version,
+            expand_directory=expand_directory,
+        )
+        res = (git_root / path for path in paths)
+    else:
+        relative_to_git_root = f"{await _find_relative_to_git_root(directory)}/"
+        if relative_to_git_root is None:
+            return []
+        paths = await git_status_ignored(
+            directory,
+            version=version,
+            expand_directory=expand_directory,
+        )
+        # because git status . is used, path must starts with the relative_to_git_root
+        res = (directory / path.removeprefix(relative_to_git_root) for path in paths)
+    return res
 
 
 async def git_dir_get_ignored_files(
