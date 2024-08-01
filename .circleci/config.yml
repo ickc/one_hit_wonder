@@ -21,7 +21,7 @@ jobs:
 
       - restore_cache:
           keys:
-            - nix-store-<< parameters.os >>-{{ checksum "devbox.lock" }}
+            - nix-store-{{ arch }}-{{ checksum "devbox.lock" }}
 
       - run:
           name: Install Devbox
@@ -55,7 +55,7 @@ jobs:
       - save_cache:
           paths:
             - /nix
-          key: nix-store-<< parameters.os >>-{{ checksum "devbox.lock" }}
+          key: nix-store-{{ arch }}-{{ checksum "devbox.lock" }}
 
 workflows:
   build-and-test:
