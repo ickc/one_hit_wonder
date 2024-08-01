@@ -31,8 +31,10 @@ jobs:
             ./devbox -f
 
       - run:
-          name: Bootstrap Rust. Somehow it's not working on Circle CI without this step.
-          command: devbox run --config envs/rust 'rustup default stable'
+          name: Remove default cargo from image
+          command: |
+            ls $HOME/.cargo
+            rm -rf $HOME/.cargo
 
       - run:
           name: Compilers version
