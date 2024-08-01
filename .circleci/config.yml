@@ -19,6 +19,10 @@ jobs:
     steps:
       - checkout
 
+      - restore_cache:
+          keys:
+            - nix-store-<< parameters.os >>-{{ checksum "devbox.lock" }}
+
       - run:
           name: Install Devbox
           command: |
@@ -41,6 +45,11 @@ jobs:
       - run:
           name: Benchmark
           command: devbox run --config envs/system 'cd ../..; make bench_md ARGS_RUN_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_BENCH_gitignored='
+
+      - save_cache:
+          paths:
+            - /nix
+          key: nix-store-<< parameters.os >>-{{ checksum "devbox.lock" }}
 
 workflows:
   build-and-test:
