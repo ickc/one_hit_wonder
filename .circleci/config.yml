@@ -1,14 +1,21 @@
 version: 2.1
 
 executors:
+  linux-64:
+    machine:
+      image: ubuntu-2404:current
+    resource_class: medium
   linux-aarch64:
     machine:
-      image: ubuntu-2204:current
+      image: ubuntu-2404:current
     resource_class: arm.medium
 
 jobs:
   build-and-test:
-    executor: linux-aarch64
+    parameters:
+      os:
+        type: executor
+    executor: << parameters.os >>
     steps:
       - checkout
 
@@ -36,7 +43,9 @@ jobs:
           command: devbox run --config envs/system 'cd ../..; make bench_md ARGS_RUN_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_BENCH_gitignored='
 
 workflows:
-  version: 2
   build-and-test:
     jobs:
-      - build-and-test
+      - build-and-test:
+          matrix:
+            parameters:
+              os: [linux-64, linux-aarch64]
