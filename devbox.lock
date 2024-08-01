@@ -2,8 +2,8 @@
   "lockfile_version": "1",
   "packages": {
     "bash@latest": {
-      "last_modified": "2024-07-21T11:05:48Z",
-      "resolved": "github:NixOS/nixpkgs/c19d62ad2265b16e2199c5feb4650fe459ca1c46#bash",
+      "last_modified": "2024-07-20T17:52:22Z",
+      "resolved": "github:NixOS/nixpkgs/d43f0636fc9492e83be8bbb41f9595d7a87106b8#bash",
       "source": "devbox-search",
       "version": "5.2p26",
       "systems": {
@@ -78,16 +78,16 @@
               "default": true
             },
             {
+              "name": "dev",
+              "path": "/nix/store/pc16894d5nr9kxmrg3gavirbkkcm1aks-bash-5.2p26-dev"
+            },
+            {
               "name": "doc",
               "path": "/nix/store/cpq6i8pq1j9klayq0il02pq5n83v9xm0-bash-5.2p26-doc"
             },
             {
               "name": "info",
               "path": "/nix/store/ykgsfvp4nr2nh1pnpfna4s9myvj7yd5q-bash-5.2p26-info"
-            },
-            {
-              "name": "dev",
-              "path": "/nix/store/pc16894d5nr9kxmrg3gavirbkkcm1aks-bash-5.2p26-dev"
             }
           ],
           "store_path": "/nix/store/g5kh6zhsch3vx9sv3s0mrjsy84fis83g-bash-5.2p26"
@@ -546,12 +546,12 @@
               "default": true
             },
             {
-              "name": "info",
-              "path": "/nix/store/561k9y7cqfyf58j9x1dblw0c18625xyd-gnumake-4.4.1-info"
-            },
-            {
               "name": "debug",
               "path": "/nix/store/1rpvn74fg0vyp7k3r369qa6m0jqhsgiz-gnumake-4.4.1-debug"
+            },
+            {
+              "name": "info",
+              "path": "/nix/store/561k9y7cqfyf58j9x1dblw0c18625xyd-gnumake-4.4.1-info"
             }
           ],
           "store_path": "/nix/store/y1p3w7pj0f7n77kl33wmz5gml6qcqfjd-gnumake-4.4.1"
@@ -1925,8 +1925,8 @@
       }
     },
     "zsh@latest": {
-      "last_modified": "2024-07-22T04:21:33Z",
-      "resolved": "github:NixOS/nixpkgs/453402b94f39f968a7c27df28e060f69e4a50c3b#zsh",
+      "last_modified": "2024-07-28T04:39:20Z",
+      "resolved": "github:NixOS/nixpkgs/038fb464fcfa79b4f08131b07f2d8c9a6bcc4160#zsh",
       "source": "devbox-search",
       "version": "5.9",
       "systems": {
@@ -1943,12 +1943,12 @@
               "default": true
             },
             {
-              "name": "doc",
-              "path": "/nix/store/kp6jyw3hfxapzh6ca97v5wk1lfyxyckx-zsh-5.9-doc"
-            },
-            {
               "name": "info",
               "path": "/nix/store/4vnfnwbdnzsp8vwm7zaqq1qhr6ndvfk9-zsh-5.9-info"
+            },
+            {
+              "name": "doc",
+              "path": "/nix/store/kp6jyw3hfxapzh6ca97v5wk1lfyxyckx-zsh-5.9-doc"
             }
           ],
           "store_path": "/nix/store/6fjbdh80mh7c0cbzndd3zgzqvrhrc1ww-zsh-5.9"

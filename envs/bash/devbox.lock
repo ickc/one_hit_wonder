@@ -2,8 +2,8 @@
   "lockfile_version": "1",
   "packages": {
     "bash@latest": {
-      "last_modified": "2024-07-21T11:05:48Z",
-      "resolved": "github:NixOS/nixpkgs/c19d62ad2265b16e2199c5feb4650fe459ca1c46#bash",
+      "last_modified": "2024-07-20T17:52:22Z",
+      "resolved": "github:NixOS/nixpkgs/d43f0636fc9492e83be8bbb41f9595d7a87106b8#bash",
       "source": "devbox-search",
       "version": "5.2p26",
       "systems": {
@@ -78,16 +78,16 @@
               "default": true
             },
             {
+              "name": "dev",
+              "path": "/nix/store/pc16894d5nr9kxmrg3gavirbkkcm1aks-bash-5.2p26-dev"
+            },
+            {
               "name": "doc",
               "path": "/nix/store/cpq6i8pq1j9klayq0il02pq5n83v9xm0-bash-5.2p26-doc"
             },
             {
               "name": "info",
               "path": "/nix/store/ykgsfvp4nr2nh1pnpfna4s9myvj7yd5q-bash-5.2p26-info"
-            },
-            {
-              "name": "dev",
-              "path": "/nix/store/pc16894d5nr9kxmrg3gavirbkkcm1aks-bash-5.2p26-dev"
             }
           ],
           "store_path": "/nix/store/g5kh6zhsch3vx9sv3s0mrjsy84fis83g-bash-5.2p26"
