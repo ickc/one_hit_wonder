@@ -36,9 +36,7 @@ jobs:
 
       - run:
           name: Compile, run, and test
-          command: |
-            devbox run --config envs/rust 'rustup default stable'
-            devbox run --config envs/system 'cd ../..; make all ARGS_RUN_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_BENCH_gitignored='
+          command: devbox run --config envs/rust 'cd ../..; rustup default stable; make all ARGS_RUN_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_BENCH_gitignored='
 
       - run:
           name: Show size and list dynamically linked libraries
