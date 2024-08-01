@@ -35,6 +35,10 @@ jobs:
           command: devbox run --config envs/system 'cd ../..; make compiler_version'
 
       - run:
+          name: Bootstrap Rust. Somehow it's not working on Circle CI without this step.
+          command: devbox run --config envs/rust 'rustup default stable'
+
+      - run:
           name: Compile, run, and test
           command: devbox run --config envs/system 'cd ../..; make all ARGS_RUN_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_BENCH_gitignored='
 
