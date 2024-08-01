@@ -1,0 +1,38 @@
+version: 2.1
+
+executors:
+  linux-aarch64:
+    machine:
+      image: ubuntu-2204:current
+
+jobs:
+  build-and-test:
+    executor: linux-aarch64
+    steps:
+      - checkout
+
+      - run:
+          name: Install Devbox
+          command: curl -fsSL https://get.jetify.com/devbox | bash
+
+      - run:
+          name: Compilers version
+          command: devbox run --config envs/system 'cd ../..; make compiler_version'
+
+      - run:
+          name: Compile, run, and test
+          command: devbox run --config envs/system 'cd ../..; make all ARGS_RUN_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_BENCH_gitignored='
+
+      - run:
+          name: Show size and list dynamically linked libraries
+          command: devbox run --config envs/system 'cd ../..; make size list_link -j1'
+
+      - run:
+          name: Benchmark
+          command: devbox run --config envs/system 'cd ../..; make bench_md ARGS_RUN_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_BENCH_gitignored='
+
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - build-and-test
