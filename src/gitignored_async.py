@@ -290,7 +290,7 @@ async def print_ignored_files(
             print(path_str)
 
 
-async def main() -> None:
+def main() -> None:
     """
     Parse command-line arguments and execute the main script functionality.
     """
@@ -326,13 +326,15 @@ async def main() -> None:
     )
 
     args = parser.parse_args()
-    await print_ignored_files(
-        args.directory,
-        version=args.version,
-        expand_directory=args.expand_directory,
-        debug=args.debug,
+    asyncio.run(
+        print_ignored_files(
+            args.directory,
+            version=args.version,
+            expand_directory=args.expand_directory,
+            debug=args.debug,
+        )
     )
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
