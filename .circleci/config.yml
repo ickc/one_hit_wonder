@@ -31,18 +31,14 @@ jobs:
             ./devbox -f
 
       - run:
-          name: Remove default cargo from image
-          command: |
-            which -a rustup
-            rm -rf $HOME/.cargo
-
-      - run:
           name: Compilers version
           command: devbox run --config envs/system 'cd ../..; make compiler_version'
 
       - run:
           name: Compile, run, and test
-          command: devbox run --config envs/system 'cd ../..; make all ARGS_RUN_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_BENCH_gitignored='
+          command: |
+            devbox run --config envs/rust 'rustup default stable'
+            devbox run --config envs/system 'cd ../..; make all ARGS_RUN_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_BENCH_gitignored='
 
       - run:
           name: Show size and list dynamically linked libraries
