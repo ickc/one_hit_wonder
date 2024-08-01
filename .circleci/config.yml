@@ -4,6 +4,7 @@ executors:
   linux-aarch64:
     machine:
       image: ubuntu-2204:current
+    resource_class: arm.medium
 
 jobs:
   build-and-test:
