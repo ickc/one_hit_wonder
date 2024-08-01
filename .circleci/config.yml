@@ -11,7 +11,7 @@ executors:
     resource_class: arm.medium
 
 jobs:
-  build-and-test:
+  test:
     parameters:
       os:
         type: executor
@@ -52,9 +52,9 @@ jobs:
           key: nix-store-{{ arch }}-{{ checksum "devbox.lock" }}
 
 workflows:
-  build-and-test:
+  test:
     jobs:
-      - build-and-test:
+      - test:
           matrix:
             parameters:
               os: [linux-64, linux-aarch64]
