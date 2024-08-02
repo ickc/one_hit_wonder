@@ -18,6 +18,7 @@ jobs:
     executor: << parameters.os >>
     environment:
       # nuitka from conda doesn't support linux-aarch64 yet
+      # so we aren't setting up pixi here
       PYTHON_METHOD: devbox
     steps:
       - checkout
