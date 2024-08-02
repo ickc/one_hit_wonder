@@ -11,7 +11,12 @@ jobs:
           - ubuntu-24.04
           - macos-13
           - macos-14
+        python_method:
+          - devbox
+          - pixi
     runs-on: ${{ matrix.os }}
+    env:
+      PYTHON_METHOD: ${{ matrix.python_method }}
     steps:
       - uses: actions/checkout@v4
 
@@ -19,6 +24,9 @@ jobs:
         uses: jetify-com/devbox-install-action@v0.11.0
         with:
           enable-cache: true
+      - name: Install Pixi
+        if: matrix.python_method == 'pixi'
+        uses: prefix-dev/setup-pixi@v0.8.1
 
       - name: Compilers version
         run: devbox run --config envs/system 'cd ../..; make compiler_version'

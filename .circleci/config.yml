@@ -16,6 +16,9 @@ jobs:
       os:
         type: executor
     executor: << parameters.os >>
+    environment:
+      # nuitka from conda doesn't support linux-aarch64 yet
+      PYTHON_METHOD: devbox
     steps:
       - checkout
 

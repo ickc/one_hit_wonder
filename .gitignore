@@ -1,5 +1,6 @@
 .devbox/
 .env
+.pixi/
 /node_modules
 bin/
 envs/julia/.julia/

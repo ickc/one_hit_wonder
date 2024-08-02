@@ -191,9 +191,11 @@ bin/%_py_cython_clangxx: src/%.py
 	@printf "#!$(CYTHON_PYTHON)\nfrom $(@F) import main\nmain()" > $@
 	@chmod +x $@
 ifdef NUITKA_PYTHON
-NUITKA_FLAGS = --assume-yes-for-downloads --standalone --static-libpython=yes
-# skip onefile build if Darwin
-ifeq ($(UNAME), Darwin)
+# https://github.com/Nuitka/Nuitka/issues/2987#issuecomment-2255262307
+NUITKA_FLAGS = --assume-yes-for-downloads --standalone --static-libpython=no
+# skip onefile build if Darwin and PYTHON_METHOD is devbox
+# as nix often have code-sign issue
+ifeq ($(UNAME)-$(PYTHON_METHOD), Darwin-devbox)
 BIN_py += $(patsubst src/%,bin/%_nuitka,$(subst .,_,$(SRC_py)))
 bin/%_py_nuitka: src/%.py
 	@mkdir -p $(@D)
@@ -601,7 +603,7 @@ test-diffpath-usage: $(BIN_diffpath)  ## test the usage help of all diffpath pro
 
 # misc #########################################################################
 
-.PHONY: build update size list_link clean Clean help
+.PHONY: build update update-devbox update-pixi size list_link clean Clean help
 build: $(INCLUDEFILE)  ## prepare environments using nix & devbox (should be triggered automatically)
 # this file is solely here for CI cache
 # it is possible the lock files between this and those under envs are out of sync
@@ -610,8 +612,11 @@ devbox.json: $(DEVBOXS_JSON)
 	util/devbox_concat.py $^ > $@
 $(INCLUDEFILE): util/env.sh devbox.json $(DEVBOXS)
 	$< $@
-update:  ## update environments using nix & devbox
+update: update-devbox update-pixi  ## update environments
+update-devbox:  ## update environments using nix & devbox
 	devbox update --all-projects --sync-lock
+update-pixi:  ## update pixi environments
+	find -name pixi.toml -exec pixi update --manifest-path {} \;
 size:  ## show binary sizes
 	@for program in $(PROGRAMS); do \
 		printf '%.0s—' {1..80}; echo; \
