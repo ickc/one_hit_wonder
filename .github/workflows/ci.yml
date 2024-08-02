@@ -27,6 +27,12 @@ jobs:
       - name: Install Pixi
         if: matrix.python_method == 'pixi'
         uses: prefix-dev/setup-pixi@v0.8.1
+        with:
+          # separated by spaces
+          environments: >-
+            cython
+            nuitka
+            python
 
       - name: Compilers version
         run: devbox run --config envs/system 'cd ../..; make compiler_version'
