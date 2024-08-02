@@ -193,9 +193,7 @@ bin/%_py_cython_clangxx: src/%.py
 ifdef NUITKA_PYTHON
 # https://github.com/Nuitka/Nuitka/issues/2987#issuecomment-2255262307
 NUITKA_FLAGS = --assume-yes-for-downloads --standalone --static-libpython=no
-# skip onefile build if Darwin and PYTHON_METHOD is devbox
-# as nix often have code-sign issue
-ifeq ($(UNAME)-$(PYTHON_METHOD), Darwin-devbox)
+ifeq ($(UNAME)-$(GITHUB_ACTIONS), Darwin-true)
 BIN_py += $(patsubst src/%,bin/%_nuitka,$(subst .,_,$(SRC_py)))
 bin/%_py_nuitka: src/%.py
 	@mkdir -p $(@D)
