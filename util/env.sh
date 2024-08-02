@@ -205,7 +205,8 @@ case "$(uname -s)" in
         [[ -e /bin/bash ]] && echo 'BASH_SYSTEM=/bin/bash' >> "${outfile}"
         [[ -e /bin/zsh ]] && echo 'ZSH_SYSTEM=/bin/zsh' >> "${outfile}"
         [[ -e /usr/bin/clang ]] && echo 'CLANG_SYSTEM=/usr/bin/clang' >> "${outfile}"
-        [[ -e /usr/bin/clang++ ]] && echo 'CLANGXX_SYSTEM=/usr/bin/clang++' >> "${outfile}"
+        # failing on GitHub Actions with ubuntu-24.04, devbox
+        # [[ -e /usr/bin/clang++ ]] && echo 'CLANGXX_SYSTEM=/usr/bin/clang++' >> "${outfile}"
         [[ -e /usr/bin/perl ]] && echo 'PERL_SYSTEM=/usr/bin/perl' >> "${outfile}"
         [[ -e /usr/bin/python3 ]] && echo 'PYTHON_SYSTEM=/usr/bin/python3' >> "${outfile}"
 
