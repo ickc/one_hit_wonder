@@ -134,6 +134,10 @@ get_python_devbox() {
 }
 
 get_python_pixi() {
+    # not setting up pypy here, as
+    # pypy from conda-forge is immature, e.g. as of writting
+    # pypy3.10 is not available, and does not support osx-arm64
+
     get_pixi_command_path AUTOFLAKE envs/python autoflake
     get_pixi_command_path BLACK envs/python black
     get_pixi_command_path ISORT envs/python isort
