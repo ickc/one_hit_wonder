@@ -66,16 +66,16 @@ get_devbox_env_var() {
 
 get_pixi_command_path() {
     local var_name=$1
-    local env_dir=$2
+    local env_name=$2
     local command_name=$3
-    pixi run --manifest-path "${env_dir}/pixi.toml" "echo ${var_name}=\"\$(type -P ${command_name})\" >> ${outfile}"
+    pixi run --environment "${env_name}" "echo ${var_name}=\"\$(type -P ${command_name})\" >> ${outfile}"
 }
 
 get_pixi_env_var() {
     local var_name=$1
-    local env_dir=$2
+    local env_name=$2
     local original_var_name=$3
-    pixi run --manifest-path "${env_dir}/pixi.toml" "echo ${var_name}=\"\${${original_var_name}}\" >> ${outfile}"
+    pixi run --environment "${env_name}" "echo ${var_name}=\"\${${original_var_name}}\" >> ${outfile}"
 }
 
 get_devbox() {
@@ -138,16 +138,15 @@ get_python_pixi() {
     # pypy from conda-forge is immature, e.g. as of writting
     # pypy3.10 is not available, and does not support osx-arm64
 
-    get_pixi_command_path AUTOFLAKE envs/python autoflake
-    get_pixi_command_path BLACK envs/python black
-    get_pixi_command_path ISORT envs/python isort
-    get_pixi_command_path PYTHON envs/python python
+    get_pixi_command_path AUTOFLAKE python autoflake
+    get_pixi_command_path BLACK python black
+    get_pixi_command_path ISORT python isort
+    get_pixi_command_path PYTHON python python
 
-    get_pixi_command_path CYTHONIZE envs/cython cythonize
-    get_pixi_command_path CYTHON_PYTHON envs/cython python
+    get_pixi_command_path CYTHONIZE cython cythonize
+    get_pixi_command_path CYTHON_PYTHON cython python
 
-    get_pixi_command_path NUITKA_PYTHON envs/nuitka python
-    echo 'NUITKA_PYTHONPATH=envs/nuitka/.pixi/envs/default/lib/python3.12/site-packages' >> "${outfile}"
+    get_pixi_command_path NUITKA_PYTHON nuitka python
 }
 
 # get mandatory commands ###############################################

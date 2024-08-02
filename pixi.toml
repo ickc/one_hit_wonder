@@ -1,0 +1,52 @@
+[project]
+name = "one_hit_wonder"
+version = "0.1.0"
+description = "Add a short description here"
+authors = ["Kolen Cheung <christian.kolen@gmail.com>"]
+channels = ["conda-forge"]
+platforms = [
+    "linux-64",
+    "linux-aarch64",
+    "osx-64",
+    "osx-arm64",
+]
+
+[tasks]
+
+[dependencies]
+
+[feature.python.dependencies]
+python = "*"
+autoflake = "*"
+black = "*"
+isort = "*"
+
+[feature.cython.dependencies]
+cython = "*"
+setuptools = "*"
+
+[feature.nuitka]
+platforms = [
+    "linux-64",
+    "osx-64",
+    "osx-arm64",
+]
+[feature.nuitka.dependencies]
+nuitka = "*"
+zstandard = "*"
+ordered-set = "*"
+
+[feature.pypy]
+platforms = [
+    "linux-64",
+    "linux-aarch64",
+    "osx-64",
+]
+[feature.pypy.dependencies]
+pypy = "*"
+
+[environments]
+python = ["python"]
+cython = ["cython"]
+nuitka = ["nuitka"]
+pypy = ["pypy"]
