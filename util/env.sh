@@ -68,14 +68,7 @@ get_pixi_command_path() {
     local var_name=$1
     local env_name=$2
     local command_name=$3
-    pixi run --environment "${env_name}" "echo ${var_name}=\"\$(type -P ${command_name})\" >> ${outfile}"
-}
-
-get_pixi_env_var() {
-    local var_name=$1
-    local env_name=$2
-    local original_var_name=$3
-    pixi run --environment "${env_name}" "echo ${var_name}=\"\${${original_var_name}}\" >> ${outfile}"
+    echo "${var_name}=${DIR}/.pixi/envs/${env_name}/bin/${command_name}" >> "${outfile}"
 }
 
 get_devbox() {
