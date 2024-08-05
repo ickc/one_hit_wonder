@@ -67,7 +67,18 @@
     },
     "lua54Packages.luafilesystem": {
       "resolved": "github:NixOS/nixpkgs/75a52265bda7fd25e06e3a67dee3f0354e73243c#lua54Packages.luafilesystem",
-      "source": "nixpkg"
+      "source": "nixpkg",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "1",
+              "path": "/nix/store/dwy4pzwnm6fr89v9nz37x1nvsancl3yr-lua5.4-luafilesystem-1.8.0-1",
+              "default": true
+            }
+          ]
+        }
+      }
     },
     "stylua@latest": {
       "last_modified": "2024-07-07T16:08:25Z",
