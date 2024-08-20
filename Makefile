@@ -531,6 +531,7 @@ out/$(1)_%.csv: bin/$(1)_%
 out/$(1).csv: $$(CSV_$(1))
 	cat $$^ | sort -un -t, -k2 > $$@
 out/$(1).md: $$(BIN_$(1))
+	@mkdir -p $$(@D)
 	$(HYPERFINE) --shell=none --warmup 1 --sort mean-time --export-markdown $$@ $$(foreach bin,$$^,--command-name $$(notdir $$(bin)) '$$(bin) $$(ARGS_BENCH_$(1))')
 endef
 $(foreach program,$(PROGRAMS),$(eval $(call PROGRAM_DISPATCH,$(program))))
