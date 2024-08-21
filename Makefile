@@ -522,8 +522,8 @@ ERR_$(1) = $(filter out/$(1)_%,$(ERR))
 TIME_$(1) = $(filter out/$(1)_%,$(TIME))
 CSV_$(1) = $(filter out/$(1)_%,$(CSV))
 
-compile_$(1): $(BIN_$(1))  ## compile $(1)
-run_$(1): $(OUT_$(1)) $(ERR_$(1)) $(TIME_$(1))  ## run $(1)
+compile_$(1): $$(BIN_$(1))  ## compile $(1)
+run_$(1): $$(OUT_$(1)) $$(ERR_$(1)) $$(TIME_$(1))  ## run $(1)
 all_$(1): compile_$(1) run_$(1) test_$(1)  ## compile, run, and test $(1)
 bench_$(1): out/$(1).csv  ## benchmark $(1) in csv format
 bench_md_$(1): out/$(1).md  ## benchmark $(1) in markdown format
