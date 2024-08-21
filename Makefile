@@ -522,6 +522,7 @@ ERR_$(1) = $(filter out/$(1)_%,$(ERR))
 TIME_$(1) = $(filter out/$(1)_%,$(TIME))
 CSV_$(1) = $(filter out/$(1)_%,$(CSV))
 
+.PHONY: compile_$(1) run_$(1) all_$(1) bench_$(1) bench_md_$(1)
 compile_$(1): $$(BIN_$(1))  ## compile $(1)
 run_$(1): $$(OUT_$(1)) $$(ERR_$(1)) $$(TIME_$(1))  ## run $(1)
 all_$(1): compile_$(1) run_$(1) test_$(1)  ## compile, run, and test $(1)
