@@ -519,7 +519,14 @@ define PROGRAM_DISPATCH
 BIN_$(1) = $(filter bin/$(1)_%,$(BIN))
 OUT_$(1) = $(filter out/$(1)_%,$(OUT))
 ERR_$(1) = $(filter out/$(1)_%,$(ERR))
+TIME_$(1) = $(filter out/$(1)_%,$(TIME))
 CSV_$(1) = $(filter out/$(1)_%,$(CSV))
+
+compile_$(1): $(BIN_$(1))  ## compile $(1)
+run_$(1): $(OUT_$(1)) $(ERR_$(1)) $(TIME_$(1))  ## run $(1)
+all_$(1): compile_$(1) run_$(1) test_$(1)  ## compile, run, and test $(1)
+bench_$(1): out/$(1).csv  ## benchmark $(1) in csv format
+bench_md_$(1): out/$(1).md  ## benchmark $(1) in markdown format
 
 out/$(1)_%.out out/$(1)_%.err out/$(1)_%.time &: bin/$(1)_%
 	@mkdir -p $$(@D)
@@ -548,10 +555,10 @@ clean_bench:  ## clean benchmark files
 
 # test #########################################################################
 
-.PHONY: test test-usage test-diffpath test-diffpath-usage
-test: test-diffpath test-gitignored  ## test all
-test-usage: test-diffpath-usage  ## test the usage help of all programs
-test-diffpath: $(OUT_diffpath)  ## test diffpath
+.PHONY: test test_usage test_diffpath test_diffpath_usage
+test: test_diffpath test_gitignored  ## test all
+test_usage: test_diffpath_usage  ## test the usage help of all programs
+test_diffpath: $(OUT_diffpath)  ## test diffpath
 	@file_ref=out/diffpath_c_gcc.out; \
 	total_lines=$$(wc -l < "$$file_ref"); \
 	for file in $^; do \
@@ -567,8 +574,8 @@ test-diffpath: $(OUT_diffpath)  ## test diffpath
 			fi; \
 		fi; \
 	done
-test-gitignored: test-gitignored-stdout test-gitignored-stderr  ## test gitignored
-test-gitignored-stdout: $(OUT_gitignored)  ## test gitignored stdout
+test_gitignored: test_gitignored_stdout test_gitignored_stderr  ## test gitignored
+test_gitignored_stdout: $(OUT_gitignored)  ## test gitignored stdout
 	@file_ref=out/gitignored_py_python.out; \
 	total_lines=$$(wc -l < "$$file_ref"); \
 	for file in $^; do \
@@ -584,13 +591,13 @@ test-gitignored-stdout: $(OUT_gitignored)  ## test gitignored stdout
 			fi; \
 		fi; \
 	done
-test-gitignored-stderr: $(ERR_gitignored)  ## test gitignored stderr to be empty apart from logging
+test_gitignored_stderr: $(ERR_gitignored)  ## test gitignored stderr to be empty apart from logging
 	@for file in $^; do \
 		if [[ $$(grep -v -E '^(gitignored DEBUG: |gitignored INFO: |$$)' "$$file" | wc -l) -ne 0 ]]; then \
 			echo -e "\033[1m\033[93m$$file\033[0m: not empty"; \
 		fi; \
 	done
-test-diffpath-usage: $(BIN_diffpath)  ## test the usage help of all diffpath programs
+test_diffpath_usage: $(BIN_diffpath)  ## test the usage help of all diffpath programs
 	@for bin in $^; do \
 		actual_output=$$($$bin --help 2>&1 >/dev/null); \
 		expected_output="Usage: $$bin PATH1 PATH2"; \
@@ -602,7 +609,7 @@ test-diffpath-usage: $(BIN_diffpath)  ## test the usage help of all diffpath pro
 
 # misc #########################################################################
 
-.PHONY: build update update-devbox update-pixi size list_link clean Clean help
+.PHONY: build update update_devbox update_pixi size list_link clean Clean help
 build: $(INCLUDEFILE)  ## prepare environments using nix & devbox (should be triggered automatically)
 # this file is solely here for CI cache
 # it is possible the lock files between this and those under envs are out of sync
@@ -611,10 +618,10 @@ devbox.json: $(DEVBOXS_JSON)
 	util/devbox_concat.py $^ > $@
 $(INCLUDEFILE): util/env.sh devbox.json $(DEVBOXS)
 	$< $@
-update: update-devbox update-pixi  ## update environments
-update-devbox:  ## update environments using nix & devbox
+update: update_devbox update_pixi  ## update environments
+update_devbox:  ## update environments using nix & devbox
 	devbox update --all-projects --sync-lock
-update-pixi:  ## update pixi environments
+update_pixi:  ## update pixi environments
 	find -name pixi.toml -exec pixi update --manifest-path {} \;
 size:  ## show binary sizes
 	@for program in $(PROGRAMS); do \
