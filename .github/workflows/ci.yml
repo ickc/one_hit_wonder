@@ -11,6 +11,7 @@ jobs:
           - ubuntu-24.04
           - macos-13
           - macos-14
+          - macos-15
         python_method:
           - devbox
           - pixi
@@ -18,7 +19,7 @@ jobs:
     env:
       PYTHON_METHOD: ${{ matrix.python_method }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Install devbox
         uses: jetify-com/devbox-install-action@v0.14.0
