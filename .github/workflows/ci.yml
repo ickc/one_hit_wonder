@@ -24,13 +24,16 @@ jobs:
         python_method:
           - devbox
           - pixi
+          - flox
     runs-on: ${{ matrix.os }}
     env:
       PYTHON_METHOD: ${{ matrix.python_method }}
+      METHOD: ${{ matrix.python_method == 'flox' && 'flox' || 'devbox' }}
     steps:
       - uses: actions/checkout@v4
 
       - name: Install devbox
+        if: env.METHOD == 'devbox'
         uses: jetify-com/devbox-install-action@v0.14.0
         with:
           enable-cache: true
@@ -43,15 +46,38 @@ jobs:
             cython
             nuitka
             python
+      - name: Install flox
+        if: env.METHOD == 'flox'
+        uses: flox/setup-flox@v3
 
       - name: Compilers version
-        run: devbox run --config envs/system 'cd ../..; make compiler_version'
+        run: |
+            if [ "${METHOD}" = "flox" ]; then
+                flox activate --dir . -- make compiler_version
+            else
+                devbox run --config envs/system 'cd ../..; make compiler_version'
+            fi
 
       - name: compile, run, and test
-        run: devbox run --config envs/system 'cd ../..; make all ARGS_RUN_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_BENCH_gitignored='
+        run: |
+            if [ "${METHOD}" = "flox" ]; then
+                flox activate --dir . -- make all ARGS_RUN_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_BENCH_gitignored=
+            else
+                devbox run --config envs/system 'cd ../..; make all ARGS_RUN_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_BENCH_gitignored='
+            fi
 
       - name: show size and list dynamically linked libraries
-        run: devbox run --config envs/system 'cd ../..; make size list_link -j1'
+        run: |
+            if [ "${METHOD}" = "flox" ]; then
+                flox activate --dir . -- make size list_link -j1
+            else
+                devbox run --config envs/system 'cd ../..; make size list_link -j1'
+            fi
         
       - name: Benchmark
-        run: devbox run --config envs/system 'cd ../..; make bench_md ARGS_RUN_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_BENCH_gitignored='
+        run: |
+            if [ "${METHOD}" = "flox" ]; then
+                flox activate --dir . -- make bench_md ARGS_RUN_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_BENCH_gitignored=
+            else
+                devbox run --config envs/system 'cd ../..; make bench_md ARGS_RUN_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_BENCH_gitignored='
+            fi

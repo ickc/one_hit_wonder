@@ -1,0 +1,38 @@
+version = 1
+
+[install]
+bash = { pkg-path = "bash" }
+clang-tools_18 = { pkg-path = "clang-tools_18" }
+clang_18 = { pkg-path = "clang_18" }
+difftastic = { pkg-path = "difftastic" }
+dotnet-sdk_8 = { pkg-path = "dotnet-sdk_8" }
+gcc = { pkg-path = "gcc" }
+ghc = { pkg-path = "ghc" }
+gnumake = { pkg-path = "gnumake" }
+go = { pkg-path = "go" }
+google-java-format = { pkg-path = "google-java-format" }
+hyperfine = { pkg-path = "hyperfine" }
+jdk-headless = { pkg-path = "jdk-headless" }
+julia-bin = { pkg-path = "julia-bin" }
+lua54Packages-lua = { pkg-path = "lua54Packages.lua" }
+lua54Packages-luafilesystem = { pkg-path = "lua54Packages.luafilesystem" }
+luajit = { pkg-path = "luajit" }
+luajitPackages-luafilesystem = { pkg-path = "luajitPackages.luafilesystem" }
+nodePackages-prettier = { pkg-path = "nodePackages.prettier" }
+nodejs = { pkg-path = "nodejs" }
+perl538Packages-PerlTidy = { pkg-path = "perl538Packages.PerlTidy" }
+perl = { pkg-path = "perl" }
+pypy310 = { pkg-path = "pypy310" }
+python311Packages-cython = { pkg-path = "python311Packages.cython" }
+python312Packages-autoflake = { pkg-path = "python312Packages.autoflake" }
+python312Packages-black = { pkg-path = "python312Packages.black" }
+python312Packages-isort = { pkg-path = "python312Packages.isort" }
+python312Packages-nuitka = { pkg-path = "python312Packages.nuitka" }
+python312Packages-python = { pkg-path = "python312Packages.python" }
+rustup = { pkg-path = "rustup" }
+shfmt = { pkg-path = "shfmt" }
+stylish-haskell = { pkg-path = "stylish-haskell" }
+stylua = { pkg-path = "stylua" }
+time = { pkg-path = "time" }
+typescript = { pkg-path = "typescript" }
+zsh = { pkg-path = "zsh" }
