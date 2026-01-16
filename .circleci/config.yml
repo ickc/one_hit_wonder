@@ -15,11 +15,14 @@ jobs:
     parameters:
       os:
         type: executor
+      python_method:
+        type: string
+        default: devbox
     executor: << parameters.os >>
     environment:
       # nuitka from conda doesn't support linux-aarch64 yet
       # so we aren't setting up pixi here
-      PYTHON_METHOD: devbox
+      PYTHON_METHOD: << parameters.python_method >>
     steps:
       - checkout
 
@@ -27,28 +30,86 @@ jobs:
           keys:
             - nix-store-{{ arch }}-{{ checksum "devbox.lock" }}
 
-      - run:
-          name: Install Devbox
-          command: |
-            curl -fsSLO https://get.jetify.com/devbox
-            chmod +x devbox
-            ./devbox -f
+      - when:
+          condition:
+            equal: [devbox, << parameters.python_method >>]
+          steps:
+            - run:
+                name: Install Devbox
+                command: |
+                  curl -fsSLO https://get.jetify.com/devbox
+                  chmod +x devbox
+                  ./devbox -f
 
-      - run:
-          name: Compilers version
-          command: devbox run --config envs/system 'cd ../..; make compiler_version'
+            - run:
+                name: Compilers version
+                command: devbox run --config envs/system 'cd ../..; make compiler_version'
 
-      - run:
-          name: Compile, run, and test
-          command: devbox run --config envs/rust 'cd ../..; rustup default stable; make all ARGS_RUN_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_BENCH_gitignored='
+            - run:
+                name: Compile, run, and test
+                command: devbox run --config envs/rust 'cd ../..; rustup default stable; make all ARGS_RUN_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_BENCH_gitignored='
 
-      - run:
-          name: Show size and list dynamically linked libraries
-          command: devbox run --config envs/system 'cd ../..; make size list_link -j1'
+            - run:
+                name: Show size and list dynamically linked libraries
+                command: devbox run --config envs/system 'cd ../..; make size list_link -j1'
 
-      - run:
-          name: Benchmark
-          command: devbox run --config envs/system 'cd ../..; make bench_md ARGS_RUN_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_BENCH_gitignored='
+            - run:
+                name: Benchmark
+                command: devbox run --config envs/system 'cd ../..; make bench_md ARGS_RUN_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_BENCH_gitignored='
+
+      - when:
+          condition:
+            equal: [flox, << parameters.python_method >>]
+          steps:
+            - run:
+                name: Install flox
+                command: |
+                    echo "Installing flox..."
+                    ARCH="$(uname -m)"
+                    if [ "$ARCH" = "x86_64" ]; then
+                        FLOX_URL="https://downloads.flox.dev/by-env/stable/deb/flox.deb"
+                    elif [ "$ARCH" = "aarch64" ]; then
+                        # Determine version from x86_64 deb headers
+                        VERSION_FILENAME=$(curl -sI "https://downloads.flox.dev/by-env/stable/deb/flox.deb" | grep -i "content-disposition" | sed -E 's/.*filename="flox-(.+)\.x86_64-linux\.deb".*/\1/')
+                        if [ -z "$VERSION_FILENAME" ]; then
+                            echo "Could not determine flox version from headers."
+                            exit 1
+                        fi
+                        echo "Detected flox version: $VERSION_FILENAME"
+                        FLOX_URL="https://downloads.flox.dev/by-env/stable/deb/flox-${VERSION_FILENAME}.aarch64-linux.deb"
+                    else
+                        echo "Unsupported architecture: $ARCH"
+                        exit 1
+                    fi
+
+                    echo "Downloading flox from $FLOX_URL"
+                    curl -sS "$FLOX_URL" -o flox.deb
+                    sudo dpkg -i flox.deb
+                    rm flox.deb
+
+            - run:
+                name: Compilers version
+                command: |
+                    export METHOD=flox
+                    flox activate --dir . -- make compiler_version
+
+            - run:
+                name: Compile, run, and test
+                command: |
+                    export METHOD=flox
+                    flox activate --dir . -- make all ARGS_RUN_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_BENCH_gitignored=
+
+            - run:
+                name: Show size and list dynamically linked libraries
+                command: |
+                    export METHOD=flox
+                    flox activate --dir . -- make size list_link -j1
+
+            - run:
+                name: Benchmark
+                command: |
+                    export METHOD=flox
+                    flox activate --dir . -- make bench_md ARGS_RUN_diffpath="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin $PATH" ARGS_BENCH_gitignored=
 
       - save_cache:
           paths:
@@ -62,3 +123,4 @@ workflows:
           matrix:
             parameters:
               os: [linux-64, linux-aarch64]
+              python_method: [devbox, flox]

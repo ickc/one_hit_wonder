@@ -4,9 +4,9 @@
 
 set -e
 
-# valid values for METHOD are devbox
+# valid values for METHOD are devbox, flox
 METHOD="${METHOD:-devbox}"
-# valid values for PYTHON_METHOD are devbox, pixi
+# valid values for PYTHON_METHOD are devbox, pixi, flox
 PYTHON_METHOD="${PYTHON_METHOD:-pixi}"
 
 # shellcheck disable=SC2046
@@ -26,6 +26,12 @@ case "${METHOD}" in
             exit 1
         fi
         ;;
+    flox)
+        if ! command -v flox &> /dev/null; then
+            echo "flox command not found. Please install flox to proceed."
+            exit 1
+        fi
+        ;;
     *)
         echo "Invalid method: ${METHOD}"
         exit 1
@@ -41,6 +47,12 @@ case "${PYTHON_METHOD}" in
     pixi)
         if ! command -v pixi &> /dev/null; then
             echo "pixi command not found. Please install pixi to proceed."
+            exit 1
+        fi
+        ;;
+    flox)
+        if ! command -v flox &> /dev/null; then
+            echo "flox command not found. Please install flox to proceed."
             exit 1
         fi
         ;;
@@ -69,6 +81,32 @@ get_pixi_command_path() {
     local env_name=$2
     local command_name=$3
     echo "${var_name}=${DIR}/.pixi/envs/${env_name}/bin/${command_name}" >> "${outfile}"
+}
+
+get_flox_command_path() {
+    local var_name=$1
+    local command_name=$2
+    # We use the FLOX_PATH retrieved earlier to find the command
+    # This avoids calling flox activate for every single command which is slow
+    local cmd_path
+    # Temporarily set PATH to include flox path
+    cmd_path=$(PATH="${FLOX_PATH}:${PATH}" type -P "${command_name}")
+    echo "${var_name}=\"${cmd_path}\"" >> "${outfile}"
+}
+
+get_flox_env_var() {
+    local var_name=$1
+    local original_var_name=$2
+    # For env vars, we might still need to activate or we can try to extract them all at once?
+    # For now, keep it simple as there are few env vars.
+    local env_val
+    env_val=$(flox activate --dir "${DIR}" -- bash -c "echo \"\${${original_var_name}}\"")
+    echo "${var_name}=\"${env_val}\"" >> "${outfile}"
+}
+
+get_flox_init() {
+    # Get the PATH from flox environment
+    FLOX_PATH=$(flox activate --dir "${DIR}" -- bash -c 'echo $PATH')
 }
 
 get_devbox() {
@@ -142,6 +180,63 @@ get_python_pixi() {
     get_pixi_command_path NUITKA_PYTHON nuitka python
 }
 
+get_flox() {
+    get_flox_init
+    get_flox_command_path CLANG_FORMAT clang-format
+    get_flox_command_path GCC gcc
+    get_flox_command_path GXX g++
+    get_flox_command_path CLANG clang
+    get_flox_command_path CLANGXX clang++
+    get_flox_command_path GOFMT gofmt
+    get_flox_command_path GO go
+    get_flox_command_path STYLISH_HASKELL stylish-haskell
+    get_flox_command_path GHC ghc
+    get_flox_command_path STYLUA stylua
+    get_flox_command_path LUA lua
+    get_flox_env_var LUA_LUA_CPATH LUA_CPATH
+    get_flox_command_path LUAJIT luajit
+    get_flox_env_var LUAJIT_LUA_CPATH LUA_CPATH
+    get_flox_command_path PYPY pypy3
+    get_flox_command_path RUSTFMT rustfmt
+    get_flox_command_path RUSTC rustc
+    get_flox_command_path SHFMT shfmt
+    get_flox_command_path BASH bash
+    get_flox_command_path ZSH zsh
+    get_flox_command_path NODE node
+    get_flox_command_path NPM npm
+    get_flox_command_path PRETTIER prettier
+    get_flox_command_path TSC tsc
+    get_flox_command_path PERL perl
+    get_flox_command_path PERLTIDY perltidy
+    get_flox_command_path DOTNET dotnet
+    get_flox_command_path JULIA julia
+
+    get_flox_command_path JAVA java
+    get_flox_command_path JAVAC javac
+    get_flox_command_path JAR jar
+    get_flox_command_path GOOGLE_JAVA_FORMAT google-java-format
+
+    get_flox_command_path HYPERFINE hyperfine
+    get_flox_command_path DIFFT difft
+    get_flox_command_path GNUTIME time
+}
+
+get_python_flox() {
+    [[ -z "${FLOX_PATH}" ]] && get_flox_init
+    get_flox_command_path AUTOFLAKE autoflake
+    get_flox_command_path BLACK black
+    get_flox_command_path ISORT isort
+    get_flox_command_path PYTHON python
+
+    get_flox_command_path CYTHONIZE cythonize
+    get_flox_command_path CYTHON_PYTHON python
+
+    if [[ "$(uname -s)" != Darwin || $(sw_vers -productVersion | awk -F '.' '{print $1}') -ge 14 ]]; then
+        get_flox_command_path NUITKA_PYTHON python
+        get_flox_env_var NUITKA_PYTHONPATH PYTHONPATH
+    fi
+}
+
 # get mandatory commands ###############################################
 
 echo "export JULIA_DEPOT_PATH=${DIR}/envs/julia/.julia" > "${outfile}"
@@ -149,6 +244,9 @@ echo "export JULIA_DEPOT_PATH=${DIR}/envs/julia/.julia" > "${outfile}"
 case "${METHOD}" in
     devbox)
         get_devbox
+        ;;
+    flox)
+        get_flox
         ;;
     *) ;;
 esac
@@ -158,6 +256,9 @@ case "${PYTHON_METHOD}" in
         ;;
     pixi)
         get_python_pixi
+        ;;
+    flox)
+        get_python_flox
         ;;
     *) ;;
 esac

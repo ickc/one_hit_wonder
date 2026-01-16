@@ -617,13 +617,18 @@ build: $(INCLUDEFILE)  ## prepare environments using nix & devbox (should be tri
 # make update should be run to ensure they are in sync
 devbox.json: $(DEVBOXS_JSON)
 	util/devbox_concat.py $^ > $@
-$(INCLUDEFILE): util/env.sh devbox.json $(DEVBOXS)
+manifest.toml: devbox.json
+	util/devbox_to_flox.py $< > $@
+$(INCLUDEFILE): util/env.sh devbox.json manifest.toml $(DEVBOXS)
 	$< $@
-update: update_devbox update_pixi  ## update environments
+update: update_devbox update_pixi update_flox  ## update environments
 update_devbox:  ## update environments using nix & devbox
 	devbox update --all-projects --sync-lock
 update_pixi:  ## update pixi environments
 	find -name pixi.toml -exec pixi update --manifest-path {} \;
+update_flox: manifest.toml  ## update flox environments
+	@touch devbox.json
+	flox upgrade --dir .
 size:  ## show binary sizes
 	@for program in $(PROGRAMS); do \
 		printf '%.0s—' {1..80}; echo; \
