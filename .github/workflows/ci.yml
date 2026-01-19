@@ -28,7 +28,7 @@ jobs:
     env:
       PYTHON_METHOD: ${{ matrix.python_method }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install devbox
         uses: jetify-com/devbox-install-action@v0.14.0
