@@ -361,7 +361,7 @@ bin/%_ts: src/%.ts node_modules/
 	@rm -f bin/$*.js
 	@chmod +x $@
 node_modules/:
-	$(NPM) install @types/node --no-save
+	$(NPM) install @types/node@22.7.5 --no-save
 .PHONY: clean_ts Clean_ts format_ts
 clean_ts:  ## clean auxiliary TypeScript files
 	rm -f $(BIN_ts)
