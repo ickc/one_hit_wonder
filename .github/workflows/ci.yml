@@ -16,7 +16,7 @@ jobs:
           - ubuntu-22.04
           - ubuntu-24.04
           # macOS-arm64
-          - macos-14
+          - macos-15
           # - macos-15
           # - macos-26
           # macOS-x64
